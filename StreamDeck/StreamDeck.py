@@ -5,6 +5,8 @@
 #         www.fourwalledcubicle.com
 #
 
+import threading
+
 
 class DeviceManager(object):
     USB_VID_ELGATO = 0x0fd9
@@ -43,21 +45,54 @@ class StreamDeck(object):
 
     def __init__(self, device):
         self.device = device
+        self.last_key_states = [False] * self.KEY_COUNT
+        self.read_thread = None
+        self.key_callback = None
 
     def __del__(self):
         try:
+            self._setup_reader(None)
+
             self.device.close()
         except:
             pass
 
+    def _read(self):
+        while self.read_thread_run:
+            payload = self.device.read(17)
+
+            if len(payload):
+                new_key_states = [bool(s) for s in payload[1:]]
+
+                if self.key_callback is not None:
+                    for k, (old, new) in enumerate(zip(self.last_key_states, new_key_states)):
+                        if old != new:
+                            self.key_callback(self, k, new)
+
+                self.last_key_states = new_key_states
+
+    def _setup_reader(self, callback):
+        if self.read_thread is not None:
+            self.read_thread_run = False
+            self.read_thread.join()
+
+        if callback is not None:
+            self.read_thread_run = True
+            self.read_thread = threading.Thread(target=callback)
+            self.read_thread.start()
+
     def open(self):
         self.device.open()
+        self._setup_reader(self._read)
 
     def close(self):
         self.device.close()
 
     def connected(self):
         return self.device.connected()
+
+    def id(self):
+        return self.device.path()
 
     def key_count(self):
         return self.KEY_COUNT
@@ -109,5 +144,11 @@ class StreamDeck(object):
         ]
         payload[0: len(header)] = header
         payload[len(header): len(
-            header) + PAYLOAD_IMAGE_LEN_2] = image[PAYLOAD_IMAGE_LEN_1: PAYLOAD_IMAGE_LEN_1 + PAYLOAD_IMAGE_LEN_2]
+                header) + PAYLOAD_IMAGE_LEN_2] = image[PAYLOAD_IMAGE_LEN_1: PAYLOAD_IMAGE_LEN_1 + PAYLOAD_IMAGE_LEN_2]
         self.device.write(payload)
+
+    def set_key_callback(self, callback):
+        self.key_callback = callback
+
+    def key_states(self):
+        return self.last_key_states

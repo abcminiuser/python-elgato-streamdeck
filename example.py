@@ -9,6 +9,31 @@
 
 from StreamDeck.StreamDeck import DeviceManager
 
+
+def get_random_key_colour_image(deck):
+    import random
+
+    key_image_format = deck.key_image_format()
+
+    key_image_byte_count = key_image_format['width'] * \
+        key_image_format['height'] * key_image_format['depth']
+
+    key_image_buffer = bytearray(key_image_byte_count)
+
+    rand_colour_bgr = [int(random.random() * 255) for i in range(0, 3)]
+    for i in range(0, len(key_image_buffer)):
+        key_image_buffer[i] = rand_colour_bgr[i % 3]
+
+    return key_image_buffer
+
+
+def key_change_callback(deck, key, state):
+    print("Deck {} Key {} = {}".format(deck.id(), key, state), flush=True)
+
+    if state:
+        deck.set_key_image(key, get_random_key_colour_image(deck))
+
+
 manager = DeviceManager()
 decks = manager.enumerate()
 
@@ -19,19 +44,10 @@ for d in decks:
 
     d.set_brightness(30)
 
-    key_image_format = d.key_image_format()
-
-    key_image_byte_count = key_image_format['width'] * \
-        key_image_format['height'] * key_image_format['depth']
-
-    key_image_buffer = bytearray(key_image_byte_count)
-
-    import random
-    colour_shift = int(random.random() * 255) % 3
-
     for k in range(0, d.key_count()):
-        rand_colour_bgr = [int(random.random() * 255) for i in range(0, 3)]
-        for i in range(0, len(key_image_buffer)):
-            key_image_buffer[i] = rand_colour_bgr[i % 3]
+        d.set_key_image(k, get_random_key_colour_image(d))
 
-        d.set_key_image(k, key_image_buffer)
+    current_key_states = d.key_states()
+    print("Initial key states: {}".format(current_key_states))
+
+    d.set_key_callback(key_change_callback)

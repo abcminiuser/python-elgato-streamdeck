@@ -26,11 +26,17 @@ class HIDAPI(object):
             devices = hid.enumerate()
             return any([d['path'] == self.hid_info['path'] for d in devices])
 
+        def path(self):
+            return self.hid_info['path']
+
         def write_feature(self, payload):
             return self.hid.send_feature_report(payload)
 
         def write(self, payload):
             return self.hid.write(payload)
+
+        def read(self, length):
+            return self.hid.read(length)
 
     def enumerate(self, vid, pid):
         devices = hid.enumerate()

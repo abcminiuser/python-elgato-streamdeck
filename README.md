@@ -15,8 +15,8 @@ repository to implement this library. Thanks Alex Van Camp!
 
 ## Status:
 
-Working - you can enumerate devices, set the brightness of the panel(s), and set
-the images shown on each button.
+Working - you can enumerate devices, set the brightness of the panel(s), set
+the images shown on each button, and read the current button states.
 
 ## Dependencies:
 
