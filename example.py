@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-#         Python Strem Deck Library
+#         Python Stream Deck Library
 #      Released under the MIT license
 #
 #   dean [at] fourwalledcubicle [dot] com
