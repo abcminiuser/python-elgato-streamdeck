@@ -106,6 +106,9 @@ class StreamDeck(object):
         }
 
     def set_brightness(self, percent):
+        if type(percent) is float:
+            percent = int(100.0 * percent)
+
         percent = min(max(percent, 0), 100)
 
         payload = bytearray(17)
