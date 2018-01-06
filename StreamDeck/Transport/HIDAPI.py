@@ -9,6 +9,7 @@
 
 import hid
 
+
 class HIDAPI(object):
     class Device(object):
         def __init__(self, device_info):
@@ -30,7 +31,6 @@ class HIDAPI(object):
 
         def write(self, payload):
             return self.hid.write(payload)
-
 
     def enumerate(self, vid, pid):
         devices = hid.enumerate()
