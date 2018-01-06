@@ -12,20 +12,15 @@ class DeviceManager(object):
     USB_VID_ELGATO = 0x0fd9
     USB_PID_STREAMDECK = 0x0060
 
-    def _get_transport(self, name):
-        if name == "hidapi":
+    def _get_transport(self, transport):
+        if transport == "hidapi":
             from .Transport.HIDAPI import HIDAPI
             return HIDAPI()
         else:
-            raise IOError("Invalid HID backend \"{}\".".format(transport))
+            raise IOError("Invalid HID transport backend \"{}\".".format(transport))
 
     def __init__(self, transport="hidapi"):
-        # User can pass in either a transport object, or the name of the
-        # built-in transports to use
-        if type(transport) is str:
-            self.transport = self._get_transport(transport)
-        else:
-            self.transport = transport
+        self.transport = self._get_transport(transport)
 
     def enumerate(self):
         deck_devices = self.transport.enumerate(
