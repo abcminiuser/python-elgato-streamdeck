@@ -38,6 +38,8 @@ class StreamDeck(object):
     KEY_PIXEL_DEPTH = 3
     KEY_PIXEL_ORDER = "BGR"
 
+    KEY_IMAGE_SIZE = KEY_PIXEL_WIDTH * KEY_PIXEL_HEIGHT * KEY_PIXEL_DEPTH
+
     def __init__(self, device):
         self.device = device
         self.last_key_states = [False] * self.KEY_COUNT
@@ -112,12 +114,15 @@ class StreamDeck(object):
 
     def set_key_image(self, key, image):
         if min(max(key, 0), self.KEY_COUNT) != key:
-            raise IOError("Invalid key index {}.".format(key))
+            raise IndexError("Invalid key index {}.".format(key))
+
+        if len(image) != self.KEY_IMAGE_SIZE:
+            raise ValueError("Invalid image size {}.".format(len(image)))
 
         payload = bytearray(8191)
 
-        PAYLOAD_IMAGE_LEN_1 = 2583 * 3
-        PAYLOAD_IMAGE_LEN_2 = 2601 * 3
+        PAYLOAD_LEN_1 = 2583 * 3
+        PAYLOAD_LEN_2 = 2601 * 3
 
         header = [
             0x02, 0x01, 0x01, 0x00, 0x00, key + 1, 0x00, 0x00,
@@ -128,9 +133,11 @@ class StreamDeck(object):
             0x00, 0x00, 0x01, 0x00, 0x18, 0x00, 0x00, 0x00,
             0x00, 0x00, 0xc0, 0x3c, 0x00, 0x00, 0xc4, 0x0e,
             0x00, 0x00, 0xc4, 0x0e, 0x00, 0x00, 0x00, 0x00,
-            0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+        ]
         payload[0: len(header)] = header
-        payload[len(header): len(header) + PAYLOAD_IMAGE_LEN_1] = image[0: PAYLOAD_IMAGE_LEN_1]
+        payload[len(header): len(header) + PAYLOAD_LEN_1] = \
+            image[0: PAYLOAD_LEN_1]
         self.device.write(payload)
 
         header = [
@@ -138,8 +145,8 @@ class StreamDeck(object):
             0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
         ]
         payload[0: len(header)] = header
-        payload[len(header): len(
-                header) + PAYLOAD_IMAGE_LEN_2] = image[PAYLOAD_IMAGE_LEN_1: PAYLOAD_IMAGE_LEN_1 + PAYLOAD_IMAGE_LEN_2]
+        payload[len(header): len(header) + PAYLOAD_LEN_2] = \
+            image[PAYLOAD_LEN_1: PAYLOAD_LEN_1 + PAYLOAD_LEN_2]
         self.device.write(payload)
 
     def set_key_callback(self, callback):
