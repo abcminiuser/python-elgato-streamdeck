@@ -7,7 +7,7 @@
 #         www.fourwalledcubicle.com
 #
 
-from StreamDeck.StreamDeck import DeviceManager
+import StreamDeck.StreamDeck as StreamDeck
 
 
 def get_random_key_colour_image(deck):
@@ -34,7 +34,7 @@ def key_change_callback(deck, key, state):
         deck.set_key_image(key, get_random_key_colour_image(deck))
 
 
-manager = DeviceManager()
+manager = StreamDeck.DeviceManager()
 decks = manager.enumerate()
 
 print("Found {} Stream Decks.".format(len(decks)))
