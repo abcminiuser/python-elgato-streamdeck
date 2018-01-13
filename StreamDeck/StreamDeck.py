@@ -155,5 +155,11 @@ class StreamDeck(object):
     def set_key_callback(self, callback):
         self.key_callback = callback
 
+    def set_key_future(self, future):
+        import asyncio
+        loop = asyncio.get_event_loop()
+        callback = lambda *args: asyncio.run_coroutine_threadsafe(future(*args), loop)
+        self.set_key_callback(callback)
+
     def key_states(self):
         return self.last_key_states
