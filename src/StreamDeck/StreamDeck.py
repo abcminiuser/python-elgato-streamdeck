@@ -287,7 +287,7 @@ class StreamDeck(object):
         """
         self.key_callback = callback
 
-    def set_key_callback_async(self, future):
+    def set_key_callback_async(self, async_callback, loop=None):
         """
         Sets the asynchronous callback function called each time a button on the
         StreamDeck changes state (either pressed, or released). The given
@@ -299,12 +299,15 @@ class StreamDeck(object):
         .. note:: This will override the callback (if any) set by
                   :func:`~StreamDeck.set_key_callback`.
 
-        :param function callback: Asynchronous callback function to fire each
-                                  time a button state changes.
+        :param function async_callback: Asynchronous callback function to fire
+                                        each time a button state changes.
+        :param function loop: Asyncio loop to dispatch the callback into
         """
-        import asyncio
-        loop = asyncio.get_event_loop()
-        callback = lambda *args: asyncio.run_coroutine_threadsafe(future(*args), loop)
+        if loop is None:
+            import asyncio
+            loop = asyncio.get_event_loop()
+
+        callback = lambda *args: asyncio.run_coroutine_threadsafe(async_callback(*args), loop)
         self.set_key_callback(callback)
 
     def key_states(self):
