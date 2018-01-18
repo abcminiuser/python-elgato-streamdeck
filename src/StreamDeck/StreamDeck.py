@@ -307,7 +307,9 @@ class StreamDeck(object):
             import asyncio
             loop = asyncio.get_event_loop()
 
-        callback = lambda *args: asyncio.run_coroutine_threadsafe(async_callback(*args), loop)
+        def callback(*args):
+            asyncio.run_coroutine_threadsafe(async_callback(*args), loop)
+
         self.set_key_callback(callback)
 
     def key_states(self):
