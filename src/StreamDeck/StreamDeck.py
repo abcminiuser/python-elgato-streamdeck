@@ -124,6 +124,7 @@ class StreamDeck(object):
         if callback is not None:
             self.read_thread_run = True
             self.read_thread = threading.Thread(target=callback)
+            self.read_thread.daemon = True
             self.read_thread.start()
 
     def open(self):
