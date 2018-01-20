@@ -96,7 +96,10 @@ class StreamDeck(object):
         any registered callbacks.
         """
         while self.read_thread_run:
-            payload = self.device.read(17)
+            try:
+                payload = self.device.read(17)
+            except ValueError as e:
+                self.read_thread_run = False
 
             if len(payload):
                 new_key_states = [bool(s) for s in payload[1:]]

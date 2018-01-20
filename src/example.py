@@ -8,6 +8,7 @@
 #
 
 import StreamDeck.StreamDeck as StreamDeck
+import threading
 
 
 def get_random_key_colour_image(deck):
@@ -15,16 +16,13 @@ def get_random_key_colour_image(deck):
 
     key_image_format = deck.key_image_format()
 
-    key_image_byte_count = key_image_format['width'] * \
-        key_image_format['height'] * key_image_format['depth']
+    width, height = (key_image_format['width'], key_image_format['height'])
+    depth = key_image_format['depth']
 
-    key_image_buffer = bytearray(key_image_byte_count)
-
-    rand_colour_bgr = [int(random.random() * 255) for i in range(0, 3)]
-    for i in range(0, len(key_image_buffer)):
-        key_image_buffer[i] = rand_colour_bgr[i % 3]
-
-    return key_image_buffer
+    random_color = [int(random.random() * 0xFF) for b in range(depth)]
+    for i in range(width * height):
+        for b in range(depth):
+            yield random_color[b]
 
 
 def key_change_callback(deck, key, state):
@@ -33,21 +31,35 @@ def key_change_callback(deck, key, state):
     if state:
         deck.set_key_image(key, get_random_key_colour_image(deck))
 
+        if key == d.key_count() - 1:
+            deck.reset()
+            deck.close()
 
-manager = StreamDeck.DeviceManager()
-decks = manager.enumerate()
 
-print("Found {} Stream Decks.".format(len(decks)))
+if __name__ == "__main__":
+    manager = StreamDeck.DeviceManager()
+    decks = manager.enumerate()
 
-for d in decks:
-    d.open()
+    print("Found {} Stream Decks.".format(len(decks)), flush=True)
 
-    d.set_brightness(30)
+    for d in decks:
+        d.open()
+        d.reset()
 
-    for k in range(0, d.key_count()):
-        d.set_key_image(k, get_random_key_colour_image(d))
+        print("Press key {} to exit.".format(d.key_count() - 1), flush=True)
 
-    current_key_states = d.key_states()
-    print("Initial key states: {}".format(current_key_states))
+        d.set_brightness(30)
 
-    d.set_key_callback(key_change_callback)
+        for k in range(d.key_count()):
+            d.set_key_image(k, get_random_key_colour_image(d))
+
+        current_key_states = d.key_states()
+        print("Initial key states: {}".format(current_key_states))
+
+        d.set_key_callback(key_change_callback)
+
+        for t in threading.enumerate():
+            if t is threading.currentThread():
+                continue
+
+            t.join()
