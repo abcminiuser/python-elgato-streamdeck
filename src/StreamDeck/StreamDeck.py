@@ -202,6 +202,16 @@ class StreamDeck(object):
             "order": self.KEY_PIXEL_ORDER,
         }
 
+    def reset(self):
+        """
+        Resets the StreamDeck, clearing all button images and showing the
+        standby image.
+        """
+
+        payload = bytearray(17)
+        payload[0:2] = [0x0B, 0x63]
+        self.device.write_feature(payload)
+
     def set_brightness(self, percent):
         """
         Sets the global screen brightness of the ScreenDeck, across all the
@@ -230,8 +240,12 @@ class StreamDeck(object):
                      information on the image format accepted by the device.
 
         :param int key: Index of the button whose image is to be updated.
-        :param enumerable image: Pixel data of the image to set on the button.
+        :param array image: Pixel data of the image to set on the button. If
+                            None, the key will be cleared to a black color.
         """
+
+        if image is None:
+            image = bytearray(self.KEY_IMAGE_SIZE)
 
         if min(max(key, 0), self.KEY_COUNT) != key:
             raise IndexError("Invalid key index {}.".format(key))
