@@ -133,12 +133,12 @@ class HIDAPI(object):
         :return: List of discovered USB HID devices.
         """
 
-        devices = hid.enumerate()
+        if vid is None:
+            vid = 0
 
-        if vid is not None:
-            devices = [d for d in devices if d['vendor_id'] == vid]
+        if pid is None:
+            pid = 0
 
-        if pid is not None:
-            devices = [d for d in devices if d['product_id'] == pid]
+        devices = hid.enumerate(vendor_id=vid, product_id=pid)
 
         return [HIDAPI.Device(d) for d in devices]

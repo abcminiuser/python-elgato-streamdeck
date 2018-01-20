@@ -256,12 +256,7 @@ class StreamDeck(object):
         if len(image) != self.KEY_IMAGE_SIZE:
             raise ValueError("Invalid image size {}.".format(len(image)))
 
-        payload = bytearray(8191)
-
-        PAYLOAD_LEN_1 = 2583 * 3
-        PAYLOAD_LEN_2 = 2601 * 3
-
-        header = [
+        header_1 = [
             0x02, 0x01, 0x01, 0x00, 0x00, key + 1, 0x00, 0x00,
             0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
             0x42, 0x4d, 0xf6, 0x3c, 0x00, 0x00, 0x00, 0x00,
@@ -272,19 +267,18 @@ class StreamDeck(object):
             0x00, 0x00, 0xc4, 0x0e, 0x00, 0x00, 0x00, 0x00,
             0x00, 0x00, 0x00, 0x00, 0x00, 0x00
         ]
-        payload[0: len(header)] = header
-        payload[len(header): len(header) + PAYLOAD_LEN_1] = \
-            image[0: PAYLOAD_LEN_1]
-        self.device.write(payload)
-
-        header = [
+        header_2 = [
             0x02, 0x01, 0x02, 0x00, 0x01, key + 1, 0x00, 0x00,
             0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
         ]
-        payload[0: len(header)] = header
-        payload[len(header): len(header) + PAYLOAD_LEN_2] = \
-            image[PAYLOAD_LEN_1: PAYLOAD_LEN_1 + PAYLOAD_LEN_2]
-        self.device.write(payload)
+
+        IMAGE_BYTES_PAGE_1 = 2583 * 3
+
+        payload_1 = bytes(header_1) + image[ : IMAGE_BYTES_PAGE_1]
+        payload_2 = bytes(header_2) + image[IMAGE_BYTES_PAGE_1 : ]
+
+        self.device.write(payload_1)
+        self.device.write(payload_2)
 
     def set_key_callback(self, callback):
         """
