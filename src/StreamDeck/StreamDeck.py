@@ -248,7 +248,7 @@ class StreamDeck(object):
                                  color.
         """
 
-        image = bytes(image if image is not None else self.KEY_IMAGE_SIZE)
+        image = bytes(image or self.KEY_IMAGE_SIZE)
 
         if min(max(key, 0), self.KEY_COUNT) != key:
             raise IndexError("Invalid key index {}.".format(key))
