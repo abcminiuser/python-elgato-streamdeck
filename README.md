@@ -33,6 +33,30 @@ Installation:
 pip3 install hidapi
 ```
 
+## Raspberry Pi Installation:
+
+The following script has been verified working on a Raspberry Pi (Model 2 B)
+running a stock Debian Stretch image, to install all the required dependencies
+needed by this project:
+
+```
+# Ensure system is up to date, upgrade all out of date packages
+sudo apt update && sudo apt dist-upgrade -y
+
+# Install the pip Python package manager
+sudo apt install -y python3-pip
+
+# Install system packages needed for the Python hidapi package installation
+sudo apt install -y libudev-dev libusb-1.0-0-dev
+
+# Install dependencies
+pip3 install hidapi
+
+# Install git and check out the repository
+sudo apt install -y git
+git clone https://github.com/abcminiuser/python-elgato-streamdeck.git
+```
+
 ## License:
 
 Released under the MIT license:
