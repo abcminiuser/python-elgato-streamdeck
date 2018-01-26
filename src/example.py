@@ -9,11 +9,10 @@
 
 import StreamDeck.StreamDeck as StreamDeck
 import threading
+import random
 
 
 def get_random_key_colour_image(deck):
-    import random
-
     key_image_format = deck.key_image_format()
 
     width, height = (key_image_format['width'], key_image_format['height'])
