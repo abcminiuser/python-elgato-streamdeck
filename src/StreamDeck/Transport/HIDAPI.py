@@ -34,7 +34,7 @@ class HIDAPI(object):
             device if it is currently open.
             """
             try:
-                self.device.close()
+                self.hid.close()
             except:
                 pass
 

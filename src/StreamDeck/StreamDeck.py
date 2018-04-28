@@ -18,7 +18,8 @@ class DeviceManager(object):
     USB_VID_ELGATO = 0x0fd9
     USB_PID_STREAMDECK = 0x0060
 
-    def _get_transport(self, transport):
+    @staticmethod
+    def _get_transport(transport):
         """
         Creates a new HID transport instance from the given transport back-end
         name.
@@ -96,9 +97,11 @@ class StreamDeck(object):
         any registered callbacks.
         """
         while self.read_thread_run:
+            payload = []
+
             try:
                 payload = self.device.read(17)
-            except ValueError as e:
+            except ValueError:
                 self.read_thread_run = False
 
             if len(payload):
@@ -184,7 +187,7 @@ class StreamDeck(object):
         :rtype: (int, int)
         :return (rows, columns): Number of button rows and columns.
         """
-        return (self.KEY_ROWS, self.KEY_COLS)
+        return self.KEY_ROWS, self.KEY_COLS
 
     def key_image_format(self):
         """
@@ -315,9 +318,9 @@ class StreamDeck(object):
                                         each time a button state changes.
         :param function loop: Asyncio loop to dispatch the callback into
         """
-        if loop is None:
-            import asyncio
-            loop = asyncio.get_event_loop()
+        import asyncio
+
+        loop = loop or asyncio.get_event_loop()
 
         def callback(*args):
             asyncio.run_coroutine_threadsafe(async_callback(*args), loop)

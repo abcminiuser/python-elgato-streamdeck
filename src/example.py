@@ -18,7 +18,7 @@ def get_random_key_colour_image(deck):
     width, height = (key_image_format['width'], key_image_format['height'])
     depth = key_image_format['depth']
 
-    random_color = [int(random.random() * 0xFF) for b in range(depth)]
+    random_color = [int(random.random() * 0xFF) for _ in range(depth)]
     for i in range(width * height):
         for b in range(depth):
             yield random_color[b]
