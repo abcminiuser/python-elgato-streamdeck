@@ -19,9 +19,8 @@ def get_random_key_colour_image(deck):
     depth = key_image_format['depth']
 
     random_color = [int(random.random() * 0xFF) for _ in range(depth)]
-    for i in range(width * height):
-        for b in range(depth):
-            yield random_color[b]
+
+    return random_color * (width * height)
 
 
 def key_change_callback(deck, key, state):
