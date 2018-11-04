@@ -10,7 +10,7 @@ import threading
 
 class DeviceManager(object):
     """
-    Central device manager, to enumerate any attached StremDeck devices. An
+    Central device manager, to enumerate any attached StreamDeck devices. An
     instance of this class must be created in order to detect and use any
     StreamDeck devices.
     """
