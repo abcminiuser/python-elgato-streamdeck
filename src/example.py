@@ -20,6 +20,7 @@ def get_key_image(deck, key, state):
     width = key_image_format['width']
     height = key_image_format['height']
     depth = key_image_format['depth']
+    order = key_image_format['order']
 
     # Create new key image of the correct dimensions, black background
     image = Image.new("RGB", (width, height), 'black')
@@ -36,13 +37,13 @@ def get_key_image(deck, key, state):
     font = ImageFont.truetype("Assets/Roboto-Regular", 14)
     draw.text((10, height - 20), text="Key {}".format(key), font=font, fill=(255, 255, 255, 128))
 
-    # Get the raw image data of the generated image (note we need to flip it
-    # horizontally to match the format the StreamDeck expects)
-    image_data = image.transpose(Image.FLIP_LEFT_RIGHT).getdata()
+    # Get the raw r, g and b components of the generated image (note we need to
+    # flip it horizontally to match the format the StreamDeck expects)
+    r, g, b = image.transpose(Image.FLIP_LEFT_RIGHT).split()
 
-    # Convert raw image pixels into BGR format required by the StreamDeck
-    image_data_bgr = [(c[2], c[1], c[0]) for c in image_data]
-    return [c for pixel in image_data_bgr for c in pixel]
+    # Recombine the B, G and R elements in the order the display expects them,
+    # and convert the resulting image to a sequence of bytes
+    return Image.merge("RGB", (b, g, r)).tobytes()
 
 
 def key_change_callback(deck, key, state):
