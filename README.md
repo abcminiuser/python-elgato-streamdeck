@@ -24,6 +24,9 @@ The library core has no special dependencies, but does use one of (potentially)
 several HID backend libraries. You will need to install the dependencies
 appropriate to your chosen backend.
 
+The included example requires the PIL fork "Pillow", although it can be swapped
+out if desired for any other image library as desired by the user application.
+
 ### HIDAPI Backend
 The default backend is the HIDAPI Python library, which should work across
 the three major (Windows, Mac, Linux) OSes.
