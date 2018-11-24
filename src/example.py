@@ -9,18 +9,16 @@
 
 import StreamDeck.StreamDeck as StreamDeck
 import threading
-import random
 from PIL import Image, ImageDraw, ImageFont
 
 
 # Custom tiles with run-time generated text and custom image via the PIL module
 def get_key_image(deck, key, state):
     # Get the required key image dimensions
-    key_image_format = deck.key_image_format()
-    width = key_image_format['width']
-    height = key_image_format['height']
-    depth = key_image_format['depth']
-    order = key_image_format['order']
+    image_format = deck.key_image_format()
+    width = image_format['width']
+    height = image_format['height']
+    order = image_format['order']
 
     # Create new key image of the correct dimensions, black background
     image = Image.new("RGB", (width, height), 'black')
@@ -33,8 +31,8 @@ def get_key_image(deck, key, state):
 
     # Load a custom TrueType font and use it to overlay the key index, draw key
     # number onto the image
-    draw = ImageDraw.Draw(image)
     font = ImageFont.truetype("Assets/Roboto-Regular", 14)
+    draw = ImageDraw.Draw(image)
     draw.text((10, height - 20), text="Key {}".format(key), font=font, fill=(255, 255, 255, 128))
 
     # Get the raw r, g and b components of the generated image (note we need to
@@ -43,7 +41,8 @@ def get_key_image(deck, key, state):
 
     # Recombine the B, G and R elements in the order the display expects them,
     # and convert the resulting image to a sequence of bytes
-    return Image.merge("RGB", (b, g, r)).tobytes()
+    rgb = { "R": r, "G": g, "B": b }
+    return Image.merge("RGB", (rgb[order[0]], rgb[order[1]], rgb[order[2]])).tobytes()
 
 
 def key_change_callback(deck, key, state):
@@ -79,4 +78,5 @@ if __name__ == "__main__":
             if t is threading.currentThread():
                 continue
 
-            t.join()
+            if t.is_alive():
+                t.join()
