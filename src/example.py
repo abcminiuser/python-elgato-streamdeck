@@ -31,7 +31,7 @@ def get_key_image(deck, key, state):
 
     # Load a custom TrueType font and use it to overlay the key index, draw key
     # number onto the image
-    font = ImageFont.truetype("Assets/Roboto-Regular", 14)
+    font = ImageFont.truetype("Assets/Roboto-Regular.ttf", 14)
     draw = ImageDraw.Draw(image)
     draw.text((10, height - 20), text="Key {}".format(key), font=font, fill=(255, 255, 255, 128))
 
