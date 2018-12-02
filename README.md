@@ -65,6 +65,10 @@ sudo apt install -y git
 git clone https://github.com/abcminiuser/python-elgato-streamdeck.git
 ```
 
+Note that after adding the `udev` rule, a restart will be required in order for
+it to take effect and allow access to the StreamDeck device without requiring
+root privileges.
+
 ## License:
 
 Released under the MIT license:
