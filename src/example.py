@@ -41,7 +41,7 @@ def get_key_image(deck, key, state):
 
     # Recombine the B, G and R elements in the order the display expects them,
     # and convert the resulting image to a sequence of bytes
-    rgb = { "R": r, "G": g, "B": b }
+    rgb = {"R": r, "G": g, "B": b}
     return Image.merge("RGB", (rgb[order[0]], rgb[order[1]], rgb[order[2]])).tobytes()
 
 
