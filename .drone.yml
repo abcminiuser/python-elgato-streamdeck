@@ -1,0 +1,13 @@
+kind: pipeline
+name: Build Tests
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+- name: Flake8
+  image: abcminiuser/docker-ci-python:latest
+  pull: always
+  commands:
+  - flake8 --ignore E501 src/
