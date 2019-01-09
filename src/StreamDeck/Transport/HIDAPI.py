@@ -35,7 +35,7 @@ class HIDAPI(object):
             """
             try:
                 self.hid.close()
-            except:
+            except Exception:
                 pass
 
         def open(self):

@@ -87,7 +87,7 @@ class StreamDeck(object):
             self._setup_reader(None)
 
             self.device.close()
-        except:
+        except Exception:
             pass
 
     def _read(self):
