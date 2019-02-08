@@ -113,7 +113,7 @@ if __name__ == "__main__":
         deck.reset()
 
         deck.set_brightness(30)
-		
+
         print("Deck at index {} has ID {}.\nIt is a {} with {} keys.\n".format(deck_count, deck.id(), deck.deck_type(), deck.key_count()), flush=True)
 
         # Set initial key images
@@ -123,7 +123,7 @@ if __name__ == "__main__":
         # Register callback function for when a key state changes
         deck.set_key_callback(key_change_callback)
 
-        deck_count+=1
+        deck_count += 1
 
         # Wait until all application threads have terminated (for this example,
         # this is when all deck handles are closed)

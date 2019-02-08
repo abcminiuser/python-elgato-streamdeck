@@ -51,13 +51,13 @@ class DeviceManager(object):
         :rtype: list(StreamDeck)
         :return: list of :class:`StreamDeck` instances, one for each detected device.
         """
-		
+
         streamdeck_devices = self.transport.enumerate(
             vid=self.USB_VID_ELGATO, pid=self.USB_PID_STREAMDECK)
         streamdeckmini_devices = self.transport.enumerate(
             vid=self.USB_VID_ELGATO, pid=self.USB_PID_STREAMDECKMINI)
 
-        return ([StreamDeck(d) for d in streamdeck_devices],[StreamDeckMini(m) for m in streamdeckmini_devices])
+        return ([StreamDeck(d) for d in streamdeck_devices], [StreamDeckMini(m) for m in streamdeckmini_devices])
 
 
 class StreamDeck(object):
@@ -75,7 +75,7 @@ class StreamDeck(object):
     KEY_PIXEL_ORDER = "BGR"
 
     KEY_IMAGE_SIZE = KEY_PIXEL_WIDTH * KEY_PIXEL_HEIGHT * KEY_PIXEL_DEPTH
-	
+
     DECK_TYPE = "Stream Deck (Original)"
 
     def __init__(self, device):
@@ -353,16 +353,17 @@ class StreamDeck(object):
         """
         return self.last_key_states
 
+
 class StreamDeckMini(StreamDeck):
     """
     Represents a physically attached StreamDeck Mini device (USB_PID 0x0063).
-	
-	.. note:: The communication protocol for the Stream Deck Mini differs in 
-              several ways from that used by the original Stream Deck.  This 
-              currently prevents the button images on the mini from being updated, 
+
+    .. note:: The communication protocol for the Stream Deck Mini differs in
+              several ways from that used by the original Stream Deck.  This
+              currently prevents the button images on the mini from being updated,
               but this example will recognize the device and register keypresses.
     """
-	
+
     KEY_COUNT = 6
     KEY_COLS = 3
     KEY_ROWS = 2
@@ -373,8 +374,7 @@ class StreamDeckMini(StreamDeck):
     KEY_PIXEL_ORDER = "BGR"
 
     KEY_IMAGE_SIZE = KEY_PIXEL_WIDTH * KEY_PIXEL_HEIGHT * KEY_PIXEL_DEPTH
-	
     DECK_TYPE = "Stream Deck Mini"
-	
+
     def __init__(self, device):
         StreamDeck.__init__(self, device)
