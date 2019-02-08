@@ -100,15 +100,21 @@ def key_change_callback(deck, key, state):
 
 if __name__ == "__main__":
     manager = StreamDeck.DeviceManager()
-    decks = manager.enumerate()
+    streamdecks, minidecks = manager.enumerate()
 
-    print("Found {} Stream Decks.".format(len(decks)), flush=True)
+    print("Found {} Original Stream Decks and {} Stream Deck Minis.\n".format(len(streamdecks), len(minidecks)), flush=True)
+
+    decks = streamdecks + minidecks
+
+    deck_count = 0
 
     for deck in decks:
         deck.open()
         deck.reset()
 
         deck.set_brightness(30)
+		
+        print("Deck at index {} has ID {}.\nIt is a {} with {} keys.\n".format(deck_count, deck.id(), deck.deck_type(), deck.key_count()), flush=True)
 
         # Set initial key images
         for key in range(deck.key_count()):
@@ -116,6 +122,8 @@ if __name__ == "__main__":
 
         # Register callback function for when a key state changes
         deck.set_key_callback(key_change_callback)
+
+        deck_count+=1
 
         # Wait until all application threads have terminated (for this example,
         # this is when all deck handles are closed)

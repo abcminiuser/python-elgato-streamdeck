@@ -17,6 +17,7 @@ class DeviceManager(object):
 
     USB_VID_ELGATO = 0x0fd9
     USB_PID_STREAMDECK = 0x0060
+    USB_PID_STREAMDECKMINI = 0x0063
 
     @staticmethod
     def _get_transport(transport):
@@ -50,15 +51,18 @@ class DeviceManager(object):
         :rtype: list(StreamDeck)
         :return: list of :class:`StreamDeck` instances, one for each detected device.
         """
-
-        deck_devices = self.transport.enumerate(
+		
+        streamdeck_devices = self.transport.enumerate(
             vid=self.USB_VID_ELGATO, pid=self.USB_PID_STREAMDECK)
-        return [StreamDeck(d) for d in deck_devices]
+        streamdeckmini_devices = self.transport.enumerate(
+            vid=self.USB_VID_ELGATO, pid=self.USB_PID_STREAMDECKMINI)
+
+        return ([StreamDeck(d) for d in streamdeck_devices],[StreamDeckMini(m) for m in streamdeckmini_devices])
 
 
 class StreamDeck(object):
     """
-    Represents a physically attached StreamDeck device.
+    Represents a physically attached original StreamDeck device.  (USB_PID 0x0060)
     """
 
     KEY_COUNT = 15
@@ -71,6 +75,8 @@ class StreamDeck(object):
     KEY_PIXEL_ORDER = "BGR"
 
     KEY_IMAGE_SIZE = KEY_PIXEL_WIDTH * KEY_PIXEL_HEIGHT * KEY_PIXEL_DEPTH
+	
+    DECK_TYPE = "Stream Deck (Original)"
 
     def __init__(self, device):
         self.device = device
@@ -179,6 +185,15 @@ class StreamDeck(object):
         :return: Number of physical buttons.
         """
         return self.KEY_COUNT
+
+    def deck_type(self):
+        """
+        Retrieves the model of Stream Deck.
+
+        :rtype: str
+        :return: Text corresponding to the specific type of the device.
+        """
+        return self.DECK_TYPE
 
     def key_layout(self):
         """
@@ -337,3 +352,29 @@ class StreamDeck(object):
                  `False` otherwise).
         """
         return self.last_key_states
+
+class StreamDeckMini(StreamDeck):
+    """
+    Represents a physically attached StreamDeck Mini device (USB_PID 0x0063).
+	
+	.. note:: The communication protocol for the Stream Deck Mini differs in 
+              several ways from that used by the original Stream Deck.  This 
+              currently prevents the button images on the mini from being updated, 
+              but this example will recognize the device and register keypresses.
+    """
+	
+    KEY_COUNT = 6
+    KEY_COLS = 3
+    KEY_ROWS = 2
+
+    KEY_PIXEL_WIDTH = 72
+    KEY_PIXEL_HEIGHT = 72
+    KEY_PIXEL_DEPTH = 3
+    KEY_PIXEL_ORDER = "BGR"
+
+    KEY_IMAGE_SIZE = KEY_PIXEL_WIDTH * KEY_PIXEL_HEIGHT * KEY_PIXEL_DEPTH
+	
+    DECK_TYPE = "Stream Deck Mini"
+	
+    def __init__(self, device):
+        StreamDeck.__init__(self, device)
