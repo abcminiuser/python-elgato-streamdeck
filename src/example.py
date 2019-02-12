@@ -53,7 +53,7 @@ def get_key_style(deck, key, state):
 
     if key == exit_key_index:
         name = "exit"
-        icon = "Assets/{}.png".format("Exit" if state else "Exit") # Dummy condition for alt state
+        icon = "Assets/{}.png".format("Exit" if state else "Exit")  # Dummy condition for alt state
         text = "Bye" if state else "Exit"
     else:
         name = "emoji"
@@ -125,7 +125,7 @@ if __name__ == "__main__":
         # Diagnostic output
         print("Deck at index {} has ID {}.\nIt is a {} with {} keys.".format(deck_count, deck.id(), deck.deck_type(), deck.key_count()), flush=True)
         print("Acceptable image upload format for this device is {}x{} pixels with a depth of {}, in {} order.".format(deck.key_image_format()['width'], deck.key_image_format()['height'], deck.key_image_format()['depth'], deck.key_image_format()['order']))
-        rotating = ", but will rotate them by {} degrees".format(deck.key_image_format()['rotation']) if deck.key_image_format()['rotation']!=0 else ""
+        rotating = ", but will rotate them by {} degrees".format(deck.key_image_format()['rotation']) if deck.key_image_format()['rotation'] != 0 else ""
         flipverb = "will" if deck.key_image_format()['flip'] else "will not"
         print("Device expects that software {} flip the images before uploading{}.\n".format(flipverb, rotating))
 
