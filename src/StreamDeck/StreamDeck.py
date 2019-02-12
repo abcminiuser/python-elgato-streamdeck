@@ -73,9 +73,13 @@ class StreamDeck(object):
     KEY_PIXEL_HEIGHT = 72
     KEY_PIXEL_DEPTH = 3
     KEY_PIXEL_ORDER = "BGR"
+    KEY_FLIPPED = True
+    KEY_ROTATION = 0
 
     KEY_IMAGE_SIZE = KEY_PIXEL_WIDTH * KEY_PIXEL_HEIGHT * KEY_PIXEL_DEPTH
 
+    START_PAGE = 1
+    REPORT_LENGTH = 8191
     DECK_TYPE = "Stream Deck (Original)"
 
     def __init__(self, device):
@@ -221,6 +225,8 @@ class StreamDeck(object):
             "height": self.KEY_PIXEL_HEIGHT,
             "depth": self.KEY_PIXEL_DEPTH,
             "order": self.KEY_PIXEL_ORDER,
+            "flip": self.KEY_FLIPPED,
+            "rotation": self.KEY_ROTATION,
         }
 
     def reset(self):
@@ -372,6 +378,8 @@ class StreamDeckMini(StreamDeck):
     KEY_PIXEL_HEIGHT = 80
     KEY_PIXEL_DEPTH = 3
     KEY_PIXEL_ORDER = "BGR"
+    KEY_FLIPPED = False
+    KEY_ROTATION = 90
 
     START_PAGE = 0          # Mini pages are 0 indexed, not 1
     REPORT_LENGTH = 1024    # Mini has a much smaller report size
