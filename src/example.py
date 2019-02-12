@@ -14,7 +14,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 # Generates a custom tile with run-time generated text and custom image via the
 # PIL module.
-def render_key_image(width, height, rgb_order, icon_filename, label_text):
+def render_key_image(width, height, rgb_order, icon_filename, label_text, flip, rotate):
     # Create new key image of the correct dimensions, black background
     image = Image.new("RGB", (width, height), 'black')
 
@@ -30,9 +30,17 @@ def render_key_image(width, height, rgb_order, icon_filename, label_text):
     draw = ImageDraw.Draw(image)
     draw.text((10, height - 20), text=label_text, font=font, fill=(255, 255, 255, 128))
 
-    # Get the raw r, g and b components of the generated image (note we need to
-    # flip it horizontally to match the format the StreamDeck expects)
-    r, g, b = image.transpose(Image.FLIP_LEFT_RIGHT).split()
+    if rotate:
+        # StreamDeck Mini sends images in a different orientation than the original.
+        image = image.rotate(90)
+
+    #Get the raw r, g and b components of the generated image 
+    if flip:
+        # Flip image horizontally to match the format the (original) StreamDeck expects
+        r, g, b = image.transpose(Image.FLIP_LEFT_RIGHT).split()
+    else:
+        r, g, b = image.split()
+
 
     # Recombine the B, G and R elements in the order the display expects them,
     # and convert the resulting image to a sequence of bytes
@@ -69,8 +77,15 @@ def update_key_image(deck, key, state):
     # Determine what icon and label to use on the generated key
     style = get_key_style(deck, key, state)
 
+    if deck.deck_type() == "Stream Deck (Original)":
+        flip = True
+        rotate = False
+    else:   # Stream Deck Mini
+        flip = False
+        rotate = True
+
     # Generate the custom key with the requested image and label
-    image = render_key_image(width, height, rgb_order, style["icon"], style["label"])
+    image = render_key_image(width, height, rgb_order, style["icon"], style["label"], flip, rotate)
 
     # Update requested key with the generated image
     deck.set_key_image(key, image)
