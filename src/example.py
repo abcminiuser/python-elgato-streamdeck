@@ -34,13 +34,12 @@ def render_key_image(width, height, rgb_order, icon_filename, label_text, flip, 
         # StreamDeck Mini sends images in a different orientation than the original.
         image = image.rotate(90)
 
-    #Get the raw r, g and b components of the generated image 
+    # Get the raw r, g and b components of the generated image
     if flip:
         # Flip image horizontally to match the format the (original) StreamDeck expects
         r, g, b = image.transpose(Image.FLIP_LEFT_RIGHT).split()
     else:
         r, g, b = image.split()
-
 
     # Recombine the B, G and R elements in the order the display expects them,
     # and convert the resulting image to a sequence of bytes
