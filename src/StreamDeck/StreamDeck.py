@@ -427,16 +427,25 @@ class StreamDeckMini(StreamDeck):
         pages = (remaining_bytes // IMAGE_BYTES_FOLLOWUP_PAGES) + (leftovers != 0) # Full pages + leftover partial page if any
         last_slice_end = IMAGE_BYTES_FIRST_PAGE
 
-        print( "Generating Payload.  Report Lengths: First={}, Followup={}, Final={}".format(IMAGE_BYTES_FIRST_PAGE, IMAGE_BYTES_FOLLOWUP_PAGES, (remaining_bytes % IMAGE_BYTES_FOLLOWUP_PAGES) ) )
+        #print( "\n\nGenerating reports.\n\nLengths: Payload={}, First={}, Followup={}, Final={}".format(len(image), IMAGE_BYTES_FIRST_PAGE, IMAGE_BYTES_FOLLOWUP_PAGES, (remaining_bytes % IMAGE_BYTES_FOLLOWUP_PAGES) ) )
 
+        # Generate first report
         payload_first = bytes(header_1) + bytes(bmp_header) + image[: IMAGE_BYTES_FIRST_PAGE]
-        print( "Payload 1 Length: {}\n".format( len(payload_1) ) )
+        #print( "Payload {} length: {} | header {} + bytes 0 to {}\n".format(self.START_PAGE, len(payload_first), len(header_1)+len(bmp_header), IMAGE_BYTES_FIRST_PAGE) )
         self.device.write(payload_first)
 
-        for report_page in (range(self.START_PAGE+1, pages-1)):
+        # Generate followup reports
+        for report_page in (range(self.START_PAGE+1, pages)):
             header_followup = [
                 0x02, 0x01, report_page, 0x00, 0x01, key + 1, 0x00, 0x00,
                 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 ]
-            payload_next = bytes(header_followup) + image[last_slice_end:(last_slice_end+IMAGE_BYTES_FOLLOWUP_PAGES)]
-            last_slice_end += IMAGE_BYTES_FOLLOWUP_PAGES
+
+            if (report_page == pages-1) and (leftovers != 0):
+                payload_end = last_slice_end + leftovers
+            else:
+                payload_end = last_slice_end + IMAGE_BYTES_FOLLOWUP_PAGES
+
+            payload_next = bytes(header_followup) + image[last_slice_end:payload_end]
+            #print("\n\nReport {} length: {} | header {} + bytes {} to {}".format(report_page, len(payload_next), len(header_followup), last_slice_end, payload_end))
+            last_slice_end = payload_end
             self.device.write(payload_next)
