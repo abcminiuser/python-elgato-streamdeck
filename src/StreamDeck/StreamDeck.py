@@ -368,13 +368,75 @@ class StreamDeckMini(StreamDeck):
     KEY_COLS = 3
     KEY_ROWS = 2
 
-    KEY_PIXEL_WIDTH = 72
-    KEY_PIXEL_HEIGHT = 72
+    KEY_PIXEL_WIDTH = 80
+    KEY_PIXEL_HEIGHT = 80
     KEY_PIXEL_DEPTH = 3
     KEY_PIXEL_ORDER = "BGR"
+
+    START_PAGE = 0
+    REPORT_LENGTH = 1024
 
     KEY_IMAGE_SIZE = KEY_PIXEL_WIDTH * KEY_PIXEL_HEIGHT * KEY_PIXEL_DEPTH
     DECK_TYPE = "Stream Deck Mini"
 
     def __init__(self, device):
         StreamDeck.__init__(self, device)
+
+    def set_key_image(self, key, image):
+        """
+        Sets the image of a button on the StremDeck to the given image. The
+        image being set should be in the correct format for the device, as an
+        enumerable collection of pixels.
+
+        .. seealso:: See :func:`~StreamDeck.get_key_image_format` method for
+                     information on the image format accepted by the device.
+
+        :param int key: Index of the button whose image is to be updated.
+        :param enumerable image: Pixel data of the image to set on the button.
+                                 If `None`, the key will be cleared to a black
+                                 color.
+        """
+
+        image = bytes(image or self.KEY_IMAGE_SIZE)
+
+        if min(max(key, 0), self.KEY_COUNT) != key:
+            raise IndexError("Invalid key index {}.".format(key))
+
+        if len(image) != self.KEY_IMAGE_SIZE:
+            raise ValueError("Invalid image size {}.".format(len(image)))
+
+        header_1 = [
+            0x02, 0x01, self.START_PAGE, 0x00, 0x00, key + 1, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 ]
+
+        bmp_header = [
+            0x42, 0x4d, 0xf6, 0x3c, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x36, 0x00, 0x00, 0x00, 0x28, 0x00,
+            0x00, 0x00, 0x48, 0x00, 0x00, 0x00, 0x48, 0x00,
+            0x00, 0x00, 0x01, 0x00, 0x18, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0xc0, 0x3c, 0x00, 0x00, 0xc4, 0x0e,
+            0x00, 0x00, 0xc4, 0x0e, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00 ]
+
+        # Lengths remaining after headers are added
+        IMAGE_BYTES_FIRST_PAGE = self.REPORT_LENGTH - len(header_1) - len(bmp_header)
+        IMAGE_BYTES_FOLLOWUP_PAGES = self.REPORT_LENGTH - len(header_1)
+
+        remaining_bytes = len(image) - IMAGE_BYTES_FIRST_PAGE
+        leftovers = remaining_bytes % IMAGE_BYTES_FOLLOWUP_PAGES
+        pages = (remaining_bytes // IMAGE_BYTES_FOLLOWUP_PAGES) + (leftovers != 0) # Full pages + leftover partial page if any
+        last_slice_end = IMAGE_BYTES_FIRST_PAGE
+
+        print( "Generating Payload.  Report Lengths: First={}, Followup={}, Final={}".format(IMAGE_BYTES_FIRST_PAGE, IMAGE_BYTES_FOLLOWUP_PAGES, (remaining_bytes % IMAGE_BYTES_FOLLOWUP_PAGES) ) )
+
+        payload_first = bytes(header_1) + bytes(bmp_header) + image[: IMAGE_BYTES_FIRST_PAGE]
+        print( "Payload 1 Length: {}\n".format( len(payload_1) ) )
+        self.device.write(payload_first)
+
+        for report_page in (range(self.START_PAGE+1, pages-1)):
+            header_followup = [
+                0x02, 0x01, report_page, 0x00, 0x01, key + 1, 0x00, 0x00,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 ]
+            payload_next = bytes(header_followup) + image[last_slice_end:(last_slice_end+IMAGE_BYTES_FOLLOWUP_PAGES)]
+            last_slice_end += IMAGE_BYTES_FOLLOWUP_PAGES
+            self.device.write(payload_next)
