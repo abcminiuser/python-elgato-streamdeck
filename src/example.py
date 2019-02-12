@@ -53,8 +53,8 @@ def get_key_style(deck, key, state):
 
     if key == exit_key_index:
         name = "exit"
-        icon = "Assets/Exit.png"
-        text = "Exit"
+        icon = "Assets/{}.png".format("Exit" if state else "Exit") # Dummy condition for alt state
+        text = "Bye" if state else "Exit"
     else:
         name = "emoji"
         icon = "Assets/{}.png".format("Pressed" if state else "Released")
@@ -110,7 +110,7 @@ if __name__ == "__main__":
     manager = StreamDeck.DeviceManager()
     streamdecks, minidecks = manager.enumerate()
 
-    print("Found {} Original Stream Decks and {} Stream Deck Minis.\n".format(len(streamdecks), len(minidecks)), flush=True)
+    print("Found {} Original Stream Deck(s) and {} Stream Deck Mini(s).\n".format(len(streamdecks), len(minidecks)), flush=True)
 
     decks = streamdecks + minidecks
 
