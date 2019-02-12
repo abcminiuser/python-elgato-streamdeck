@@ -373,8 +373,8 @@ class StreamDeckMini(StreamDeck):
     KEY_PIXEL_DEPTH = 3
     KEY_PIXEL_ORDER = "BGR"
 
-    START_PAGE = 0
-    REPORT_LENGTH = 1024
+    START_PAGE = 0          # Mini pages are 0 indexed, not 1
+    REPORT_LENGTH = 1024    # Mini has a much smaller report size
 
     KEY_IMAGE_SIZE = KEY_PIXEL_WIDTH * KEY_PIXEL_HEIGHT * KEY_PIXEL_DEPTH
     DECK_TYPE = "Stream Deck Mini"
@@ -384,7 +384,7 @@ class StreamDeckMini(StreamDeck):
 
     def set_key_image(self, key, image):
         """
-        Sets the image of a button on the StremDeck to the given image. The
+        Sets the image of a button on the StreamDeck to the given image. The
         image being set should be in the correct format for the device, as an
         enumerable collection of pixels.
 
@@ -422,26 +422,38 @@ class StreamDeckMini(StreamDeck):
         IMAGE_BYTES_FIRST_PAGE = self.REPORT_LENGTH - len(header_1) - len(bmp_header)
         IMAGE_BYTES_FOLLOWUP_PAGES = self.REPORT_LENGTH - len(header_1)
 
+        # Bytes of data to fit into pages after the first
         remaining_bytes = len(image) - IMAGE_BYTES_FIRST_PAGE
+
+        # Bytes leftover after the last full page
         leftovers = remaining_bytes % IMAGE_BYTES_FOLLOWUP_PAGES
-        pages = (remaining_bytes // IMAGE_BYTES_FOLLOWUP_PAGES) + (leftovers != 0) # Full pages + leftover partial page if any
-        last_slice_end = IMAGE_BYTES_FIRST_PAGE
+
+        # Calc number of followup pages and add leftover partial page (if any)
+        pages = (remaining_bytes // IMAGE_BYTES_FOLLOWUP_PAGES) + (leftovers != 0)
 
         # Generate first report
         payload_first = bytes(header_1) + bytes(bmp_header) + image[: IMAGE_BYTES_FIRST_PAGE]
         self.device.write(payload_first)
 
-        # Generate followup reports
-        for report_page in (range(self.START_PAGE+1, pages)):
+        # Initialize the slicing variable to the end of the first page
+        last_slice_end = IMAGE_BYTES_FIRST_PAGE
+
+        # Generate followup pages
+        for report_page in range(self.START_PAGE+1, pages):
+            # Byte 3 is page number, byte 5 indicates followup, byte 6 is keynumber to update
             header_followup = [
                 0x02, 0x01, report_page, 0x00, 0x01, key + 1, 0x00, 0x00,
                 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 ]
 
+            # Figure out where to stop pulling data from the image for this page
             if (report_page == pages-1) and (leftovers != 0):
                 payload_end = last_slice_end + leftovers
             else:
                 payload_end = last_slice_end + IMAGE_BYTES_FOLLOWUP_PAGES
 
+            # Generate followup payload
             payload_next = bytes(header_followup) + image[last_slice_end:payload_end]
-            last_slice_end = payload_end
             self.device.write(payload_next)
+
+            # Update slicing variable
+            last_slice_end = payload_end
