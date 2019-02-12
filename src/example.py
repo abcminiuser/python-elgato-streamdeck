@@ -14,7 +14,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 # Generates a custom tile with run-time generated text and custom image via the
 # PIL module.
-def render_key_image(width, height, rgb_order, icon_filename, label_text, flip, rotate):
+def render_key_image(width, height, rgb_order, icon_filename, label_text, flip, rotation):
     # Create new key image of the correct dimensions, black background
     image = Image.new("RGB", (width, height), 'black')
 
@@ -30,9 +30,8 @@ def render_key_image(width, height, rgb_order, icon_filename, label_text, flip, 
     draw = ImageDraw.Draw(image)
     draw.text((10, height - 20), text=label_text, font=font, fill=(255, 255, 255, 128))
 
-    if rotate:
-        # StreamDeck Mini sends images in a different orientation than the original.
-        image = image.rotate(90)
+    # StreamDeck Mini sends images in a different orientation than the original.
+    image = image.rotate(rotation)
 
     # Get the raw r, g and b components of the generated image
     if flip:
@@ -72,19 +71,14 @@ def update_key_image(deck, key, state):
     width = image_format['width']
     height = image_format['height']
     rgb_order = image_format['order']
+    flip = image_format['flip']
+    rotation = image_format['rotation']
 
     # Determine what icon and label to use on the generated key
     style = get_key_style(deck, key, state)
 
-    if deck.deck_type() == "Stream Deck (Original)":
-        flip = True
-        rotate = False
-    else:   # Stream Deck Mini
-        flip = False
-        rotate = True
-
     # Generate the custom key with the requested image and label
-    image = render_key_image(width, height, rgb_order, style["icon"], style["label"], flip, rotate)
+    image = render_key_image(width, height, rgb_order, style["icon"], style["label"], flip, rotation)
 
     # Update requested key with the generated image
     deck.set_key_image(key, image)
@@ -128,7 +122,12 @@ if __name__ == "__main__":
 
         deck.set_brightness(30)
 
-        print("Deck at index {} has ID {}.\nIt is a {} with {} keys.\n".format(deck_count, deck.id(), deck.deck_type(), deck.key_count()), flush=True)
+        # Diagnostic output
+        print("Deck at index {} has ID {}.\nIt is a {} with {} keys.".format(deck_count, deck.id(), deck.deck_type(), deck.key_count()), flush=True)
+        print("Acceptable image upload format for this device is {}x{} pixels with a depth of {}, in {} order.".format(deck.key_image_format()['width'], deck.key_image_format()['height'], deck.key_image_format()['depth'], deck.key_image_format()['order']))
+        rotating = ", but will rotate them by {} degrees".format(deck.key_image_format()['rotation']) if deck.key_image_format()['rotation']!=0 else ""
+        flipverb = "will" if deck.key_image_format()['flip'] else "will not"
+        print("Device expects that software {} flip the images before uploading{}.\n".format(flipverb, rotating))
 
         # Set initial key images
         for key in range(deck.key_count()):
