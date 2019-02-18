@@ -9,8 +9,6 @@
 
 from .Transport import Transport
 
-import hid
-
 
 class HIDAPI(Transport):
     """
@@ -27,6 +25,8 @@ class HIDAPI(Transport):
             :param dict() device_info: Device information dictionary describing
                                        a single unique attached USB HID device.
             """
+            import hid
+
             self.hid_info = device_info
             self.hid = hid.device()
 
@@ -67,6 +67,8 @@ class HIDAPI(Transport):
             :rtype: bool
             :return: `True` if the device is still connected, `False` otherwise.
             """
+            import hid
+
             devices = hid.enumerate()
             return any([d['path'] == self.hid_info['path'] for d in devices])
 
@@ -141,6 +143,7 @@ class HIDAPI(Transport):
         if pid is None:
             pid = 0
 
+        import hid
         devices = hid.enumerate(vendor_id=vid, product_id=pid)
 
         return [HIDAPI.Device(d) for d in devices]
