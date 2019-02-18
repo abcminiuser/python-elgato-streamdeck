@@ -62,7 +62,7 @@ class DeviceManager(object):
 
 class StreamDeck(object):
     """
-    Represents a physically attached original StreamDeck device.  (USB_PID 0x0060)
+    Represents a physically attached original StreamDeck device.
     """
 
     KEY_COUNT = 15
@@ -362,12 +362,7 @@ class StreamDeck(object):
 
 class StreamDeckMini(StreamDeck):
     """
-    Represents a physically attached StreamDeck Mini device (USB_PID 0x0063).
-
-    .. note:: The communication protocol for the Stream Deck Mini differs in
-              several ways from that used by the original Stream Deck.  This
-              currently prevents the button images on the mini from being updated,
-              but this example will recognize the device and register keypresses.
+    Represents a physically attached StreamDeck Mini device.
     """
 
     KEY_COUNT = 6
