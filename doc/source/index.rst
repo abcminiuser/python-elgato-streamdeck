@@ -71,8 +71,21 @@ this software.
    :caption: Contents:
 
 .. automodule:: StreamDeck
+
+.. automodule:: StreamDeck.DeviceManager
    :members:
 
-.. automodule:: Transport.HIDAPI
+.. automodule:: StreamDeck.Devices.StreamDeck
    :members:
 
+.. automodule:: StreamDeck.Devices.StreamDeckOriginal
+   :members:
+
+.. automodule:: StreamDeck.Devices.StreamDeckMini
+   :members:
+
+.. automodule:: StreamDeck.Transport.Transport
+   :members:
+
+.. automodule:: StreamDeck.Transport.HIDAPI
+   :members:

@@ -19,7 +19,7 @@
 #
 import os
 import sys
-sys.path.insert(0, os.path.abspath('../../src/StreamDeck'))
+sys.path.insert(0, os.path.abspath('../../src/'))
 
 
 # -- General configuration ------------------------------------------------
@@ -47,7 +47,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'python-elgato-streamdeck'
-copyright = '2018, Dean Camera'
+copyright = '2019, Dean Camera'
 author = 'Dean Camera'
 
 # The version info for the project you're documenting, acts as replacement for

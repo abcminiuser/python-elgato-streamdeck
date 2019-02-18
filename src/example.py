@@ -7,7 +7,7 @@
 #         www.fourwalledcubicle.com
 #
 
-import StreamDeck.StreamDeck as StreamDeck
+import StreamDeck.DeviceManager as StreamDeck
 import threading
 from PIL import Image, ImageDraw, ImageFont
 
