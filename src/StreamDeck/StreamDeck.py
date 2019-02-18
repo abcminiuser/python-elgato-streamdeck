@@ -110,7 +110,7 @@ class StreamDeck(object):
             payload = []
 
             try:
-                payload = self.device.read(17)
+                payload = self.device.read(1 + self.KEY_COUNT)
             except ValueError:
                 self.read_thread_run = False
 
