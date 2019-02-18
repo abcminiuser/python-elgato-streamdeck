@@ -30,15 +30,20 @@ def render_key_image(width, height, rgb_order, icon_filename, label_text, flip, 
     draw = ImageDraw.Draw(image)
     draw.text((10, height - 20), text=label_text, font=font, fill=(255, 255, 255, 128))
 
-    # StreamDeck Mini sends images in a different orientation than the original.
-    image = image.rotate(rotation)
+    # Rptate the image if required for the current StreamDeck
+    if rotation:
+        image = image.rotate(rotation)
+
+    # Flip image horizontally if required for the current StreamDeck
+    if flip[0]:
+        image = image.transpose(Image.FLIP_LEFT_RIGHT)
+
+    # Flip image vertically if required for the current StreamDeck
+    if flip[1]:
+        image = image.transpose(Image.FLIP_TOP_BOTTOM)
 
     # Get the raw r, g and b components of the generated image
-    if flip:
-        # Flip image horizontally to match the format the (original) StreamDeck expects
-        r, g, b = image.transpose(Image.FLIP_LEFT_RIGHT).split()
-    else:
-        r, g, b = image.split()
+    r, g, b = image.split()
 
     # Recombine the B, G and R elements in the order the display expects them,
     # and convert the resulting image to a sequence of bytes
@@ -53,7 +58,7 @@ def get_key_style(deck, key, state):
 
     if key == exit_key_index:
         name = "exit"
-        icon = "Assets/{}.png".format("Exit" if state else "Exit")  # Dummy condition for alt state
+        icon = "Assets/{}.png".format("Exit")
         text = "Bye" if state else "Exit"
     else:
         name = "emoji"
@@ -114,20 +119,29 @@ if __name__ == "__main__":
 
     decks = streamdecks + minidecks
 
-    deck_count = 0
-
-    for deck in decks:
+    for index, deck in enumerate(decks):
         deck.open()
         deck.reset()
 
+        # Reduce backlight brightness to 30%
         deck.set_brightness(30)
 
-        # Diagnostic output
-        print("Deck at index {} has ID {}.\nIt is a {} with {} keys.".format(deck_count, deck.id(), deck.deck_type(), deck.key_count()), flush=True)
-        print("Acceptable image upload format for this device is {}x{} pixels with a depth of {}, in {} order.".format(deck.key_image_format()['width'], deck.key_image_format()['height'], deck.key_image_format()['depth'], deck.key_image_format()['order']))
-        rotating = ", but will rotate them by {} degrees".format(deck.key_image_format()['rotation']) if deck.key_image_format()['rotation'] != 0 else ""
-        flipverb = "will" if deck.key_image_format()['flip'] else "will not"
-        print("Device expects that software {} flip the images before uploading{}.\n".format(flipverb, rotating))
+        # Print diagnostic information about each StrewmDeck
+        image_format = deck.key_image_format()
+        flip_description = {
+            (False, False): "Not Mirrored",
+            (True, False): "Mirrored Horizontally",
+            (False, True): "Mirrored Vertically",
+            (True, True): "Mirrored Horizontally/Vertically",
+        }
+        print("Deck {} - {}.".format(index, deck.deck_type()), flush=True)
+        print("\t - ID: {}".format(deck.id()), flush=True)
+        print("\t - Key Count: {}".format(deck.key_count()), flush=True)
+        print("\t - Key Image Format: {}x{} pixels, {} order, {} degrees rotated, {}".format(
+            image_format['width'], image_format['height'],
+            image_format['order'],
+            image_format['rotation'],
+            flip_description[image_format['flip']]), flush=True)
 
         # Set initial key images
         for key in range(deck.key_count()):
@@ -135,8 +149,6 @@ if __name__ == "__main__":
 
         # Register callback function for when a key state changes
         deck.set_key_callback(key_change_callback)
-
-        deck_count += 1
 
         # Wait until all application threads have terminated (for this example,
         # this is when all deck handles are closed)

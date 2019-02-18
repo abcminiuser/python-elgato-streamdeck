@@ -73,7 +73,7 @@ class StreamDeck(object):
     KEY_PIXEL_HEIGHT = 72
     KEY_PIXEL_DEPTH = 3
     KEY_PIXEL_ORDER = "BGR"
-    KEY_FLIPPED = True
+    KEY_FLIP = (True, False)
     KEY_ROTATION = 0
 
     KEY_IMAGE_SIZE = KEY_PIXEL_WIDTH * KEY_PIXEL_HEIGHT * KEY_PIXEL_DEPTH
@@ -218,14 +218,15 @@ class StreamDeck(object):
 
         :rtype: dict()
         :return: Dictionary describing the various image parameters
-                 (width, height, pixel depth and RGB order).
+                 (width, height, pixel depth, RGB order, mirroring and
+                 rotation).
         """
         return {
             "width": self.KEY_PIXEL_WIDTH,
             "height": self.KEY_PIXEL_HEIGHT,
             "depth": self.KEY_PIXEL_DEPTH,
             "order": self.KEY_PIXEL_ORDER,
-            "flip": self.KEY_FLIPPED,
+            "flip": self.KEY_FLIP,
             "rotation": self.KEY_ROTATION,
         }
 
@@ -373,7 +374,7 @@ class StreamDeckMini(StreamDeck):
     KEY_PIXEL_HEIGHT = 80
     KEY_PIXEL_DEPTH = 3
     KEY_PIXEL_ORDER = "BGR"
-    KEY_FLIPPED = False
+    KEY_FLIP = (False, False)
     KEY_ROTATION = 90
 
     START_PAGE = 0          # Mini pages are 0 indexed, not 1
