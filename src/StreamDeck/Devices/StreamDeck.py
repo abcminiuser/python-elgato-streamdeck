@@ -60,7 +60,7 @@ class StreamDeck(ABC):
             except ValueError:
                 self.read_thread_run = False
 
-            if len(payload):
+            if payload:
                 new_key_states = [bool(s) for s in payload[1:]]
 
                 if self.key_callback is not None:

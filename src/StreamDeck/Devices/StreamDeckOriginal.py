@@ -49,7 +49,7 @@ class StreamDeckOriginal(StreamDeck):
                                   or normalized to [0.0-1.0] as a `float`.
         """
 
-        if type(percent) is float:
+        if isinstance(percent, float):
             percent = int(100.0 * percent)
 
         percent = min(max(percent, 0), 100)

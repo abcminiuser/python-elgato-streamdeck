@@ -11,7 +11,7 @@ from .Devices.StreamDeckMini import StreamDeckMini
 from .Transport.HIDAPI import HIDAPI
 
 
-class DeviceManager(object):
+class DeviceManager:
     """
     Central device manager, to enumerate any attached StreamDeck devices. An
     instance of this class must be created in order to detect and use any
@@ -35,8 +35,8 @@ class DeviceManager(object):
         """
         if transport == "hidapi":
             return HIDAPI()
-        else:
-            raise IOError("Invalid HID transport backend \"{}\".".format(transport))
+
+        raise IOError("Invalid HID transport backend \"{}\".".format(transport))
 
     def __init__(self, transport="hidapi"):
         """
