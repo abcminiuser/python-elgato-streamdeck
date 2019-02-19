@@ -7,10 +7,14 @@
 #         www.fourwalledcubicle.com
 #
 
+import logging
+
 import StreamDeck.DeviceManager as StreamDeck
 
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO)
+
     manager = StreamDeck.DeviceManager(transport="dummy")
     streamdecks = manager.enumerate()
 
