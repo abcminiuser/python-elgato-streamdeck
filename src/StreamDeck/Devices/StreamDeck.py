@@ -43,7 +43,7 @@ class StreamDeck(ABC):
             self._setup_reader(None)
 
             self.device.close()
-        except Exception:
+        except (IOError, ValueError):
             pass
 
     def _read(self):
@@ -57,7 +57,7 @@ class StreamDeck(ABC):
 
             try:
                 payload = self.device.read(1 + self.KEY_COUNT)
-            except ValueError:
+            except (IOError, ValueError):
                 self.read_thread_run = False
 
             if payload:

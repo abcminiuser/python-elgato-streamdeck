@@ -37,7 +37,7 @@ class HIDAPI(Transport):
             """
             try:
                 self.hid.close()
-            except Exception:
+            except (IOError, ValueError):
                 pass
 
         def open(self):
