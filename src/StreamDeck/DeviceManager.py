@@ -7,6 +7,7 @@
 
 from .Devices.StreamDeckOriginal import StreamDeckOriginal
 from .Devices.StreamDeckMini import StreamDeckMini
+from .Transport.Dummy import Dummy
 from .Transport.HIDAPI import HIDAPI
 
 
@@ -32,7 +33,9 @@ class DeviceManager:
         :rtype: Transport.* instance
         :return: Instance of a HID Transport class
         """
-        if transport == "hidapi":
+        if transport == "dummy":
+            return Dummy()
+        elif transport == "hidapi":
             return HIDAPI()
 
         raise IOError("Invalid HID transport backend \"{}\".".format(transport))
