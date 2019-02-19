@@ -13,7 +13,7 @@ I've used the reverse engineering notes from
 [this GitHub](https://github.com/Lange/node-elgato-stream-deck/blob/master/NOTES.md)
 repository to implement this library. Thanks Alex Van Camp!
 
-Initial StreamDeck Mini support added by Aetherdyne (https://github.com/Aetherdyne).
+Initial StreamDeck Mini support added by [Aetherdyne](https://github.com/Aetherdyne).
 
 ## Status:
 
