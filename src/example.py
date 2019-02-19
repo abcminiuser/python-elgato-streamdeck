@@ -30,7 +30,7 @@ def render_key_image(width, height, rgb_order, icon_filename, label_text, flip, 
     draw = ImageDraw.Draw(image)
     draw.text((10, height - 20), text=label_text, font=font, fill=(255, 255, 255, 128))
 
-    # Rptate the image if required for the current StreamDeck
+    # Rotate the image if required for the current StreamDeck
     if rotation:
         image = image.rotate(rotation)
 
