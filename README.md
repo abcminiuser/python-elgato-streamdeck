@@ -18,6 +18,8 @@ repository to implement this library. Thanks Alex Van Camp!
 Working - you can enumerate devices, set the brightness of the panel(s), set
 the images shown on each button, and read the current button states.
 
+Currently both the StreamDeck and StreamDeck Mini products are supported.
+
 ## Dependencies:
 
 The library core has no special dependencies, but does use one of (potentially)

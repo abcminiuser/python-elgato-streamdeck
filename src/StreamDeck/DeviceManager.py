@@ -7,7 +7,6 @@
 
 from .Devices.StreamDeckOriginal import StreamDeckOriginal
 from .Devices.StreamDeckMini import StreamDeckMini
-
 from .Transport.HIDAPI import HIDAPI
 
 
@@ -54,9 +53,15 @@ class DeviceManager:
         :return: list of :class:`StreamDeck` instances, one for each detected device.
         """
 
-        streamdeck_devices = self.transport.enumerate(
-            vid=self.USB_VID_ELGATO, pid=self.USB_PID_STREAMDECK_ORIGINAL)
-        streamdeckmini_devices = self.transport.enumerate(
-            vid=self.USB_VID_ELGATO, pid=self.USB_PID_STREAMDECK_MINI)
+        products = [
+            (self.USB_VID_ELGATO, self.USB_PID_STREAMDECK_ORIGINAL, StreamDeckOriginal),
+            (self.USB_VID_ELGATO, self.USB_PID_STREAMDECK_MINI, StreamDeckMini),
+        ]
 
-        return ([StreamDeckOriginal(d) for d in streamdeck_devices], [StreamDeckMini(m) for m in streamdeckmini_devices])
+        streamdecks = list()
+
+        for vid, pid, class_type in products:
+            found_devices = self.transport.enumerate(vid=vid, pid=pid)
+            streamdecks.extend([class_type(d) for d in found_devices])
+
+        return streamdecks

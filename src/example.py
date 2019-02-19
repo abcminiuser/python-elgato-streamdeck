@@ -113,13 +113,11 @@ def key_change_callback(deck, key, state):
 
 if __name__ == "__main__":
     manager = StreamDeck.DeviceManager()
-    streamdecks, minidecks = manager.enumerate()
+    streamdecks = manager.enumerate()
 
-    print("Found {} Original Stream Deck(s) and {} Stream Deck Mini(s).\n".format(len(streamdecks), len(minidecks)), flush=True)
+    print("Found {} Stream Deck(s).\n".format(len(streamdecks)), flush=True)
 
-    decks = streamdecks + minidecks
-
-    for index, deck in enumerate(decks):
+    for index, deck in enumerate(streamdecks):
         deck.open()
         deck.reset()
 
