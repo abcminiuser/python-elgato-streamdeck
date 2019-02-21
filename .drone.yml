@@ -23,3 +23,9 @@ steps:
   pull: always
   commands:
   - bandit src/
+
+- name: Documentation
+  image: abcminiuser/docker-ci-python:latest
+  pull: always
+  commands:
+  - make -C doc html
