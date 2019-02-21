@@ -11,7 +11,7 @@ setuptools.setup(
    author_email='dean@fourwalledcubicle.com',
    url='https://github.com/abcminiuser/python-elgato-streamdeck',
    package_dir={'': 'src'},
-   packages=setuptools.find_namespace_packages(where='src'),
+   packages=setuptools.find_packages(where='src'),
    install_requires=['hidapi'],
    license="MIT",
    long_description=long_description,

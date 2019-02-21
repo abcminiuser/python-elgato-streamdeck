@@ -1,4 +1,1 @@
 hidapi==0.7.99.post21
-Sphinx==1.8.4
-sphinx-rtd-theme==0.4.3
-m2r==0.2.1
