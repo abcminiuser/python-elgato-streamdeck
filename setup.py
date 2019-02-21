@@ -5,7 +5,7 @@ with open("README.md", 'r') as f:
 
 setuptools.setup(
    name='streamdeck',
-   version='0.2',
+   version='0.2.1',
    description='Library to control Elgato StreamDeck devices.',
    author='Dean Camera',
    author_email='dean@fourwalledcubicle.com',

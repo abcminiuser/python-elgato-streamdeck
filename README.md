@@ -7,6 +7,9 @@ This is an open source Python 3 library to control an
 without the official software. This can allow you to create your own custom
 front-ends, such as a custom control front-end for home automation software.
 
+[PyPi Project Entry](https://pypi.org/project/streamdeck/)
+[Online Documentation](https://python-elgato-streamdeck.readthedocs.io)
+
 ## Credits:
 
 I've used the reverse engineering notes from
@@ -38,6 +41,19 @@ the three major (Windows, Mac, Linux) OSes.
 Installation:
 ```
 pip3 install hidapi
+```
+
+## Package Installation:
+
+Install the library via pip:
+
+```
+pip install streamdeck
+```
+
+Alternatively, manually clone the project repository:
+```
+git clone https://github.com/abcminiuser/python-elgato-streamdeck.git
 ```
 
 ## Raspberry Pi Installation:
