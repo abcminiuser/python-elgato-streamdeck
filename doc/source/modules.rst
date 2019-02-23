@@ -23,7 +23,6 @@ StreamDeck Devices
    :members:
    :show-inheritance:
 
-
 Communication Transports
 ------------------------
 
