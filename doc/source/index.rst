@@ -3,11 +3,13 @@
 .. toctree::
     :maxdepth: 2
     :numbered:
-    :titlesonly:
     :glob:
     :hidden:
 
-    modules.rst
+    modules/discovery.rst
+    modules/devices.rst
+    modules/transports.rst
+    modules/imagehelpers.rst
     example.rst
 
 Indices and tables

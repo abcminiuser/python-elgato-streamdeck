@@ -8,14 +8,13 @@
 #
 
 import logging
-
-import StreamDeck.DeviceManager as StreamDeck
+from StreamDeck.DeviceManager import DeviceManager
 
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
 
-    manager = StreamDeck.DeviceManager(transport="dummy")
+    manager = DeviceManager(transport="dummy")
     streamdecks = manager.enumerate()
 
     print("Got {} Dummy Stream Deck(s).\n".format(len(streamdecks)), flush=True)
