@@ -17,7 +17,7 @@ from PIL import Image, ImageDraw, ImageFont
 # PIL module.
 def render_key_image(deck, icon_filename, label_text):
     # Create new key image of the correct dimensions, black background
-    image = PILHelper.create_image(deck, 'black')
+    image = PILHelper.create_image(deck)
 
     # Add image overlay, rescaling the image asset if it is too large to fit the
     # requested dimensions via a high quality Lanczos scaling algorithm
@@ -91,10 +91,10 @@ def print_deck_info(deck):
     image_format = deck.key_image_format()
 
     flip_description = {
-        (False, False): "Not Mirrored",
-        (True, False): "Mirrored Horizontally",
-        (False, True): "Mirrored Vertically",
-        (True, True): "Mirrored Horizontally/Vertically",
+        (False, False): "not mirrored",
+        (True, False): "mirrored horizontally",
+        (False, True): "mirrored vertically",
+        (True, True): "mirrored horizontally/vertically",
     }
 
     print("Deck {} - {}.".format(index, deck.deck_type()), flush=True)

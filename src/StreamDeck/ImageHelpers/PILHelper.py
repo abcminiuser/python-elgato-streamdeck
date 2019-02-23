@@ -60,5 +60,4 @@ def to_native_format(deck, image):
     # Recombine the B, G and R elements in the order the display expects
     # them, and convert the resulting image to a sequence of bytes
     rgb = {"R": r, "G": g, "B": b}
-    rgb_order = image_format['order']
-    return Image.merge("RGB", (rgb[rgb_order[0]], rgb[rgb_order[1]], rgb[rgb_order[2]])).tobytes()
+    return Image.merge("RGB", [rgb[c] for c in image_format['order']]).tobytes()
