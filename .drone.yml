@@ -29,3 +29,10 @@ steps:
   pull: always
   commands:
   - make -C doc html
+
+- name: Packaging
+  image: abcminiuser/docker-ci-python:latest
+  pull: always
+  commands:
+  - python setup.py sdist bdist_wheel
+  - twine check dist/*
