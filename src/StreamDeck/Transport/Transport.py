@@ -9,33 +9,43 @@ from abc import ABC, abstractmethod
 
 
 class Transport(ABC):
+    """
+    Base transport layer, representing an abstract communication back-end which
+    can be used to discovery attached StreamDeck devices.
+    """
+
     class Device(ABC):
+        """
+        Base connection device, representing an abstract connected device which
+        can be communicated with by an upper layer high level protocol.
+        """
+
         @abstractmethod
         def open(self):
             """
-            Opens the HID device for input/output. This must be called prior to
-            sending or receiving any HID reports.
+            Opens the device for input/output. This must be called prior to
+            sending or receiving any reports.
 
-            .. seealso:: See :func:`~Transport.Device.close` for the corresponding
-                         close method.
+            .. seealso:: See :func:`~Transport.Device.close` for the
+                         corresponding close method.
             """
             pass
 
         @abstractmethod
         def close(self):
             """
-            Closes the HID device for input/output.
+            Closes the device for input/output.
 
-            .. seealso:: See :func:`~~Transport.Device.open` for the corresponding
-                         open method.
+            .. seealso:: See :func:`~~Transport.Device.open` for the
+                         corresponding open method.
             """
             pass
 
         @abstractmethod
         def connected(self):
             """
-            Indicates if the physical HID device this instance is attached to
-            is still connected to the host.
+            Indicates if the physical device object this instance is attached
+            to is still connected to the host.
 
             :rtype: bool
             :return: `True` if the device is still connected, `False` otherwise.
@@ -45,9 +55,9 @@ class Transport(ABC):
         @abstractmethod
         def path(self):
             """
-            Retrieves the logical path of the attached HID device within the
-            current system. This can be used to differentiate one HID device
-            from another.
+            Retrieves the logical path of the attached device within the
+            current system. This can be used to uniquely differentiate one
+            device from another.
 
             :rtype: str
             :return: Logical device path for the attached device.
@@ -101,7 +111,8 @@ class Transport(ABC):
     @abstractmethod
     def enumerate(self, vid, pid):
         """
-        Enumerates all available USB HID devices on the system.
+        Enumerates all available devices on the system using the current
+        transport back-end.
 
         :param int vid: USB Vendor ID to filter all devices by, `None` if the
                         device list should not be filtered by vendor.
@@ -109,6 +120,7 @@ class Transport(ABC):
                         device list should not be filtered by product.
 
         :rtype: list(Transport.Device)
-        :return: List of discovered USB HID devices.
+        :return: List of discovered devices that are available through this
+                 transport back-end.
         """
         pass
