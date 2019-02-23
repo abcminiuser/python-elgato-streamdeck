@@ -1,3 +1,4 @@
 recursive-include src/StreamDeck
-include *.md
 include src/example.py
+include *.md
+include VERSION

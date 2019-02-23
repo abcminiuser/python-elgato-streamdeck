@@ -1,11 +1,14 @@
 import setuptools
 
+with open("VERSION", 'r') as f:
+    version = f.read().strip()
+
 with open("README.md", 'r') as f:
     long_description = f.read()
 
 setuptools.setup(
    name='streamdeck',
-   version='0.2.3',
+   version=version,
    description='Library to control Elgato StreamDeck devices.',
    author='Dean Camera',
    author_email='dean@fourwalledcubicle.com',
