@@ -6,8 +6,8 @@
 #
 
 from abc import ABC, abstractmethod
-
 import threading
+from .StreamDeckFilter import StateChangedFilter
 
 
 class StreamDeck(ABC):
@@ -30,9 +30,13 @@ class StreamDeck(ABC):
 
     def __init__(self, device):
         self.device = device
-        self.last_key_states = [False] * self.KEY_COUNT
+        self.filter = [StateChangedFilter() for _ in range(self.KEY_COUNT)]
         self.read_thread = None
         self.key_callback = None
+
+    @property  # provide property last_key_states for backwards compatibility
+    def last_key_states(self):
+        return [self.filter[k]._last_cb_state for k in range(self.KEY_COUNT)]
 
     def __del__(self):
         """
@@ -64,11 +68,10 @@ class StreamDeck(ABC):
                 new_key_states = [bool(s) for s in payload[1:]]
 
                 if self.key_callback is not None:
-                    for k, (old, new) in enumerate(zip(self.last_key_states, new_key_states)):
-                        if old != new:
-                            self.key_callback(self, k, new)
-
-                self.last_key_states = new_key_states
+                    for k, (new, cbfilter) in enumerate(zip(new_key_states, self.filter)):
+                        new_state = cbfilter.map_states(new)
+                        if new_state is not None:
+                            self.key_callback(self, k, new_state)
 
     def _setup_reader(self, callback):
         """
