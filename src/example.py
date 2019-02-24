@@ -8,10 +8,18 @@
 #
 
 import threading
+import os
+from inspect import getsourcefile
 from StreamDeck.DeviceManager import DeviceManager
 from StreamDeck.ImageHelpers import PILHelper
 from PIL import Image, ImageDraw, ImageFont
 
+
+# returns absolute path to this module
+# allows to load files relative to module instead of relative to current working directory
+# i.e. module does not need to be placed in current working directory
+def ospath_to_module():
+    return os.path.dirname(getsourcefile(lambda: 0))
 
 # Generates a custom tile with run-time generated text and custom image via the
 # PIL module.
@@ -27,7 +35,7 @@ def render_key_image(deck, icon_filename, label_text):
 
     # Load a custom TrueType font and use it to overlay the key index, draw key
     # number onto the image
-    font = ImageFont.truetype("Assets/Roboto-Regular.ttf", 14)
+    font = ImageFont.truetype(os.path.join(ospath_to_module(),"Assets", "Roboto-Regular.ttf"), 14)
     draw = ImageDraw.Draw(image)
     draw.text((10, image.height - 20), text=label_text, font=font, fill=(255, 255, 255, 128))
 
@@ -41,11 +49,11 @@ def get_key_style(deck, key, state):
 
     if key == exit_key_index:
         name = "exit"
-        icon = "Assets/{}.png".format("Exit")
+        icon = os.path.join(ospath_to_module(), "Assets", "{}.png".format("Exit"))
         text = "Bye" if state else "Exit"
     else:
         name = "emoji"
-        icon = "Assets/{}.png".format("Pressed" if state else "Released")
+        icon = os.path.join(ospath_to_module(), "Assets", "{}.png".format("Pressed" if state else "Released"))
         text = "Pressed!" if state else "Key {}".format(key)
 
     return {"name": name, "icon": icon, "label": text}

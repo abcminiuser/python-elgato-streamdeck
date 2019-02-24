@@ -9,7 +9,7 @@ from .Devices.StreamDeckOriginal import StreamDeckOriginal
 from .Devices.StreamDeckMini import StreamDeckMini
 from .Transport.Dummy import Dummy
 from .Transport.HIDAPI import HIDAPI
-
+from .StreamDeckFilter import TempoFilter, StateChangedFilter, DebounceFilter
 
 class DeviceManager:
     """
