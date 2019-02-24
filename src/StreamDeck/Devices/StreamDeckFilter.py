@@ -10,7 +10,7 @@ Module StreamDeckFilter
 StreamDeckFilter is designed to modify the callback behavior of the StreamDeck class while
 hiding the internal changes to existing implementations.
 
-Generally StreamDeck invokes the Callback-Function, whenever a key-status changed, 
+Generally StreamDeck invokes the Callback-Function, whenever a key-status changed,
 i.e. a key is pressed or released. The callback can be set with deck.set_key_callback(self, callback),
 and looks like this:
     key_callback(self, k, new_state)
@@ -43,7 +43,7 @@ Extendability:
     You can simply subclass CallbackFilter (or any other of the above filter classes)
     and override CallBackFilter.map_states(self, new_state)
 
-JSON support: 
+JSON support:
     See JSONexample.py
 
 Known Bugs:
@@ -63,6 +63,7 @@ Future Development plans
 
 from time import time
 from functools import wraps
+
 
 def manage_states(f):
     """
@@ -86,7 +87,7 @@ def manage_states(f):
 
 
 class CallBackFilter(object):
-    """ 
+    """
     Serves as base for Filters that map physical states (True, False) to a different range, type of values
     Simply assign a filter to a specific key like this:  deck.filter[key] = StateChangedFilter()
     """
@@ -97,7 +98,7 @@ class CallBackFilter(object):
         self._last_key_time = time()            # time of last callback
         self._delay = 0.0                       # delay since last callback
 
-    @manage_states # register states, time and delay
+    @manage_states  # register states, time and delay
     def map_states(self, new_state):
         """
         - maps/filers pysical states(pressed=True, released=False) to before callback to client
@@ -109,9 +110,9 @@ class CallBackFilter(object):
         return new_state  # do not filter anything
 
     def json_serialize(self):
-        """ 
+        """
         Serialize only non-protected, i.e. non volatile attributes.
-        Designed to be part of json.Encoder.default(self, obj): -> add the following lines 
+        Designed to be part of json.Encoder.default(self, obj): -> add the following lines
             ...
             if isinstance(obj, CallBackFilter):
                 return obj.json_serialize()
@@ -121,22 +122,23 @@ class CallBackFilter(object):
 
     @classmethod
     def json_deserialize(cls, data_dict):
-        """ 
-        Creates obj and updates state. 
+        """
+        Creates obj and updates state.
         Add the following lines to decode a loaded object instance from native json.load to CallBackFilter
             ...
-            if isinstance(x, dict):  
+            if isinstance(x, dict):
                 key, value = next(iter(x.items()))
                 cbf_class = globals()[key]
-                return cbf_class.json_deserialize(value)  
+                return cbf_class.json_deserialize(value)
             ...
         """
-        obj = cls() # create object
+        obj = cls()  # create object
         obj.__dict__.update(data_dict)  # update native json objects
         return obj
 
+
 class StateChangedFilter(CallBackFilter):
-    """ 
+    """
     StateChangeFilter: Returns None (i.e. no callback) if stade did not change
     equals the default StreamDeck behavior
     """
@@ -147,8 +149,8 @@ class StateChangedFilter(CallBackFilter):
 
 
 class DebounceFilter(CallBackFilter):
-    """ 
-    DebounceFilter: Returns None (i.e. no callback) if stade did not change 
+    """
+    DebounceFilter: Returns None (i.e. no callback) if stade did not change
     or did already change within the last self.key_delay seconds
     - prevents chattering of keys.
     """
@@ -163,14 +165,14 @@ class DebounceFilter(CallBackFilter):
 
 
 class TempoFilter(DebounceFilter):
-    """ 
+    """
     TempoFilter: returns
     - True if key is pressed for less than tempo_delay seconds
     - False if key is pressed for more than tempo_delay seconds
     - None if key pressed for less than key_delay seconds or state did not change
     Note: In tempo mode callbacks are fired at key release time
         i.e. it results in lag/latency and is not suitable gaming keys
-        like W,A,S,D, etc.     
+        like W,A,S,D, etc.
     """
 
     def __init__(self, default_state=False, key_delay=0.003, tempo_delay=0.3):
@@ -179,10 +181,10 @@ class TempoFilter(DebounceFilter):
 
     @manage_states
     def map_states(self, new_state):
-        rv=None
+        rv = None
         if self._last_key_state != new_state and self._delay >= self.key_delay:
-            self._last_key_time = time() # we always need to register last state change and time
+            self._last_key_time = time()  # we always need to register last state change and time
             self._last_key_state = new_state
-            if new_state is False:      # but only return a callback on key release
-                rv = True if self._delay < self.tempo_delay else False      
+            if new_state is False:        # but only return a callback on key release
+                rv = True if self._delay < self.tempo_delay else False
         return rv

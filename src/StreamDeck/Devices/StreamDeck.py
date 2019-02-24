@@ -7,7 +7,8 @@
 
 from abc import ABC, abstractmethod
 import threading
-from .StreamDeckFilter import TempoFilter, StateChangedFilter, DebounceFilter
+from .StreamDeckFilter import StateChangedFilter
+
 
 class StreamDeck(ABC):
     """

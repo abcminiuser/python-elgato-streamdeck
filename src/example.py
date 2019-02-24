@@ -23,6 +23,8 @@ def ospath_to_module():
 
 # Generates a custom tile with run-time generated text and custom image via the
 # PIL module.
+
+
 def render_key_image(deck, icon_filename, label_text):
     # Create new key image of the correct dimensions, black background
     image = PILHelper.create_image(deck)
@@ -35,7 +37,7 @@ def render_key_image(deck, icon_filename, label_text):
 
     # Load a custom TrueType font and use it to overlay the key index, draw key
     # number onto the image
-    font = ImageFont.truetype(os.path.join(ospath_to_module(),"Assets", "Roboto-Regular.ttf"), 14)
+    font = ImageFont.truetype(os.path.join(ospath_to_module(), "Assets", "Roboto-Regular.ttf"), 14)
     draw = ImageDraw.Draw(image)
     draw.text((10, image.height - 20), text=label_text, font=font, fill=(255, 255, 255, 128))
 

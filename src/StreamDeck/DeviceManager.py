@@ -10,6 +10,7 @@ from .Devices.StreamDeckMini import StreamDeckMini
 from .Transport.Dummy import Dummy
 from .Transport.HIDAPI import HIDAPI
 
+
 class DeviceManager:
     """
     Central device manager, to enumerate any attached StreamDeck devices. An
