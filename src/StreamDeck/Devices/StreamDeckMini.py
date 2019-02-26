@@ -83,7 +83,8 @@ class StreamDeckMini(StreamDeck):
 
         header_1 = [
             0x02, 0x01, self.START_PAGE, 0x00, 0x00, key + 1, 0x00, 0x00,
-            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+        ]
 
         bmp_header = [
             0x42, 0x4d, 0xf6, 0x3c, 0x00, 0x00, 0x00, 0x00,
@@ -92,7 +93,8 @@ class StreamDeckMini(StreamDeck):
             0x00, 0x00, 0x01, 0x00, 0x18, 0x00, 0x00, 0x00,
             0x00, 0x00, 0xc0, 0x3c, 0x00, 0x00, 0xc4, 0x0e,
             0x00, 0x00, 0xc4, 0x0e, 0x00, 0x00, 0x00, 0x00,
-            0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+        ]
 
         # Lengths remaining after headers are added
         IMAGE_BYTES_FIRST_PAGE = self.REPORT_LENGTH - len(header_1) - len(bmp_header)
@@ -104,7 +106,7 @@ class StreamDeckMini(StreamDeck):
         # Bytes leftover after the last full page
         leftovers = remaining_bytes % IMAGE_BYTES_FOLLOWUP_PAGES
 
-        # Calc number of followup pages and add leftover partial page (if any)
+        # Calc number of follow-up pages and add leftover partial page (if any)
         pages = (remaining_bytes // IMAGE_BYTES_FOLLOWUP_PAGES) + (leftovers != 0)
 
         # Generate first report
@@ -116,7 +118,7 @@ class StreamDeckMini(StreamDeck):
 
         # Generate followup pages
         for report_page in range(self.START_PAGE + 1, pages):
-            # Byte 3 is page number, byte 5 indicates followup, byte 6 is keynumber to update
+            # Byte 3 is page number, byte 5 indicates follow-up, byte 6 is key number to update
             header_followup = [
                 0x02, 0x01, report_page, 0x00, 0x01, key + 1, 0x00, 0x00,
                 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]

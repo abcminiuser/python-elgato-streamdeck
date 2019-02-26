@@ -73,7 +73,7 @@ class StreamDeck(ABC):
     def _setup_reader(self, callback):
         """
         Sets up the internal transport reader thread with the given callback,
-        for asynchronous processing of HID events from the device. IF the thread
+        for asynchronous processing of HID events from the device. If the thread
         already exists, it is terminated and restarted with the new callback
         function.
 

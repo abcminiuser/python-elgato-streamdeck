@@ -5,8 +5,6 @@
 #         www.fourwalledcubicle.com
 #
 
-from PIL import Image
-
 
 def create_image(deck, background='black'):
     """
@@ -20,9 +18,11 @@ def create_image(deck, background='black'):
     :param StreamDeck deck: StreamDeck device to generate a compatible image for.
     :param str background: Background color to use, compatible with `PIL.Image.new()`.
 
-    :rtype: PIL.Image instance
+    :rtype: PIL.Image
     :return: Created PIL image
     """
+    from PIL import Image
+
     image_format = deck.key_image_format()
 
     dimensions = (image_format['width'], image_format['height'])
@@ -40,9 +40,11 @@ def to_native_format(deck, image):
     :param StreamDeck deck: StreamDeck device to generate a compatible native image for.
     :param PIL.Image image: PIL Image to convert to the native StreamDeck image format
 
-    :rtype: PIL.Image instance
-    :return: Created PIL image
+    :rtype: enumerable()
+    :return: Image converted to the given StreamDeck's native format
     """
+    from PIL import Image
+
     image_format = deck.key_image_format()
 
     if image_format['rotation']:

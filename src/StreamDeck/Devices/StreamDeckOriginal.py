@@ -29,6 +29,7 @@ class StreamDeckOriginal(StreamDeck):
     KEY_IMAGE_SIZE = KEY_PIXEL_WIDTH * KEY_PIXEL_HEIGHT * KEY_PIXEL_DEPTH
     START_PAGE = 1
     REPORT_LENGTH = 8191
+    IMAGE_BYTES_PAGE_1 = 2583 * 3
 
     def reset(self):
         """
@@ -97,10 +98,8 @@ class StreamDeckOriginal(StreamDeck):
             0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
         ]
 
-        IMAGE_BYTES_PAGE_1 = 2583 * 3
-
-        payload_1 = bytes(header_1) + image[: IMAGE_BYTES_PAGE_1]
-        payload_2 = bytes(header_2) + image[IMAGE_BYTES_PAGE_1:]
+        payload_1 = bytes(header_1) + image[: self.IMAGE_BYTES_PAGE_1]
+        payload_2 = bytes(header_2) + image[self.IMAGE_BYTES_PAGE_1:]
 
         self.device.write(payload_1)
         self.device.write(payload_2)

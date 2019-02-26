@@ -117,7 +117,7 @@ class HIDAPI(Transport):
 
             :param int length: Maximum length of the In report to read.
 
-            :rtype: list()
+            :rtype: list(byte)
             :return: List of bytes containing the read In report. The first byte
                      of the report will be the Report ID of the report that was
                      read.
