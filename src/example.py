@@ -7,6 +7,7 @@
 #         www.fourwalledcubicle.com
 #
 
+import os
 import threading
 from StreamDeck.DeviceManager import DeviceManager
 from StreamDeck.ImageHelpers import PILHelper
@@ -44,14 +45,18 @@ def get_key_style(deck, key, state):
 
     if key == exit_key_index:
         name = "exit"
-        icon = "Assets/{}.png".format("Exit")
+        icon = "{}.png".format("Exit")
         text = "Bye" if state else "Exit"
     else:
         name = "emoji"
-        icon = "Assets/{}.png".format("Pressed" if state else "Released")
+        icon = "{}.png".format("Pressed" if state else "Released")
         text = "Pressed!" if state else "Key {}".format(key)
 
-    return {"name": name, "icon": icon, "label": text}
+    return {
+        "name": name,
+        "icon": os.path.join(os.path.dirname(__file__), "Assets", icon),
+        "label": text
+    }
 
 
 # Creates a new key image based on the key index, style and current key state

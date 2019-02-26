@@ -32,6 +32,7 @@ class StreamDeck(ABC):
         self.device = device
         self.last_key_states = [False] * self.KEY_COUNT
         self.read_thread = None
+        self.run_read_thread = False
         self.key_callback = None
 
     def __del__(self):
@@ -52,13 +53,13 @@ class StreamDeck(ABC):
         changes on the underlying device, caching the new states and firing off
         any registered callbacks.
         """
-        while self.read_thread_run:
+        while self.run_read_thread:
             payload = []
 
             try:
                 payload = self.device.read(1 + self.KEY_COUNT)
             except (IOError, ValueError):
-                self.read_thread_run = False
+                self.run_read_thread = False
 
             if payload:
                 new_key_states = [bool(s) for s in payload[1:]]
@@ -80,11 +81,11 @@ class StreamDeck(ABC):
         :param function callback: Callback to run on the reader thread.
         """
         if self.read_thread is not None:
-            self.read_thread_run = False
+            self.run_read_thread = False
             self.read_thread.join()
 
         if callback is not None:
-            self.read_thread_run = True
+            self.run_read_thread = True
             self.read_thread = threading.Thread(target=callback)
             self.read_thread.daemon = True
             self.read_thread.start()
