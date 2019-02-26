@@ -18,18 +18,21 @@ from PIL import Image, ImageDraw, ImageFont
 def render_key_image(deck, icon_filename, label_text):
     # Create new key image of the correct dimensions, black background
     image = PILHelper.create_image(deck)
+    draw = ImageDraw.Draw(image)
 
-    # Add image overlay, rescaling the image asset if it is too large to fit the
-    # requested dimensions via a high quality Lanczos scaling algorithm
+    # Add image overlay, rescaling the image asset if it is too large to fit
+    # the requested dimensions via a high quality Lanczos scaling algorithm
     icon = Image.open(icon_filename).convert("RGBA")
     icon.thumbnail((image.width, image.height - 20), Image.LANCZOS)
-    image.paste(icon, (0, 0), icon)
+    icon_pos = ((image.width - icon.width) // 2, 0)
+    image.paste(icon, icon_pos, icon)
 
     # Load a custom TrueType font and use it to overlay the key index, draw key
-    # number onto the image
+    # label onto the image
     font = ImageFont.truetype("Assets/Roboto-Regular.ttf", 14)
-    draw = ImageDraw.Draw(image)
-    draw.text((10, image.height - 20), text=label_text, font=font, fill=(255, 255, 255, 128))
+    label_w, label_h = draw.textsize(label_text, font=font)
+    label_pos = ((image.width - label_w) // 2, image.height - 20)
+    draw.text(label_pos, text=label_text, font=font, fill="white")
 
     return PILHelper.to_native_format(deck, image)
 
@@ -55,10 +58,10 @@ def get_key_style(deck, key, state):
 # and updates the image on the StreamDeck.
 def update_key_image(deck, key, state):
     # Determine what icon and label to use on the generated key
-    style = get_key_style(deck, key, state)
+    key_style = get_key_style(deck, key, state)
 
     # Generate the custom key with the requested image and label
-    image = render_key_image(deck, style["icon"], style["label"])
+    image = render_key_image(deck, key_style["icon"], key_style["label"])
 
     # Update requested key with the generated image
     deck.set_key_image(key, image)
@@ -75,10 +78,10 @@ def key_change_callback(deck, key, state):
 
     # Check if the key is changing to the pressed state
     if state:
-        key_style_name = get_key_style(deck, key, state)["name"]
+        key_style = get_key_style(deck, key, state)
 
         # When an exit button is pressed, close the application
-        if key_style_name == "exit" and state:
+        if key_style["name"] == "exit":
             # Reset deck, clearing all button images
             deck.reset()
 
