@@ -22,7 +22,7 @@ steps:
   image: abcminiuser/docker-ci-python:latest
   pull: always
   commands:
-  - bandit src/
+  - bandit -r src/
 
 - name: Documentation
   image: abcminiuser/docker-ci-python:latest
