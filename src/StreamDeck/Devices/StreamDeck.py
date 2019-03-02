@@ -66,7 +66,6 @@ class StreamDeck(ABC):
             except (IOError, ValueError):
                 self.run_read_thread = False
 
-
     def _setup_reader(self, callback):
         """
         Sets up the internal transport reader thread with the given callback,
