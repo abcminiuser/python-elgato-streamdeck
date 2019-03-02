@@ -109,7 +109,10 @@ def print_deck_info(deck):
     print("\t - ID: {}".format(deck.id()), flush=True)
     print("\t - Serial: {}".format(deck.get_serial_number()), flush=True)
     print("\t - Firmware Version: {}".format(deck.get_firmware_version()), flush=True)
-    print("\t - Key Count: {}".format(deck.key_count()), flush=True)
+    print("\t - Key Count: {} ({} rows x {} columns)".format(
+        deck.key_count(),
+        deck.key_layout()[0],
+        deck.key_layout()[1]), flush=True)
     print("\t - Key Image Format: {}x{} pixels, {} order, rotated {} degrees, {}".format(
         image_format['width'], image_format['height'],
         image_format['order'],
