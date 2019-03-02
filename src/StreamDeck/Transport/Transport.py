@@ -80,6 +80,21 @@ class Transport(ABC):
             pass
 
         @abstractmethod
+        def read_feature(self, report_id, length):
+            """
+            Reads a HID Feature report from the open HID device.
+
+            :param int report_id: Report ID of the report being read.
+            :param int length: Maximum length of the Feature report to read..
+
+            :rtype: list(byte)
+            :return: List of bytes containing the read Feature report. The
+                     first byte of the report will be the Report ID of the
+                     report that was read.
+            """
+            pass
+
+        @abstractmethod
         def write(self, payload):
             """
             Sends a HID Out report to the open HID device.

@@ -35,6 +35,10 @@ class Dummy(Transport):
             logging.info('Deck feature write (length {}): {}'.format(len(payload), payload))
             return True
 
+        def read_feature(self, report_id, length):
+            logging.info('Deck feature read (length {})'.format(length))
+            return IOError("Dummy device!")
+
         def write(self, payload):
             logging.info('Deck report write (length {}): {}'.format(len(payload), payload))
             return True
