@@ -30,20 +30,6 @@ class StreamDeckMini(StreamDeck):
     START_PAGE = 0
     REPORT_LENGTH = 1024
 
-    def _convert_key_id_origin(self, key):
-        """
-        Converts a key index from or to a origin at the physical top-left of
-        the StreamDeck device.
-
-        :param int key: Index of the button with either a device or top-left origin.
-
-        :rtype: int
-        :return: Key index converted to the opposite key origin (device or top-left).
-        """
-
-        key_col = key % self.KEY_COLS
-        return (key - key_col) + ((self.KEY_COLS - 1) - key_col)
-
     def _read_key_states(self):
         """
         Reads the key states of the StreamDeck. This is used internally by
@@ -54,12 +40,7 @@ class StreamDeckMini(StreamDeck):
         """
 
         states = self.device.read(1 + self.KEY_COUNT)[1:]
-
-        new_key_states = bytearray(self.KEY_COUNT)
-        for k in range(self.KEY_COUNT):
-            new_key_states[k] = bool(states[self._convert_key_id_origin(k)])
-
-        return new_key_states
+        return [bool(s) for s in states]
 
     def reset(self):
         """
@@ -133,8 +114,6 @@ class StreamDeckMini(StreamDeck):
 
         if len(image) != self.KEY_IMAGE_SIZE:
             raise ValueError("Invalid image size {}.".format(len(image)))
-
-        key = self._convert_key_id_origin(key)
 
         header_1 = [
             0x02, 0x01, self.START_PAGE, 0x00, 0x00, key + 1, 0x00, 0x00,
