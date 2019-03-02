@@ -107,6 +107,8 @@ def print_deck_info(deck):
 
     print("Deck {} - {}.".format(index, deck.deck_type()), flush=True)
     print("\t - ID: {}".format(deck.id()), flush=True)
+    print("\t - Serial: {}".format(deck.get_serial_number()), flush=True)
+    print("\t - Firmware Version: {}".format(deck.get_firmware_version()), flush=True)
     print("\t - Key Count: {}".format(deck.key_count()), flush=True)
     print("\t - Key Image Format: {}x{} pixels, {} order, rotated {} degrees, {}".format(
         image_format['width'], image_format['height'],
@@ -121,10 +123,12 @@ if __name__ == "__main__":
     print("Found {} Stream Deck(s).\n".format(len(streamdecks)), flush=True)
 
     for index, deck in enumerate(streamdecks):
-        print_deck_info(deck)
-
         deck.open()
         deck.reset()
+
+        print_deck_info(deck)
+
+        # Set initial screen brightness to 30%
         deck.set_brightness(30)
 
         # Set initial key images

@@ -42,7 +42,7 @@ class StreamDeckMini(StreamDeck):
 
     def set_brightness(self, percent):
         """
-        Sets the global screen brightness of the ScreenDeck, across all the
+        Sets the global screen brightness of the StreamDeck, across all the
         physical buttons.
 
         :param int/float percent: brightness percent, from [0-100] as an `int`,
@@ -57,6 +57,28 @@ class StreamDeckMini(StreamDeck):
         payload = bytearray(17)
         payload[0:6] = [0x05, 0x55, 0xaa, 0xd1, 0x01, percent]
         self.device.write_feature(payload)
+
+    def get_serial_number(self):
+        """
+        Gets the serial number of the attached StreamDeck.
+
+        :rtype: str
+        :return: String containing the serial number of the attached device.
+        """
+
+        serial = self.device.read_feature(0x03, 16)
+        return "".join(map(chr, serial[5:]))
+
+    def get_firmware_version(self):
+        """
+        Gets the firmware version of the attached StreamDeck.
+
+        :rtype: str
+        :return: String containing the firmware version of the attached device.
+        """
+
+        version = self.device.read_feature(0x04, 16)
+        return "".join(map(chr, version[5:]))
 
     def set_key_image(self, key, image):
         """

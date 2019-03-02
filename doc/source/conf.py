@@ -22,7 +22,7 @@ import sys
 
 import sphinx_rtd_theme
 
-ROOT_PATH = os.path.join("..", "..")
+ROOT_PATH = os.path.join(os.path.dirname(__file__), "..", "..")
 
 with open(os.path.join(ROOT_PATH, "VERSION"), 'r') as f:
     package_version = f.read().strip()

@@ -243,11 +243,31 @@ class StreamDeck(ABC):
     @abstractmethod
     def set_brightness(self, percent):
         """
-        Sets the global screen brightness of the ScreenDeck, across all the
+        Sets the global screen brightness of the StreamDeck, across all the
         physical buttons.
 
         :param int/float percent: brightness percent, from [0-100] as an `int`,
                                   or normalized to [0.0-1.0] as a `float`.
+        """
+        pass
+
+    @abstractmethod
+    def get_serial_number(self):
+        """
+        Gets the serial number of the attached StreamDeck.
+
+        :rtype: str
+        :return: String containing the serial number of the attached device.
+        """
+        pass
+
+    @abstractmethod
+    def get_firmware_version(self):
+        """
+        Gets the firmware version of the attached StreamDeck.
+
+        :rtype: str
+        :return: String containing the firmware version of the attached device.
         """
         pass
 
