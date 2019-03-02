@@ -54,15 +54,8 @@ class StreamDeck(ABC):
         any registered callbacks.
         """
         while self.run_read_thread:
-            payload = []
-
             try:
-                payload = self.device.read(1 + self.KEY_COUNT)
-            except (IOError, ValueError):
-                self.run_read_thread = False
-
-            if payload:
-                new_key_states = [bool(s) for s in payload[1:]]
+                new_key_states = self._read_key_states()
 
                 if self.key_callback is not None:
                     for k, (old, new) in enumerate(zip(self.last_key_states, new_key_states)):
@@ -70,6 +63,9 @@ class StreamDeck(ABC):
                             self.key_callback(self, k, new)
 
                 self.last_key_states = new_key_states
+            except (IOError, ValueError):
+                self.run_read_thread = False
+
 
     def _setup_reader(self, callback):
         """
