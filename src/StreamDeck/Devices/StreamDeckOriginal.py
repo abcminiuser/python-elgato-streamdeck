@@ -55,12 +55,7 @@ class StreamDeckOriginal(StreamDeck):
         """
 
         states = self.device.read(1 + self.KEY_COUNT)[1:]
-
-        new_key_states = bytearray(self.KEY_COUNT)
-        for k in range(self.KEY_COUNT):
-            new_key_states[k] = bool(states[self._convert_key_id_origin(k)])
-
-        return new_key_states
+        return [bool(states[self._convert_key_id_origin(k)]) for k in range(self.KEY_COUNT)]
 
     def reset(self):
         """
