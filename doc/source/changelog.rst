@@ -1,0 +1,5 @@
+*****************
+Library Changelog
+*****************
+
+.. literalinclude:: ../../CHANGELOG

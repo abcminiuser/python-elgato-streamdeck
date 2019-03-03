@@ -1,0 +1,10 @@
+Version 0.3:
+	- Remapped StreamDeck key indexes so that key 0 is located on the physical
+	  top-left of all supported devices.
+
+Version 0.2.4:
+	- Added new StreamDeck.get_serial_number() function.
+	- Added new StreamDeck.get_firmware_version() function.
+
+Version 0.2.3:
+	- Added new StreamDeck.ImageHelpers modules for easier key image generation.

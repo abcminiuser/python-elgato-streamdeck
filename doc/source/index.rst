@@ -11,6 +11,7 @@
     modules/transports.rst
     modules/imagehelpers.rst
     example.rst
+    changelog.rst
 
 Indices and tables
 ==================
