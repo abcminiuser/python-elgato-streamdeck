@@ -33,7 +33,7 @@ several HID backend libraries. You will need to install the dependencies
 appropriate to your chosen backend.
 
 The included example requires the PIL fork "Pillow", although it can be swapped
-out if desired for any other image library as desired by the user application.
+out if desired by the user application for any other image manipulation library.
 
 ### HIDAPI Backend
 The default backend is the HIDAPI Python library, which should work across
@@ -79,11 +79,15 @@ pip3 install hidapi
 # Add udev rule to allow all users non-root access to Elgato StreamDeck devices:
 sudo tee /etc/udev/rules.d/10-streamdeck.rules << EOF
 	SUBSYSTEMS=="usb", ATTRS{idVendor}=="0fd9", ATTRS{idProduct}=="0060", GROUP="users"
+	SUBSYSTEMS=="usb", ATTRS{idVendor}=="0fd9", ATTRS{idProduct}=="0063", GROUP="users"
 	EOF
 
-# Install git and check out the repository
-sudo apt install -y git
-git clone https://github.com/abcminiuser/python-elgato-streamdeck.git
+# Install the latest version of the StreamDeck library via pip
+pip3 install streamdeck
+
+# Alternatively, install git and check out the repository
+#sudo apt install -y git
+#git clone https://github.com/abcminiuser/python-elgato-streamdeck.git
 ```
 
 Note that after adding the `udev` rule, a restart will be required in order for
