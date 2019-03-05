@@ -16,7 +16,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 # Generates a custom tile with run-time generated text and custom image via the
 # PIL module.
-def render_key_image(deck, icon_filename, label_text):
+def render_key_image(deck, icon_filename, font_filename, label_text):
     # Create new key image of the correct dimensions, black background
     image = PILHelper.create_image(deck)
     draw = ImageDraw.Draw(image)
@@ -30,7 +30,7 @@ def render_key_image(deck, icon_filename, label_text):
 
     # Load a custom TrueType font and use it to overlay the key index, draw key
     # label onto the image
-    font = ImageFont.truetype("Assets/Roboto-Regular.ttf", 14)
+    font = ImageFont.truetype(font_filename, 14)
     label_w, label_h = draw.textsize(label_text, font=font)
     label_pos = ((image.width - label_w) // 2, image.height - 20)
     draw.text(label_pos, text=label_text, font=font, fill="white")
@@ -46,16 +46,19 @@ def get_key_style(deck, key, state):
     if key == exit_key_index:
         name = "exit"
         icon = "{}.png".format("Exit")
-        text = "Bye" if state else "Exit"
+        font = "Roboto-Regular.ttf"
+        label = "Bye" if state else "Exit"
     else:
         name = "emoji"
         icon = "{}.png".format("Pressed" if state else "Released")
-        text = "Pressed!" if state else "Key {}".format(key)
+        font = "Roboto-Regular.ttf"
+        label = "Pressed!" if state else "Key {}".format(key)
 
     return {
         "name": name,
         "icon": os.path.join(os.path.dirname(__file__), "Assets", icon),
-        "label": text
+        "font": os.path.join(os.path.dirname(__file__), "Assets", font),
+        "label": label
     }
 
 
@@ -66,7 +69,7 @@ def update_key_image(deck, key, state):
     key_style = get_key_style(deck, key, state)
 
     # Generate the custom key with the requested image and label
-    image = render_key_image(deck, key_style["icon"], key_style["label"])
+    image = render_key_image(deck, key_style["icon"], key_style["font"], key_style["label"])
 
     # Update requested key with the generated image
     deck.set_key_image(key, image)
@@ -109,7 +112,7 @@ def print_deck_info(deck):
     print("\t - ID: {}".format(deck.id()), flush=True)
     print("\t - Serial: {}".format(deck.get_serial_number()), flush=True)
     print("\t - Firmware Version: {}".format(deck.get_firmware_version()), flush=True)
-    print("\t - Key Count: {} ({} rows x {} columns)".format(
+    print("\t - Key Count: {} ({}x{} grid)".format(
         deck.key_count(),
         deck.key_layout()[0],
         deck.key_layout()[1]), flush=True)
