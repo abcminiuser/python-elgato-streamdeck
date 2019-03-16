@@ -7,6 +7,10 @@
 #         www.fourwalledcubicle.com
 #
 
+# Example script showing basic library usage - updating key images,
+# responding to button state change events, and printing out information
+# on discovered devices.
+
 import os
 import threading
 from StreamDeck.DeviceManager import DeviceManager

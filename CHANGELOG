@@ -1,3 +1,6 @@
+Version 0.3.1:
+	- Added animated image example script.
+
 Version 0.3:
 	- Remapped StreamDeck key indexes so that key 0 is located on the physical
 	  top-left of all supported devices.
