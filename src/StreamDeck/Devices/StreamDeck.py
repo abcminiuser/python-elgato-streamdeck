@@ -47,6 +47,16 @@ class StreamDeck(ABC):
         except (IOError, ValueError):
             pass
 
+    @abstractmethod
+    def _read_key_states(self):
+        """
+        Reads the raw key states from an attached StreamDeck.
+
+        :rtype: list(bool)
+        :return: List containing the raw key states.
+        """
+        pass
+
     def _read(self):
         """
         Read handler for the underlying transport, listening for button state

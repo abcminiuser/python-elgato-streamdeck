@@ -14,9 +14,9 @@
 
 import itertools
 import threading
+from PIL import Image
 from StreamDeck.DeviceManager import DeviceManager
 from StreamDeck.ImageHelpers import PILHelper
-from PIL import Image
 
 
 # Loads in a source image, extracts out the individual animation frames (if any) and returns an infinite

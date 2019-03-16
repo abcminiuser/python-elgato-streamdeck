@@ -32,19 +32,19 @@ class Dummy(Transport):
             return self.id
 
         def write_feature(self, payload):
-            logging.info('Deck feature write (length {}): {}'.format(len(payload), payload))
+            logging.info('Deck feature write (length %s): %s', len(payload), payload)
             return True
 
         def read_feature(self, report_id, length):
-            logging.info('Deck feature read (length {})'.format(length))
+            logging.info('Deck feature read (length %s)', length)
             return IOError("Dummy device!")
 
         def write(self, payload):
-            logging.info('Deck report write (length {}): {}'.format(len(payload), payload))
+            logging.info('Deck report write (length %s): %s', len(payload), payload)
             return True
 
         def read(self, length):
-            logging.info('Deck report read (length {})'.format(length))
+            logging.info('Deck report read (length %s)', length)
             raise IOError("Dummy device!")
 
     def enumerate(self, vid, pid):

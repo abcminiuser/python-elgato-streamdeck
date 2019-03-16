@@ -13,9 +13,9 @@
 
 import os
 import threading
+from PIL import Image, ImageDraw, ImageFont
 from StreamDeck.DeviceManager import DeviceManager
 from StreamDeck.ImageHelpers import PILHelper
-from PIL import Image, ImageDraw, ImageFont
 
 
 # Generates a custom tile with run-time generated text and custom image via the
@@ -102,7 +102,7 @@ def key_change_callback(deck, key, state):
 
 
 # Prints diagnostic information about a given StrewmDeck
-def print_deck_info(deck):
+def print_deck_info(index, deck):
     image_format = deck.key_image_format()
 
     flip_description = {
@@ -136,7 +136,7 @@ if __name__ == "__main__":
         deck.open()
         deck.reset()
 
-        print_deck_info(deck)
+        print_deck_info(index, deck)
 
         # Set initial screen brightness to 30%
         deck.set_brightness(30)
