@@ -10,8 +10,9 @@
     modules/devices.rst
     modules/transports.rst
     modules/imagehelpers.rst
-    example.rst
-    example_animated.rst
+    examples/deckinfo.rst
+    examples/basic.rst
+    examples/animated.rst
     changelog.rst
 
 Indices and tables
