@@ -12,11 +12,16 @@
 # device's native image format, and displaying them with a periodic
 # timer.
 
+import os
 import itertools
 import threading
 from PIL import Image
 from StreamDeck.DeviceManager import DeviceManager
 from StreamDeck.ImageHelpers import PILHelper
+
+
+# Animation frames per second to attempt to display on the StreamDeck devices
+FRAMES_PER_SECOND = 30
 
 
 # Loads in a source image, extracts out the individual animation frames (if
@@ -27,7 +32,7 @@ def create_animation_frames(deck, image_filename):
 
     try:
         # Open the source image asset
-        icon = Image.open("assets/{}".format(image_filename))
+        icon = Image.open(os.path.join(os.path.dirname(__file__), "Assets", image_filename))
 
         # Extract out each animation frame, resizing and converting to the
         # native device image format
@@ -103,7 +108,7 @@ if __name__ == "__main__":
                     deck.set_key_image(key, next(frames))
 
                 # Schedule the next periodic animation frame update
-                threading.Timer(0.1, update_frames).start()
+                threading.Timer(1.0 / FRAMES_PER_SECOND, update_frames).start()
             except (IOError, ValueError):
                 # Something went wrong (deck closed?) - don't re-schedule the
                 # next animation frame
