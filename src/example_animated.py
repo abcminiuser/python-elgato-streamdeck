@@ -30,14 +30,18 @@ FRAMES_PER_SECOND = 30
 def create_animation_frames(deck, image_filename):
     icon_frames = list()
 
-    try:
-        # Open the source image asset
-        icon = Image.open(os.path.join(os.path.dirname(__file__), "Assets", image_filename))
+    # Open the source image asset
+    icon = Image.open(os.path.join(os.path.dirname(__file__), "Assets", image_filename))
 
+    # Create a blank key image in the host image format, which we can
+    # duplicate quickly for each animation frame to save time
+    blank_image = PILHelper.create_image(deck)
+
+    try:
         # Extract out each animation frame, resizing and converting to the
         # native device image format
         while True:
-            image = PILHelper.create_image(deck)
+            image = blank_image.copy()
 
             # Resize the animation frame and paste it into the new image buffer
             icon_frame = icon.convert("RGBA")
@@ -46,12 +50,13 @@ def create_animation_frames(deck, image_filename):
             image.paste(icon_frame, icon_frame_pos, icon_frame)
 
             # Store the rendered animation frame in the device's native image
-            # format for later use
-            icon_frames += [PILHelper.to_native_format(deck, image)]
+            # format for later use, so we don't need to keep converting it
+            icon_frames.append(PILHelper.to_native_format(deck, image))
 
             # Move to next animation frame in the source image
             icon.seek(icon.tell() + 1)
     except EOFError:
+        # End of file, all image frames have been extracted
         pass
 
     # Return an infinite cycle generator that returns the next animation frame
