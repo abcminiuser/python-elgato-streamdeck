@@ -107,6 +107,13 @@ class StreamDeckMini(StreamDeck):
                                  color.
         """
 
+        def pad(payload):
+            if len(payload) == self.REPORT_LENGTH:
+                return payload
+            extra = self.REPORT_LENGTH - len(payload)
+            padding = bytearray(extra)
+            return payload + padding
+
         image = bytes(image or self.KEY_IMAGE_SIZE)
 
         if min(max(key, 0), self.KEY_COUNT) != key:
@@ -145,7 +152,7 @@ class StreamDeckMini(StreamDeck):
 
         # Generate first report
         payload_first = bytes(header_1) + bytes(bmp_header) + image[: IMAGE_BYTES_FIRST_PAGE]
-        self.device.write(payload_first)
+        self.device.write(pad(payload_first))
 
         # Initialize the slicing variable to the end of the first page
         last_slice_end = IMAGE_BYTES_FIRST_PAGE
@@ -165,7 +172,7 @@ class StreamDeckMini(StreamDeck):
 
             # Generate followup payload
             payload_next = bytes(header_followup) + image[last_slice_end:payload_end]
-            self.device.write(payload_next)
+            self.device.write(pad(payload_next))
 
             # Update slicing variable
             last_slice_end = payload_end
