@@ -1,3 +1,6 @@
+Version 0.3.2:
+	- Fixed StreamDeck Mini key images not updating under some circumstances.
+
 Version 0.3.1:
 	- Added animated image example script.
 
