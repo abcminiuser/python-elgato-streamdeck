@@ -35,14 +35,14 @@ appropriate to your chosen backend.
 The included example requires the PIL fork "Pillow", although it can be swapped
 out if desired by the user application for any other image manipulation library.
 
+To install all library dependencies at once, run:
+```
+pip install -r requirements.txt
+```
+
 ### HIDAPI Backend
 The default backend is the HIDAPI Python library, which should work across
 the three major (Windows, Mac, Linux) OSes.
-
-Installation:
-```
-pip3 install hidapi
-```
 
 ## Package Installation:
 
