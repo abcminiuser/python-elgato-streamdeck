@@ -35,7 +35,7 @@ class StreamDeckXL(StreamDeck):
         :return: Button states, with the origin at the top-left of the deck.
         """
 
-        states = self.device.read(1 + self.KEY_COUNT)[1:]
+        states = self.device.read(4 + self.KEY_COUNT)[4:]
         return [bool(s) for s in states]
 
     def reset(self):
