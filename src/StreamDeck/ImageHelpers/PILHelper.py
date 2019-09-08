@@ -5,6 +5,7 @@
 #         www.fourwalledcubicle.com
 #
 
+
 def create_image(deck, background='black'):
     """
     Creates a new PIL Image with the correct image dimensions for the given

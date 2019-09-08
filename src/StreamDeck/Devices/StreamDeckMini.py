@@ -103,7 +103,7 @@ class StreamDeckMini(StreamDeck):
                      information on the image format accepted by the device.
 
         :param int key: Index of the button whose image is to be updated.
-        :param enumerable image: Pixel data of the image to set on the button.
+        :param enumerable image: Raw data of the image to set on the button.
                                  If `None`, the key will be cleared to a black
                                  color.
         """
