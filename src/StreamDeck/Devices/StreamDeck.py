@@ -23,6 +23,7 @@ class StreamDeck(ABC):
     KEY_PIXEL_HEIGHT = None
     KEY_PIXEL_DEPTH = None
     KEY_PIXEL_ORDER = None
+    KEY_IMAGE_CODEC = None
     KEY_FLIP = None
     KEY_ROTATION = None
 
@@ -178,6 +179,7 @@ class StreamDeck(ABC):
             "height": self.KEY_PIXEL_HEIGHT,
             "depth": self.KEY_PIXEL_DEPTH,
             "order": self.KEY_PIXEL_ORDER,
+            "codec": self.KEY_IMAGE_CODEC,
             "flip": self.KEY_FLIP,
             "rotation": self.KEY_ROTATION,
         }
@@ -281,7 +283,7 @@ class StreamDeck(ABC):
         """
         Sets the image of a button on the StremDeck to the given image. The
         image being set should be in the correct format for the device, as an
-        enumerable collection of pixels.
+        enumerable collection of bytes.
 
         .. seealso:: See :func:`~StreamDeck.get_key_image_format` method for
                      information on the image format accepted by the device.
