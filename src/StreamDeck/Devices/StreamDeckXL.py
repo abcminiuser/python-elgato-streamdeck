@@ -22,7 +22,7 @@ class StreamDeckXL(StreamDeck):
     KEY_PIXEL_DEPTH = 3
     KEY_PIXEL_ORDER = "BGR"
     KEY_IMAGE_CODEC = "JPEG"
-    KEY_FLIP = (True, False)
+    KEY_FLIP = (True, True)
     KEY_ROTATION = 0
 
     DECK_TYPE = "Stream Deck XL"
@@ -167,8 +167,8 @@ class StreamDeckXL(StreamDeck):
                 page_number >> 8
             ]
 
-            bytes_sent = len(image) - bytes_remaining
-            self.device.write(bytes(header) + image[bytes_sent:this_length])
+            bytes_sent = page_number * self.IMAGE_REPORT_PAYLOAD_LENGTH
+            self.device.write(bytes(header) + image[bytes_sent:bytes_sent+this_length])
 
             bytes_remaining = bytes_remaining - this_length
             page_number = page_number + 1
