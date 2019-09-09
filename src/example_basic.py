@@ -109,6 +109,8 @@ if __name__ == "__main__":
         deck.open()
         deck.reset()
 
+        print("Opened '{}' device (serial number: '{}')\n".format(deck.deck_type(), deck.get_serial_number()))
+
         # Set initial screen brightness to 30%
         deck.set_brightness(30)
 
