@@ -56,10 +56,22 @@ def to_native_format(deck, image):
     if image_format['flip'][1]:
         image = image.transpose(Image.FLIP_TOP_BOTTOM)
 
-    # Get the raw r, g and b components of the generated image
-    r, g, b = image.split()
+    expected_size = (image_format['width'], image_format['height'])
+    if image.size != expected_size:
+        image.thumbnail(expected_size)
 
-    # Recombine the B, G and R elements in the order the display expects
-    # them, and convert the resulting image to a sequence of bytes
-    rgb = {"R": r, "G": g, "B": b}
-    return Image.merge("RGB", [rgb[c] for c in image_format['order']]).tobytes()
+    if image_format['codec']:
+        import io
+
+        # We want a compressed image in a given codec, convert.
+        compressed_image = io.BytesIO()
+        image.save(compressed_image, image_format['codec'])
+        return compressed_image.getbuffer()
+    else:
+        # Get the raw r, g and b components of the generated image
+        r, g, b = image.split()
+
+        # Recombine the B, G and R elements in the order the display expects
+        # them, and convert the resulting image to a sequence of bytes
+        rgb = {"R": r, "G": g, "B": b}
+        return Image.merge("RGB", [rgb[c] for c in image_format['order']]).tobytes()

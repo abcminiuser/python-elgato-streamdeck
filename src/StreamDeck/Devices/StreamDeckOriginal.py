@@ -21,6 +21,7 @@ class StreamDeckOriginal(StreamDeck):
     KEY_PIXEL_HEIGHT = 72
     KEY_PIXEL_DEPTH = 3
     KEY_PIXEL_ORDER = "BGR"
+    KEY_IMAGE_CODEC = None
     KEY_FLIP = (True, False)
     KEY_ROTATION = 0
 
@@ -107,13 +108,13 @@ class StreamDeckOriginal(StreamDeck):
         """
         Sets the image of a button on the StremDeck to the given image. The
         image being set should be in the correct format for the device, as an
-        enumerable collection of pixels.
+        enumerable collection of bytes.
 
         .. seealso:: See :func:`~StreamDeck.get_key_image_format` method for
                      information on the image format accepted by the device.
 
         :param int key: Index of the button whose image is to be updated.
-        :param enumerable image: Pixel data of the image to set on the button.
+        :param enumerable image: Raw data of the image to set on the button.
                                  If `None`, the key will be cleared to a black
                                  color.
         """

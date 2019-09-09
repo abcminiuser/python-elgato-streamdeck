@@ -10,6 +10,8 @@ steps:
   image: abcminiuser/docker-ci-python:latest
   pull: always
   commands:
+  - apk add jpeg-dev zlib-dev
+  - pip install Pillow
   - python src/test.py
 
 - name: Flake8

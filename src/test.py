@@ -9,7 +9,7 @@
 
 import logging
 from StreamDeck.DeviceManager import DeviceManager
-
+from StreamDeck.ImageHelpers import PILHelper
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
@@ -30,9 +30,12 @@ if __name__ == "__main__":
         image_format = deck.key_image_format()
         key_states = deck.key_states()
 
+        test_key_image = PILHelper.create_image(deck)
+        test_key_image = PILHelper.to_native_format(deck, test_key_image)
+
         deck.set_key_callback(None)
         deck.reset()
         deck.set_brightness(30)
-        deck.set_key_image(0, [])
+        deck.set_key_image(0, test_key_image)
 
         deck.close()

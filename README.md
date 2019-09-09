@@ -19,12 +19,17 @@ repository to implement this library. Thanks Alex Van Camp!
 
 Initial StreamDeck Mini support added by [Aetherdyne](https://github.com/Aetherdyne).
 
+StreamDeck XP support assisted by [Pointshader](https://github.com/pointshader).
+
 ## Status:
 
 Working - you can enumerate devices, set the brightness of the panel(s), set
 the images shown on each button, and read the current button states.
 
-Currently both the StreamDeck and StreamDeck Mini products are supported.
+Currently the following StreamDeck product variants are supported:
+* StreamDeck Classic
+* StreamDeck Mini
+* StreamDeck XL
 
 ## Dependencies:
 
@@ -41,6 +46,7 @@ pip install -r requirements.txt
 ```
 
 ### HIDAPI Backend
+
 The default backend is the HIDAPI Python library, which should work across
 the three major (Windows, Mac, Linux) OSes.
 
@@ -78,8 +84,7 @@ pip3 install hidapi
 
 # Add udev rule to allow all users non-root access to Elgato StreamDeck devices:
 sudo tee /etc/udev/rules.d/10-streamdeck.rules << EOF
-	SUBSYSTEMS=="usb", ATTRS{idVendor}=="0fd9", ATTRS{idProduct}=="0060", GROUP="users"
-	SUBSYSTEMS=="usb", ATTRS{idVendor}=="0fd9", ATTRS{idProduct}=="0063", GROUP="users"
+	SUBSYSTEMS=="usb", ATTRS{idVendor}=="0fd9", GROUP="users"
 	EOF
 
 # Install the latest version of the StreamDeck library via pip
