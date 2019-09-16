@@ -1,3 +1,8 @@
+Version 0.5.0:
+	- Fixed StreamDeck devices occasionally showing partial old frames on initial connection.
+	- Removed support for RAW pixel images, StreamDeck Mini and Original take BMP images.
+	- Removed "width" and "height" information from Deck key image dict, now returned as "size" tuple entry.
+
 Version 0.4.0:
 	- Added StreamDeck XL support.
 
