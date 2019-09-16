@@ -5,6 +5,8 @@
 #         www.fourwalledcubicle.com
 #
 
+import io
+
 
 def create_image(deck, background='black'):
     """
@@ -25,8 +27,7 @@ def create_image(deck, background='black'):
 
     image_format = deck.key_image_format()
 
-    dimensions = (image_format['width'], image_format['height'])
-    return Image.new("RGB", dimensions, background)
+    return Image.new("RGB", image_format['size'], background)
 
 
 def to_native_format(deck, image):
@@ -56,22 +57,10 @@ def to_native_format(deck, image):
     if image_format['flip'][1]:
         image = image.transpose(Image.FLIP_TOP_BOTTOM)
 
-    expected_size = (image_format['width'], image_format['height'])
-    if image.size != expected_size:
-        image.thumbnail(expected_size)
+    if image.size != image_format['size']:
+        image.thumbnail(image_format['size'])
 
-    if image_format['codec']:
-        import io
-
-        # We want a compressed image in a given codec, convert.
-        compressed_image = io.BytesIO()
-        image.save(compressed_image, image_format['codec'])
-        return compressed_image.getbuffer()
-    else:
-        # Get the raw r, g and b components of the generated image
-        r, g, b = image.split()
-
-        # Recombine the B, G and R elements in the order the display expects
-        # them, and convert the resulting image to a sequence of bytes
-        rgb = {"R": r, "G": g, "B": b}
-        return Image.merge("RGB", [rgb[c] for c in image_format['order']]).tobytes()
+    # We want a compressed image in a given codec, convert.
+    compressed_image = io.BytesIO()
+    image.save(compressed_image, image_format['format'])
+    return compressed_image.getbuffer()

@@ -19,17 +19,26 @@ class StreamDeckMini(StreamDeck):
 
     KEY_PIXEL_WIDTH = 80
     KEY_PIXEL_HEIGHT = 80
-    KEY_PIXEL_DEPTH = 3
-    KEY_PIXEL_ORDER = "BGR"
-    KEY_IMAGE_CODEC = None
-    KEY_FLIP = (False, False)
+    KEY_IMAGE_FORMAT = "BMP"
+    KEY_FLIP = (False, True)
     KEY_ROTATION = 90
 
     DECK_TYPE = "Stream Deck Mini"
 
-    KEY_IMAGE_SIZE = KEY_PIXEL_WIDTH * KEY_PIXEL_HEIGHT * KEY_PIXEL_DEPTH
-    START_PAGE = 0
-    REPORT_LENGTH = 1024
+    IMAGE_REPORT_LENGTH = 1024
+    IMAGE_REPORT_HEADER_LENGTH = 16
+    IMAGE_REPORT_PAYLOAD_LENGTH = IMAGE_REPORT_LENGTH - IMAGE_REPORT_HEADER_LENGTH
+
+    # 80 x 80 black BMP
+    BLANK_KEY_IMAGE = [
+        0x42, 0x4d, 0xf6, 0x3c, 0x00, 0x00, 0x00, 0x00,
+        0x00, 0x00, 0x36, 0x00, 0x00, 0x00, 0x28, 0x00,
+        0x00, 0x00, 0x48, 0x00, 0x00, 0x00, 0x48, 0x00,
+        0x00, 0x00, 0x01, 0x00, 0x18, 0x00, 0x00, 0x00,
+        0x00, 0x00, 0xc0, 0x3c, 0x00, 0x00, 0xc4, 0x0e,
+        0x00, 0x00, 0xc4, 0x0e, 0x00, 0x00, 0x00, 0x00,
+        0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+    ] + [0] * (KEY_PIXEL_WIDTH * KEY_PIXEL_HEIGHT * 3)
 
     def _read_key_states(self):
         """
@@ -42,6 +51,18 @@ class StreamDeckMini(StreamDeck):
 
         states = self.device.read(1 + self.KEY_COUNT)[1:]
         return [bool(s) for s in states]
+
+    def _reset_key_stream(self):
+        """
+        Sends a blank key report to the StreamDeck, resetting the key image
+        streamer in the device. This prevents previously started partial key
+        writes that were not completed from corrupting images sent from this
+        application.
+        """
+
+        payload = bytearray(self.IMAGE_REPORT_LENGTH)
+        payload[0] = 0x02
+        self.device.write(payload)
 
     def reset(self):
         """
@@ -80,7 +101,7 @@ class StreamDeckMini(StreamDeck):
         """
 
         serial = self.device.read_feature(0x03, 17)
-        return "".join(map(chr, serial[5:]))
+        return "".join(map(chr, serial[5:-1]))
 
     def get_firmware_version(self):
         """
@@ -108,73 +129,39 @@ class StreamDeckMini(StreamDeck):
                                  color.
         """
 
-        def pad(payload):
-            if len(payload) == self.REPORT_LENGTH:
-                return payload
-            extra = self.REPORT_LENGTH - len(payload)
-            padding = bytearray(extra)
-            return payload + padding
-
-        image = bytes(image or self.KEY_IMAGE_SIZE)
-
         if min(max(key, 0), self.KEY_COUNT) != key:
             raise IndexError("Invalid key index {}.".format(key))
 
-        if len(image) != self.KEY_IMAGE_SIZE:
-            raise ValueError("Invalid image size {}.".format(len(image)))
+        image = bytes(image or self.BLANK_KEY_IMAGE)
 
-        header_1 = [
-            0x02, 0x01, self.START_PAGE, 0x00, 0x00, key + 1, 0x00, 0x00,
-            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
-        ]
+        page_number = 0
+        bytes_remaining = len(image)
+        while bytes_remaining > 0:
+            this_length = min(bytes_remaining, self.IMAGE_REPORT_PAYLOAD_LENGTH)
+            bytes_sent = page_number * self.IMAGE_REPORT_PAYLOAD_LENGTH
 
-        bmp_header = [
-            0x42, 0x4d, 0xf6, 0x3c, 0x00, 0x00, 0x00, 0x00,
-            0x00, 0x00, 0x36, 0x00, 0x00, 0x00, 0x28, 0x00,
-            0x00, 0x00, 0x48, 0x00, 0x00, 0x00, 0x48, 0x00,
-            0x00, 0x00, 0x01, 0x00, 0x18, 0x00, 0x00, 0x00,
-            0x00, 0x00, 0xc0, 0x3c, 0x00, 0x00, 0xc4, 0x0e,
-            0x00, 0x00, 0xc4, 0x0e, 0x00, 0x00, 0x00, 0x00,
-            0x00, 0x00, 0x00, 0x00, 0x00, 0x00
-        ]
-
-        # Lengths remaining after headers are added
-        IMAGE_BYTES_FIRST_PAGE = self.REPORT_LENGTH - len(header_1) - len(bmp_header)
-        IMAGE_BYTES_FOLLOWUP_PAGES = self.REPORT_LENGTH - len(header_1)
-
-        # Bytes of data to fit into pages after the first
-        remaining_bytes = len(image) - IMAGE_BYTES_FIRST_PAGE
-
-        # Bytes leftover after the last full page
-        leftovers = remaining_bytes % IMAGE_BYTES_FOLLOWUP_PAGES
-
-        # Calc number of follow-up pages and add leftover partial page (if any)
-        pages = (remaining_bytes // IMAGE_BYTES_FOLLOWUP_PAGES) + (leftovers != 0)
-
-        # Generate first report
-        payload_first = bytes(header_1) + bytes(bmp_header) + image[: IMAGE_BYTES_FIRST_PAGE]
-        self.device.write(pad(payload_first))
-
-        # Initialize the slicing variable to the end of the first page
-        last_slice_end = IMAGE_BYTES_FIRST_PAGE
-
-        # Generate followup pages
-        for report_page in range(self.START_PAGE + 1, pages):
-            # Byte 3 is page number, byte 5 indicates follow-up, byte 6 is key number to update
-            header_followup = [
-                0x02, 0x01, report_page, 0x00, 0x01, key + 1, 0x00, 0x00,
-                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+            header = [
+                0x02,
+                0x01,
+                page_number,
+                0,
+                1 if this_length == bytes_remaining else 0,
+                key + 1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
             ]
 
-            # Figure out where to stop pulling data from the image for this page
-            if (report_page == pages - 1) and (leftovers != 0):
-                payload_end = last_slice_end + leftovers
-            else:
-                payload_end = last_slice_end + IMAGE_BYTES_FOLLOWUP_PAGES
+            payload = bytes(header) + image[bytes_sent:bytes_sent + this_length]
+            padding = bytearray(self.IMAGE_REPORT_LENGTH - len(payload))
+            self.device.write(payload + padding)
 
-            # Generate followup payload
-            payload_next = bytes(header_followup) + image[last_slice_end:payload_end]
-            self.device.write(pad(payload_next))
-
-            # Update slicing variable
-            last_slice_end = payload_end
+            bytes_remaining = bytes_remaining - this_length
+            page_number = page_number + 1

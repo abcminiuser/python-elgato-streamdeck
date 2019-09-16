@@ -12,6 +12,7 @@
     modules/imagehelpers.rst
     examples/deckinfo.rst
     examples/basic.rst
+    examples/tiled.rst
     examples/animated.rst
     changelog.rst
 

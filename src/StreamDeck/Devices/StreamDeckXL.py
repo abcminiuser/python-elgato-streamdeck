@@ -19,18 +19,17 @@ class StreamDeckXL(StreamDeck):
 
     KEY_PIXEL_WIDTH = 96
     KEY_PIXEL_HEIGHT = 96
-    KEY_PIXEL_DEPTH = 3
-    KEY_PIXEL_ORDER = "BGR"
-    KEY_IMAGE_CODEC = "JPEG"
+    KEY_IMAGE_FORMAT = "JPEG"
     KEY_FLIP = (True, True)
     KEY_ROTATION = 0
 
     DECK_TYPE = "Stream Deck XL"
 
-    REPORT_LENGTH = 1024
+    IMAGE_REPORT_LENGTH = 1024
     IMAGE_REPORT_HEADER_LENGTH = 8
-    IMAGE_REPORT_PAYLOAD_LENGTH = REPORT_LENGTH - IMAGE_REPORT_HEADER_LENGTH
+    IMAGE_REPORT_PAYLOAD_LENGTH = IMAGE_REPORT_LENGTH - IMAGE_REPORT_HEADER_LENGTH
 
+    # 96 x 96 black JPEG
     BLANK_KEY_IMAGE = [
         0xff, 0xd8, 0xff, 0xe0, 0x00, 0x10, 0x4a, 0x46, 0x49, 0x46, 0x00, 0x01, 0x01, 0x00, 0x00, 0x01, 0x00, 0x01, 0x00,
         0x00, 0xff, 0xdb, 0x00, 0x43, 0x00, 0x08, 0x06, 0x06, 0x07, 0x06, 0x05, 0x08, 0x07, 0x07, 0x07, 0x09, 0x09, 0x08,
@@ -86,6 +85,18 @@ class StreamDeckXL(StreamDeck):
 
         states = self.device.read(4 + self.KEY_COUNT)[4:]
         return [bool(s) for s in states]
+
+    def _reset_key_stream(self):
+        """
+        Sends a blank key report to the StreamDeck, resetting the key image
+        streamer in the device. This prevents previously started partial key
+        writes that were not completed from corrupting images sent from this
+        application.
+        """
+
+        payload = bytearray(self.IMAGE_REPORT_LENGTH)
+        payload[0] = 0x02
+        self.device.write(payload)
 
     def reset(self):
         """
@@ -157,9 +168,12 @@ class StreamDeckXL(StreamDeck):
         bytes_remaining = len(image)
         while bytes_remaining > 0:
             this_length = min(bytes_remaining, self.IMAGE_REPORT_PAYLOAD_LENGTH)
+            bytes_sent = page_number * self.IMAGE_REPORT_PAYLOAD_LENGTH
 
             header = [
-                0x02, 0x07, key,
+                0x02,
+                0x07,
+                key,
                 1 if this_length == bytes_remaining else 0,
                 this_length & 0xFF,
                 this_length >> 8,
@@ -167,8 +181,8 @@ class StreamDeckXL(StreamDeck):
                 page_number >> 8
             ]
 
-            bytes_sent = page_number * self.IMAGE_REPORT_PAYLOAD_LENGTH
-            self.device.write(bytes(header) + image[bytes_sent:bytes_sent + this_length])
+            payload = bytes(header) + image[bytes_sent:bytes_sent + this_length]
+            self.device.write(payload)
 
             bytes_remaining = bytes_remaining - this_length
             page_number = page_number + 1

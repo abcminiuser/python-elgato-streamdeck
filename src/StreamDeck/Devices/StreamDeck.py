@@ -21,8 +21,6 @@ class StreamDeck(ABC):
 
     KEY_PIXEL_WIDTH = None
     KEY_PIXEL_HEIGHT = None
-    KEY_PIXEL_DEPTH = None
-    KEY_PIXEL_ORDER = None
     KEY_IMAGE_CODEC = None
     KEY_FLIP = None
     KEY_ROTATION = None
@@ -55,6 +53,16 @@ class StreamDeck(ABC):
 
         :rtype: list(bool)
         :return: List containing the raw key states.
+        """
+        pass
+
+    @abstractmethod
+    def _reset_key_stream(self):
+        """
+        Sends a blank key report to the StreamDeck, resetting the key image
+        streamer in the device. This prevents previously started partial key
+        writes that were not completed from corrupting images sent from this
+        application.
         """
         pass
 
@@ -104,6 +112,8 @@ class StreamDeck(ABC):
         .. seealso:: See :func:`~StreamDeck.close` for the corresponding close method.
         """
         self.device.open()
+
+        self._reset_key_stream()
         self._setup_reader(self._read)
 
     def close(self):
@@ -171,15 +181,11 @@ class StreamDeck(ABC):
 
         :rtype: dict()
         :return: Dictionary describing the various image parameters
-                 (width, height, pixel depth, RGB order, mirroring and
-                 rotation).
+                 (size, image format, image mirroring and rotation).
         """
         return {
-            "width": self.KEY_PIXEL_WIDTH,
-            "height": self.KEY_PIXEL_HEIGHT,
-            "depth": self.KEY_PIXEL_DEPTH,
-            "order": self.KEY_PIXEL_ORDER,
-            "codec": self.KEY_IMAGE_CODEC,
+            "size": (self.KEY_PIXEL_WIDTH, self.KEY_PIXEL_HEIGHT),
+            "format": self.KEY_IMAGE_FORMAT,
             "flip": self.KEY_FLIP,
             "rotation": self.KEY_ROTATION,
         }

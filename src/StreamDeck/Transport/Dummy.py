@@ -6,6 +6,7 @@
 #
 
 import logging
+import binascii
 
 from .Transport import Transport
 
@@ -32,7 +33,7 @@ class Dummy(Transport):
             return self.id
 
         def write_feature(self, payload):
-            logging.info('Deck feature write (length %s): %s', len(payload), payload)
+            logging.info('Deck feature write (length %s): %s', len(payload), binascii.hexlify(payload))
             return True
 
         def read_feature(self, report_id, length):
@@ -40,7 +41,7 @@ class Dummy(Transport):
             return IOError("Dummy device!")
 
         def write(self, payload):
-            logging.info('Deck report write (length %s): %s', len(payload), payload)
+            logging.info('Deck report write (length %s): %s', len(payload), binascii.hexlify(payload))
             return True
 
         def read(self, length):
