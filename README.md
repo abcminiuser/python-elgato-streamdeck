@@ -27,7 +27,7 @@ Working - you can enumerate devices, set the brightness of the panel(s), set
 the images shown on each button, and read the current button states.
 
 Currently the following StreamDeck product variants are supported:
-* StreamDeck Classic
+* StreamDeck Original
 * StreamDeck Mini
 * StreamDeck XL
 
