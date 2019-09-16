@@ -19,7 +19,7 @@ repository to implement this library. Thanks Alex Van Camp!
 
 Initial StreamDeck Mini support added by [Aetherdyne](https://github.com/Aetherdyne).
 
-StreamDeck XP support assisted by [Pointshader](https://github.com/pointshader).
+StreamDeck XL support assisted by [Pointshader](https://github.com/pointshader).
 
 ## Status:
 
