@@ -18,6 +18,10 @@ from StreamDeck.DeviceManager import DeviceManager
 from StreamDeck.ImageHelpers import PILHelper
 
 
+# Folder location of image assets used by this example
+ASSETS_PATH = os.path.join(os.path.dirname(__file__), "Assets")
+
+
 # Generates an image that is correctly sized to fit across all keys of a given
 # StreamDeck.
 def create_full_deck_sized_image(deck, image_filename):
@@ -28,7 +32,7 @@ def create_full_deck_sized_image(deck, image_filename):
 
     # Resize the image to suit the StreamDeck's full image size (note: will not
     # preserve the correct aspect ratio).
-    image = Image.open(os.path.join(os.path.dirname(__file__), "Assets", image_filename)).convert("RGBA")
+    image = Image.open(os.path.join(ASSETS_PATH, image_filename)).convert("RGBA")
     return image.resize(full_deck_image_size, Image.LANCZOS)
 
 

@@ -35,12 +35,17 @@ class DeviceManager:
         :rtype: Transport.* instance
         :return: Instance of a HID Transport class
         """
-        if transport == "dummy":
-            return Dummy()
-        elif transport == "hidapi":
-            return HIDAPI()
 
-        raise IOError("Invalid HID transport backend \"{}\".".format(transport))
+        transports = {
+            "dummy": Dummy,
+            "hidapi": HIDAPI,
+        }
+
+        transport_class = transports.get(transport)
+        if transport_class is None:
+            raise IOError("Invalid HID transport backend \"{}\".".format(transport))
+
+        return transport_class()
 
     def __init__(self, transport="hidapi"):
         """

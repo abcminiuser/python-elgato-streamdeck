@@ -17,6 +17,10 @@ from StreamDeck.DeviceManager import DeviceManager
 from StreamDeck.ImageHelpers import PILHelper
 
 
+# Folder location of image assets used by this example
+ASSETS_PATH = os.path.join(os.path.dirname(__file__), "Assets")
+
+
 # Generates a custom tile with run-time generated text and custom image via the
 # PIL module.
 def render_key_image(deck, icon_filename, font_filename, label_text):
@@ -59,8 +63,8 @@ def get_key_style(deck, key, state):
 
     return {
         "name": name,
-        "icon": os.path.join(os.path.dirname(__file__), "Assets", icon),
-        "font": os.path.join(os.path.dirname(__file__), "Assets", font),
+        "icon": os.path.join(ASSETS_PATH, icon),
+        "font": os.path.join(ASSETS_PATH, font),
         "label": label
     }
 

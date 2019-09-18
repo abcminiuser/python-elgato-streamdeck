@@ -20,6 +20,9 @@ from StreamDeck.DeviceManager import DeviceManager
 from StreamDeck.ImageHelpers import PILHelper
 
 
+# Folder location of image assets used by this example
+ASSETS_PATH = os.path.join(os.path.dirname(__file__), "Assets")
+
 # Animation frames per second to attempt to display on the StreamDeck devices
 FRAMES_PER_SECOND = 30
 
@@ -31,7 +34,7 @@ def create_animation_frames(deck, image_filename):
     icon_frames = list()
 
     # Open the source image asset
-    icon = Image.open(os.path.join(os.path.dirname(__file__), "Assets", image_filename))
+    icon = Image.open(os.path.join(ASSETS_PATH, image_filename))
 
     # Create a blank key image in the host image format, which we can
     # duplicate quickly for each animation frame to save time
