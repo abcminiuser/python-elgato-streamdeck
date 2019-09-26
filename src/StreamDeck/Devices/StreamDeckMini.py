@@ -101,7 +101,7 @@ class StreamDeckMini(StreamDeck):
         """
 
         serial = self.device.read_feature(0x03, 17)
-        return "".join(map(chr, serial[5:-1]))
+        return "".join(map(chr, serial[5:]))
 
     def get_firmware_version(self):
         """
