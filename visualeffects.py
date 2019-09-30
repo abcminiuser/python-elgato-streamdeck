@@ -1,3 +1,7 @@
+from random import randint
+import math
+import sleep
+
 def pulse(cycles=3,interval=0.02):
     #TODO: Make non blocking so that effect continues to cycle in parallel
     for centisecond in range(cycles * 100 * 2):
