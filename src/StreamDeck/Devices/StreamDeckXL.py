@@ -14,8 +14,8 @@ class StreamDeckXL(StreamDeck):
     """
 
     KEY_COUNT = 32
-    KEY_COLS = 4
-    KEY_ROWS = 8
+    KEY_COLS = 8
+    KEY_ROWS = 4
 
     KEY_PIXEL_WIDTH = 96
     KEY_PIXEL_HEIGHT = 96
