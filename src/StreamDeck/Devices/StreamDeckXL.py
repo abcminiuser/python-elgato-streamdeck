@@ -130,7 +130,7 @@ class StreamDeckXL(StreamDeck):
         :return: String containing the serial number of the attached device.
         """
 
-        serial = self.device.read_feature(0x06, 17)
+        serial = self.device.read_feature(0x06, 32)
         return "".join(map(chr, serial[2:]))
 
     def get_firmware_version(self):
@@ -141,8 +141,8 @@ class StreamDeckXL(StreamDeck):
         :return: String containing the firmware version of the attached device.
         """
 
-        version = self.device.read_feature(0x05, 17)
-        return "".join(map(chr, version[5:]))
+        version = self.device.read_feature(0x05, 32)
+        return "".join(map(chr, version[6:]))
 
     def set_key_image(self, key, image):
         """
