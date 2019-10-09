@@ -12,3 +12,7 @@ Modules: StreamDeck Devices
 .. automodule:: StreamDeck.Devices.StreamDeckMini
    :members:
    :show-inheritance:
+
+.. automodule:: StreamDeck.Devices.StreamDeckXL
+   :members:
+   :show-inheritance:
