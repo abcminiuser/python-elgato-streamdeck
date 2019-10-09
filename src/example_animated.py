@@ -59,11 +59,8 @@ def create_animation_frames(deck, image_filename):
     return itertools.cycle(icon_frames)
 
 
-# Prints key state change information and closes the StreamDeck device.
+# Closes the StreamDeck device on key state change.
 def key_change_callback(deck, key, state):
-    # Print new key state
-    print("Deck {} Key {} = {}".format(deck.id(), key, state), flush=True)
-
     # Reset deck, clearing all button images.
     deck.reset()
 
@@ -79,6 +76,8 @@ if __name__ == "__main__":
     for index, deck in enumerate(streamdecks):
         deck.open()
         deck.reset()
+
+        print("Opened '{}' device (serial number: '{}')".format(deck.deck_type(), deck.get_serial_number()))
 
         # Set initial screen brightness to 30%.
         deck.set_brightness(30)
