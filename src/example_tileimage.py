@@ -9,7 +9,7 @@
 
 # Example script showing how to tile a larger image across multiple buttons, by
 # first generating an image suitable for the entire deck, then cropping out and
-# applying key-sized tiles to individual keys of a StreamDeck..
+# applying key-sized tiles to individual keys of a StreamDeck.
 
 import os
 import threading
@@ -18,7 +18,7 @@ from StreamDeck.DeviceManager import DeviceManager
 from StreamDeck.ImageHelpers import PILHelper
 
 
-# Folder location of image assets used by this example
+# Folder location of image assets used by this example.
 ASSETS_PATH = os.path.join(os.path.dirname(__file__), "Assets")
 
 
@@ -42,7 +42,7 @@ def crop_key_image_from_deck_sized_image(deck, image, key):
     key_width, key_height = deck.key_image_format()['size']
     key_rows, key_cols = deck.key_layout()
 
-    # Determine which row and column the requested key is located on
+    # Determine which row and column the requested key is located on.
     row = key // key_cols
     col = key % key_cols
 
@@ -61,13 +61,13 @@ def crop_key_image_from_deck_sized_image(deck, image, key):
 
 # Prints key state change information and closes the StreamDeck device.
 def key_change_callback(deck, key, state):
-    # Print new key state
+    # Print new key state.
     print("Deck {} Key {} = {}".format(deck.id(), key, state), flush=True)
 
-    # Reset deck, clearing all button images
+    # Reset deck, clearing all button images.
     deck.reset()
 
-    # Close deck handle, terminating internal worker threads
+    # Close deck handle, terminating internal worker threads.
     deck.close()
 
 
@@ -82,7 +82,7 @@ if __name__ == "__main__":
 
         print("Opened '{}' device (serial number: '{}')\n".format(deck.deck_type(), deck.get_serial_number()))
 
-        # Set initial screen brightness to 30%
+        # Set initial screen brightness to 30%.
         deck.set_brightness(30)
 
         # Load and resize a source image so that it will fill the given
@@ -97,11 +97,11 @@ if __name__ == "__main__":
             # Show the section of the main image onto the key.
             deck.set_key_image(k, key_image)
 
-        # Register callback function for when a key state changes
+        # Register callback function for when a key state changes.
         deck.set_key_callback(key_change_callback)
 
         # Wait until all application threads have terminated (for this example,
-        # this is when all deck handles are closed)
+        # this is when all deck handles are closed).
         for t in threading.enumerate():
             if t is threading.currentThread():
                 continue

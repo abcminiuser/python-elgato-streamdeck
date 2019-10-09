@@ -13,7 +13,7 @@
 from StreamDeck.DeviceManager import DeviceManager
 
 
-# Prints diagnostic information about a given StreamDeck
+# Prints diagnostic information about a given StreamDeck.
 def print_deck_info(index, deck):
     image_format = deck.key_image_format()
 
