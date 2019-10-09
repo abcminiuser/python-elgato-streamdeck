@@ -6,14 +6,6 @@ platform:
   arch: amd64
 
 steps:
-- name: Tests
-  image: abcminiuser/docker-ci-python:latest
-  pull: always
-  commands:
-  - apk add jpeg-dev zlib-dev
-  - pip install Pillow
-  - python src/test.py
-
 - name: Flake8
   image: abcminiuser/docker-ci-python:latest
   pull: always
@@ -25,6 +17,14 @@ steps:
   pull: always
   commands:
   - bandit -r src/
+
+- name: Tests
+  image: abcminiuser/docker-ci-python:latest
+  pull: always
+  commands:
+  - apk add jpeg-dev zlib-dev
+  - pip install Pillow
+  - python src/test.py
 
 - name: Documentation
   image: abcminiuser/docker-ci-python:latest
