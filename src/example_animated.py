@@ -45,7 +45,7 @@ def create_animation_frames(deck, image_filename):
         image = PILHelper.create_image(deck)
 
         # Resize the animation frame to best-fit the dimensions of a single key,
-        # and paste it onto our blank frame centered as closely as possible..
+        # and paste it onto our blank frame centered as closely as possible.
         icon_frame.thumbnail(image.size, Image.LANCZOS)
         icon_frame_pos = ((image.width - icon_frame.width) // 2, (image.height - icon_frame.height) // 2)
         image.paste(icon_frame, icon_frame_pos, icon_frame)

@@ -28,7 +28,7 @@ def render_key_image(deck, icon_filename, font_filename, label_text):
     image = PILHelper.create_image(deck)
 
     # Resize the source image asset to best-fit the dimensions of a single key,
-    # and paste it onto our blank frame centered as closely as possible..
+    # and paste it onto our blank frame centered as closely as possible.
     icon = Image.open(icon_filename).convert("RGBA")
     icon.thumbnail((image.width, image.height - 20), Image.LANCZOS)
     icon_pos = ((image.width - icon.width) // 2, 0)
