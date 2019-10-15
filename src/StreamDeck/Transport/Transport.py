@@ -126,11 +126,9 @@ class Transport(ABC):
     @abstractmethod
     def probe():
         """
-        Attempts to determine if the backend is installed and usable.
-
-        :rtype: bool
-        :return: True if the backend is installed and is likely usable to
-                 discover and communicate with attached devices.
+        Attempts to determine if the back-end is installed and usable. It is
+        expected that probe failures throw exceptions detailing their exact
+        cause of failure.
         """
         pass
 

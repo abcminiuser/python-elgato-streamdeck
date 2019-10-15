@@ -13,6 +13,10 @@ from .Transport.HID import HID
 from .Transport.HIDAPI import HIDAPI
 
 
+class ProbeError(Exception):
+    pass
+
+
 class DeviceManager:
     """
     Central device manager, to enumerate any attached StreamDeck devices. An
@@ -44,18 +48,31 @@ class DeviceManager:
             "hidapi": HIDAPI,
         }
 
-        if transport is None:
-            for name, transport_class in transports.items():
-                if transport_class.probe():
+        if transport:
+            transport_class = transports.get(transport)
+
+            if transport_class is None:
+                raise ProbeError("Unknown HID transport backend \"{}\".".format(transport))
+
+            try:
+                transport_class.probe()
+                return transport_class()
+            except Exception as transport_error:
+                raise ProbeError("Probe failed on HID backend \"{}\".".format(transport), transport_error)
+        else:
+            probe_errors = {}
+
+            for transport_name, transport_class in transports.items():
+                if transport_name == "dummy":
+                    continue
+
+                try:
+                    transport_class.probe()
                     return transport_class()
+                except Exception as transport_error:
+                    probe_errors[transport_name] = transport_error
 
-            raise IOError("Probe failed to find an installed HID backend.")
-
-        transport_class = transports.get(transport)
-        if transport_class is None:
-            raise IOError("Invalid HID transport backend \"{}\".".format(transport))
-
-        return transport_class()
+            raise ProbeError("Probe failed to find any functional HID backend.", probe_errors)
 
     def __init__(self, transport=None):
         """

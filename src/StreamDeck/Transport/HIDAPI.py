@@ -165,17 +165,8 @@ class HIDAPI(Transport):
     @staticmethod
     def probe():
         """
-        Attempts to determine if the backend is installed and usable.
-
-        :rtype: bool
-        :return: True if the backend is installed and is likely usable to
-                 discover and communicate with attached devices.
+        Attempts to determine if the back-end is installed and usable.
         """
-        try:
-            import hid
 
-            hid.enumerate(vendor_id=0, product_id=0)
-
-            return True
-        except:  # noqa: E722
-            return False
+        import hid
+        hid.enumerate(vid=0, pid=0)
