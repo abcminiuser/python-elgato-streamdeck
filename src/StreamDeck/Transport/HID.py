@@ -146,6 +146,17 @@ class HID(Transport):
             """
             return self.hid.read(length)
 
+    @staticmethod
+    def probe():
+        """
+        Attempts to determine if the back-end is installed and usable. It is
+        expected that probe failures throw exceptions detailing their exact
+        cause of failure.
+        """
+
+        import hid
+        hid.enumerate(vid=0, pid=0)
+
     def enumerate(self, vid, pid):
         """
         Enumerates all available USB HID devices on the system.
@@ -169,12 +180,3 @@ class HID(Transport):
         devices = hid.enumerate(vid=vid, pid=pid)
 
         return [HID.Device(d) for d in devices]
-
-    @staticmethod
-    def probe():
-        """
-        Attempts to determine if the back-end is installed and usable.
-        """
-
-        import hid
-        hid.enumerate(vid=0, pid=0)
