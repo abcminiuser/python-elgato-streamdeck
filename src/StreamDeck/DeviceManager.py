@@ -9,6 +9,7 @@ from .Devices.StreamDeckOriginal import StreamDeckOriginal
 from .Devices.StreamDeckMini import StreamDeckMini
 from .Devices.StreamDeckXL import StreamDeckXL
 from .Transport.Dummy import Dummy
+from .Transport.HID import HID
 from .Transport.HIDAPI import HIDAPI
 
 
@@ -28,9 +29,10 @@ class DeviceManager:
     def _get_transport(transport):
         """
         Creates a new HID transport instance from the given transport back-end
-        name.
+        name. If no specific transport is supplied, an attempt to find an
+        installed backend will be made.
 
-        :param str transport: Name of a supported HID transport back-end to use.
+        :param str transport: Name of a supported HID transport back-end to use, None to autoprobe.
 
         :rtype: Transport.* instance
         :return: Instance of a HID Transport class
@@ -38,8 +40,16 @@ class DeviceManager:
 
         transports = {
             "dummy": Dummy,
+            "hid": HID,
             "hidapi": HIDAPI,
         }
+
+        if transport is None:
+            for name, transport_class in transports.items():
+                if transport_class.probe():
+                    return transport_class()
+
+            raise IOError("Probe failed to find an installed HID backend.")
 
         transport_class = transports.get(transport)
         if transport_class is None:
@@ -47,11 +57,11 @@ class DeviceManager:
 
         return transport_class()
 
-    def __init__(self, transport="hidapi"):
+    def __init__(self, transport=None):
         """
         Creates a new StreamDeck DeviceManager, used to detect attached StreamDeck devices.
 
-        :param str transport: name of the the HID transport backend to use
+        :param str transport: name of the the specific HID transport back-end to use, None to auto-probe.
         """
         self.transport = self._get_transport(transport)
 

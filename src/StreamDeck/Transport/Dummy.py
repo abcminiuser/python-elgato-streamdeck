@@ -38,7 +38,7 @@ class Dummy(Transport):
 
         def read_feature(self, report_id, length):
             logging.info('Deck feature read (length %s)', length)
-            return IOError("Dummy device!")
+            raise IOError("Dummy device!")
 
         def write(self, payload):
             logging.info('Deck report write (length %s): %s', len(payload), binascii.hexlify(payload))
@@ -50,3 +50,7 @@ class Dummy(Transport):
 
     def enumerate(self, vid, pid):
         return [Dummy.Device("{}:{}".format(vid, pid))]
+
+    @staticmethod
+    def probe():
+        return False

@@ -5,21 +5,21 @@
 #         www.fourwalledcubicle.com
 #
 
-# pip3 install hidapi (https://pypi.org/project/hidapi/)
+# pip3 install hid (https://pypi.org/project/hid/)
 
 from .Transport import Transport
 
 
-class HIDAPI(Transport):
+class HID(Transport):
     """
-    USB HID transport layer, using the `hidapi` Python wrapper. This transport
-    can be used to enumerate and communicate with HID devices.
+    USB HID transport layer, using the `hid` Python wrapper. This transport can
+    be used to enumerate and communicate with HID devices.
     """
 
     class Device(Transport.Device):
         def __init__(self, device_info):
             """
-            Creates a new HIDAPI device instance, used to send and receive HID
+            Creates a new HID device instance, used to send and receive HID
             reports from/to an attached USB HID device.
 
             :param dict() device_info: Device information dictionary describing
@@ -28,11 +28,11 @@ class HIDAPI(Transport):
             import hid
 
             self.hid_info = device_info
-            self.hid = hid.device()
+            self.hid = hid.Device(vid=device_info['vendor_id'], pid=device_info['product_id'])
 
         def __del__(self):
             """
-            Deletion handler for the HIDAPI transport, automatically closing the
+            Deletion handler for the HID transport, automatically closing the
             device if it is currently open.
             """
             try:
@@ -45,16 +45,18 @@ class HIDAPI(Transport):
             Opens the HID device for input/output. This must be called prior to
             sending or receiving any HID reports.
 
-            .. seealso:: See :func:`~HIDAPI.Device.close` for the corresponding
+            .. seealso:: See :func:`~HID.Device.close` for the corresponding
                          close method.
             """
-            self.hid.open_path(self.hid_info['path'])
+            import hid
+
+            self.hid = hid.Device(path=self.hid_info['path'])
 
         def close(self):
             """
             Closes theHID  device for input/output.
 
-            .. seealso:: See :func:`~~HIDAPI.Device.open` for the corresponding
+            .. seealso:: See :func:`~~HID.Device.open` for the corresponding
                          open method.
             """
             self.hid.close()
@@ -95,6 +97,9 @@ class HIDAPI(Transport):
             :rtype: int
             :return: Number of bytes successfully sent to the device.
             """
+            if type(payload) is bytearray:
+                payload = bytes(payload)
+
             return self.hid.send_feature_report(payload)
 
         def read_feature(self, report_id, length):
@@ -123,6 +128,9 @@ class HIDAPI(Transport):
             :rtype: int
             :return: Number of bytes successfully sent to the device.
             """
+            if type(payload) is bytearray:
+                payload = bytes(payload)
+
             return self.hid.write(payload)
 
         def read(self, length):
@@ -147,7 +155,7 @@ class HIDAPI(Transport):
         :param int pid: USB Product ID to filter all devices by, `None` if the
                         device list should not be filtered by product.
 
-        :rtype: list(HIDAPI.Device)
+        :rtype: list(HID.Device)
         :return: List of discovered USB HID devices.
         """
 
@@ -158,9 +166,9 @@ class HIDAPI(Transport):
             pid = 0
 
         import hid
-        devices = hid.enumerate(vendor_id=vid, product_id=pid)
+        devices = hid.enumerate(vid=vid, pid=pid)
 
-        return [HIDAPI.Device(d) for d in devices]
+        return [HID.Device(d) for d in devices]
 
     @staticmethod
     def probe():
@@ -174,7 +182,7 @@ class HIDAPI(Transport):
         try:
             import hid
 
-            hid.enumerate(vendor_id=0, product_id=0)
+            hid.enumerate(vid=0, pid=0)
 
             return True
         except:  # noqa: E722

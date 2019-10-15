@@ -124,6 +124,17 @@ class Transport(ABC):
             pass
 
     @abstractmethod
+    def probe():
+        """
+        Attempts to determine if the backend is installed and usable.
+
+        :rtype: bool
+        :return: True if the backend is installed and is likely usable to
+                 discover and communicate with attached devices.
+        """
+        pass
+
+    @abstractmethod
     def enumerate(self, vid, pid):
         """
         Enumerates all available devices on the system using the current

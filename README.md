@@ -11,16 +11,6 @@ front-ends, such as a custom control front-end for home automation software.
 
 [Online Documentation](https://python-elgato-streamdeck.readthedocs.io)
 
-## Credits:
-
-I've used the reverse engineering notes from
-[this GitHub](https://github.com/Lange/node-elgato-stream-deck/blob/master/NOTES.md)
-repository to implement this library. Thanks Alex Van Camp!
-
-Initial StreamDeck Mini support added by [Aetherdyne](https://github.com/Aetherdyne).
-
-StreamDeck XL support assisted by [Pointshader](https://github.com/pointshader).
-
 ## Status:
 
 Working - you can enumerate devices, set the brightness of the panel(s), set
@@ -31,24 +21,43 @@ Currently the following StreamDeck product variants are supported:
 * StreamDeck Mini
 * StreamDeck XL
 
-## Dependencies:
+## Package Dependencies:
 
 The library core has no special dependencies, but does use one of (potentially)
 several HID backend libraries. You will need to install the dependencies
 appropriate to your chosen backend.
 
-The included example requires the PIL fork "Pillow", although it can be swapped
+The included examples require the PIL fork "Pillow", although it can be swapped
 out if desired by the user application for any other image manipulation library.
 
-To install all library dependencies at once, run:
-```
-pip install -r requirements.txt
-```
+### HID Backend
+
+The recommended HID backend is the aptly named
+[HID Python library](https://pypi.org/project/hid/), which should work across
+the three major (Windows, Mac, Linux) OSes and is the most up-to-date. This can
+be installed via `pip3 install hid`.
+
+Note that Windows systems requires additional manual installation of a DLL in
+order to function. The latest source for this DLL is the
+[libUSB GitHub project](https://github.com/libusb/hidapi/releases).
+
+Despite the additional setup, this will give the best results in terms of
+reliability and performance.
 
 ### HIDAPI Backend
 
-The default backend is the HIDAPI Python library, which should work across
-the three major (Windows, Mac, Linux) OSes.
+Another option is the older
+[HIDAPI Python library](https://pypi.org/project/hidapi/), which originates from
+the same original project as the HID library listed above, but is now entirely
+unmaintained. This can be installed via `pip3 install hidapi`.
+
+Several users report issues with this backend due to various bugs
+that have not been patched in the packaged library version, but support for it
+is included in this library due to its simple one-line setup on all three major
+platforms.
+
+Note the library package name conflicts with the HID backend above; only one or
+the other should be installed at the same time.
 
 ## Package Installation:
 
@@ -81,6 +90,7 @@ sudo apt install -y libudev-dev libusb-1.0-0-dev
 
 # Install dependencies
 pip3 install hidapi
+pip3 install pillow
 
 # Add udev rule to allow all users non-root access to Elgato StreamDeck devices:
 sudo tee /etc/udev/rules.d/10-streamdeck.rules << EOF
@@ -98,6 +108,26 @@ pip3 install streamdeck
 Note that after adding the `udev` rule, a restart will be required in order for
 it to take effect and allow access to the StreamDeck device without requiring
 root privileges.
+
+## Credits:
+
+I've used the reverse engineering notes from
+[this GitHub](https://github.com/Lange/node-elgato-stream-deck/blob/master/NOTES.md)
+repository to implement this library. Thanks Alex Van Camp!
+
+Thank you to the following contributors, large and small, for helping with the
+development and maintenance of this library:
+
+- [Aetherdyne](https://github.com/Aetherdyne)
+- [dirkk0](https://github.com/dirkk0)
+- [Kalle-Wirsch](https://github.com/Kalle-Wirsch)
+- [pointshader](https://github.com/pointshader)
+- [spidererrol](https://github.com/Spidererrol)
+- [Subsentient](https://github.com/Subsentient)
+- [shanna](https://github.com/shanna)
+
+If you've contributed in some manner, but I've accidentally missed you in the
+list above, please let me know.
 
 ## License:
 
