@@ -1,6 +1,10 @@
+Version 0,6,0:
+	- Added support for the 'HID' Python package. This new HID backend is strongly recommended over the old HIDAPI backend.
+	- Added autoprobing of installed backends, if no specific transport is supplied when constructing a DeviceManager instance.
+
 Version 0.5.1:
-	- Fixed StreamDeck XL reporting swapped rows/columns count
-	- Fixed StreamDeck XL failing to report correct serial number and firmware version
+	- Fixed StreamDeck XL reporting swapped rows/columns count.
+	- Fixed StreamDeck XL failing to report correct serial number and firmware version.
 
 Version 0.5.0:
 	- Fixed StreamDeck devices occasionally showing partial old frames on initial connection.
