@@ -5,7 +5,7 @@
 #         www.fourwalledcubicle.com
 #
 
-# pip3 install hidapi (https://pypi.python.org/pypi/hidapi/0.7.99.post8)
+# pip3 install hidapi (https://pypi.org/project/hidapi/)
 
 from .Transport import Transport
 
@@ -137,6 +137,17 @@ class HIDAPI(Transport):
                      read.
             """
             return self.hid.read(length)
+
+    @staticmethod
+    def probe():
+        """
+        Attempts to determine if the back-end is installed and usable. It is
+        expected that probe failures throw exceptions detailing their exact
+        cause of failure.
+        """
+
+        import hid
+        hid.enumerate(vid=0, pid=0)
 
     def enumerate(self, vid, pid):
         """

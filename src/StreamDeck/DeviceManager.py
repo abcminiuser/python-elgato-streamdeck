@@ -9,7 +9,12 @@ from .Devices.StreamDeckOriginal import StreamDeckOriginal
 from .Devices.StreamDeckMini import StreamDeckMini
 from .Devices.StreamDeckXL import StreamDeckXL
 from .Transport.Dummy import Dummy
+from .Transport.HID import HID
 from .Transport.HIDAPI import HIDAPI
+
+
+class ProbeError(Exception):
+    pass
 
 
 class DeviceManager:
@@ -28,9 +33,10 @@ class DeviceManager:
     def _get_transport(transport):
         """
         Creates a new HID transport instance from the given transport back-end
-        name.
+        name. If no specific transport is supplied, an attempt to find an
+        installed backend will be made.
 
-        :param str transport: Name of a supported HID transport back-end to use.
+        :param str transport: Name of a supported HID transport back-end to use, None to autoprobe.
 
         :rtype: Transport.* instance
         :return: Instance of a HID Transport class
@@ -38,20 +44,41 @@ class DeviceManager:
 
         transports = {
             "dummy": Dummy,
+            "hid": HID,
             "hidapi": HIDAPI,
         }
 
-        transport_class = transports.get(transport)
-        if transport_class is None:
-            raise IOError("Invalid HID transport backend \"{}\".".format(transport))
+        if transport:
+            transport_class = transports.get(transport)
 
-        return transport_class()
+            if transport_class is None:
+                raise ProbeError("Unknown HID transport backend \"{}\".".format(transport))
 
-    def __init__(self, transport="hidapi"):
+            try:
+                transport_class.probe()
+                return transport_class()
+            except Exception as transport_error:
+                raise ProbeError("Probe failed on HID backend \"{}\".".format(transport), transport_error)
+        else:
+            probe_errors = {}
+
+            for transport_name, transport_class in transports.items():
+                if transport_name == "dummy":
+                    continue
+
+                try:
+                    transport_class.probe()
+                    return transport_class()
+                except Exception as transport_error:
+                    probe_errors[transport_name] = transport_error
+
+            raise ProbeError("Probe failed to find any functional HID backend.", probe_errors)
+
+    def __init__(self, transport=None):
         """
         Creates a new StreamDeck DeviceManager, used to detect attached StreamDeck devices.
 
-        :param str transport: name of the the HID transport backend to use
+        :param str transport: name of the the specific HID transport back-end to use, None to auto-probe.
         """
         self.transport = self._get_transport(transport)
 
