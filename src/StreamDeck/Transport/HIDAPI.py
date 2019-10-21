@@ -35,10 +35,7 @@ class HIDAPI(Transport):
             Deletion handler for the HIDAPI transport, automatically closing the
             device if it is currently open.
             """
-            try:
-                self.hid.close()
-            except (IOError, ValueError):
-                pass
+            self.close()
 
         def open(self):
             """
@@ -57,7 +54,10 @@ class HIDAPI(Transport):
             .. seealso:: See :func:`~~HIDAPI.Device.open` for the corresponding
                          open method.
             """
-            self.hid.close()
+            try:
+                self.hid.close()
+            except Exception:  # nosec
+                pass
 
         def connected(self):
             """
@@ -145,8 +145,8 @@ class HIDAPI(Transport):
         expected that probe failures throw exceptions detailing their exact
         cause of failure.
         """
-
         import hid
+
         hid.enumerate(vid=0, pid=0)
 
     def enumerate(self, vid, pid):
@@ -161,6 +161,7 @@ class HIDAPI(Transport):
         :rtype: list(HIDAPI.Device)
         :return: List of discovered USB HID devices.
         """
+        import hid
 
         if vid is None:
             vid = 0
@@ -168,7 +169,6 @@ class HIDAPI(Transport):
         if pid is None:
             pid = 0
 
-        import hid
         devices = hid.enumerate(vendor_id=vid, product_id=pid)
 
         return [HIDAPI.Device(d) for d in devices]

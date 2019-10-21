@@ -25,20 +25,15 @@ class HID(Transport):
             :param dict() device_info: Device information dictionary describing
                                        a single unique attached USB HID device.
             """
-            import hid
-
             self.hid_info = device_info
-            self.hid = hid.Device(vid=device_info['vendor_id'], pid=device_info['product_id'])
+            self.hid = None
 
         def __del__(self):
             """
             Deletion handler for the HID transport, automatically closing the
             device if it is currently open.
             """
-            try:
-                self.hid.close()
-            except (IOError, ValueError):
-                pass
+            self.close()
 
         def open(self):
             """
@@ -59,7 +54,13 @@ class HID(Transport):
             .. seealso:: See :func:`~~HID.Device.open` for the corresponding
                          open method.
             """
-            self.hid.close()
+            if not self.hid:
+                return
+
+            try:
+                self.hid.close()
+            except Exception:  # nosec
+                pass
 
         def connected(self):
             """
@@ -97,10 +98,18 @@ class HID(Transport):
             :rtype: int
             :return: Number of bytes successfully sent to the device.
             """
+            import hid
+
+            if not self.hid:
+                raise IOError("No HID device!")
+
             if type(payload) is bytearray:
                 payload = bytes(payload)
 
-            return self.hid.send_feature_report(payload)
+            try:
+                return self.hid.send_feature_report(payload)
+            except hid.HIDException as e:
+                raise IOError(e)
 
         def read_feature(self, report_id, length):
             """
@@ -114,7 +123,15 @@ class HID(Transport):
                      first byte of the report will be the Report ID of the
                      report that was read.
             """
-            return self.hid.get_feature_report(report_id, length)
+            import hid
+
+            if not self.hid:
+                raise IOError("No HID device!")
+
+            try:
+                return self.hid.get_feature_report(report_id, length)
+            except hid.HIDException as e:
+                raise IOError(e)
 
         def write(self, payload):
             """
@@ -128,10 +145,18 @@ class HID(Transport):
             :rtype: int
             :return: Number of bytes successfully sent to the device.
             """
+            import hid
+
+            if not self.hid:
+                raise IOError("No HID device!")
+
             if type(payload) is bytearray:
                 payload = bytes(payload)
 
-            return self.hid.write(payload)
+            try:
+                return self.hid.write(payload)
+            except hid.HIDException as e:
+                raise IOError(e)
 
         def read(self, length):
             """
@@ -144,7 +169,15 @@ class HID(Transport):
                      of the report will be the Report ID of the report that was
                      read.
             """
-            return self.hid.read(length)
+            import hid
+
+            if not self.hid:
+                raise IOError("No HID device!")
+
+            try:
+                return self.hid.read(length)
+            except hid.HIDException as e:
+                raise IOError(e)
 
     @staticmethod
     def probe():
@@ -153,8 +186,8 @@ class HID(Transport):
         expected that probe failures throw exceptions detailing their exact
         cause of failure.
         """
-
         import hid
+
         hid.enumerate(vid=0, pid=0)
 
     def enumerate(self, vid, pid):
@@ -169,6 +202,7 @@ class HID(Transport):
         :rtype: list(HID.Device)
         :return: List of discovered USB HID devices.
         """
+        import hid
 
         if vid is None:
             vid = 0
@@ -176,7 +210,6 @@ class HID(Transport):
         if pid is None:
             pid = 0
 
-        import hid
         devices = hid.enumerate(vid=vid, pid=pid)
 
         return [HID.Device(d) for d in devices]
