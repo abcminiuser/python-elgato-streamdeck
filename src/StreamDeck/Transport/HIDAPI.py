@@ -147,7 +147,7 @@ class HIDAPI(Transport):
         """
         import hid
 
-        hid.enumerate(vid=0, pid=0)
+        hid.enumerate(vendor_id=0, product_id=0)
 
     def enumerate(self, vid, pid):
         """
