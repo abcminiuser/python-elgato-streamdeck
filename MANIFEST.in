@@ -1,4 +1,5 @@
-recursive-include src/StreamDeck
+graft src/StreamDeck
+graft src/Assets
 include src/example*.py
 include *.md
 include VERSION
