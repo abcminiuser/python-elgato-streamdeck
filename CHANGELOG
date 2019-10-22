@@ -1,4 +1,8 @@
-Version 0,6,0:
+Version 0.6.1:
+	- Fixed broken HIDAPI backend probing.
+	- Fixed double-open of HID backend devices causing connection issues on some platforms.
+
+Version 0.6.0:
 	- Added support for the 'HID' Python package. This new HID backend is strongly recommended over the old HIDAPI backend.
 	- Added autoprobing of installed backends, if no specific transport is supplied when constructing a DeviceManager instance.
 
