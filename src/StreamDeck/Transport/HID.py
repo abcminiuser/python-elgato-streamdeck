@@ -186,8 +186,26 @@ class HID(Transport):
         expected that probe failures throw exceptions detailing their exact
         cause of failure.
         """
-        import hid
+        import ctypes
 
+        blacklisted_library_paths = (
+            'libhidapi-hidraw.so',
+            'libhidapi-hidraw.so.0',
+        )
+
+        blacklisted_hidapi = None
+
+        for lib in blacklisted_library_paths:
+            try:
+                if not blacklisted_hidapi:
+                    blacklisted_hidapi = ctypes.cdll.LoadLibrary(lib)
+            except OSError:
+                pass
+
+        if blacklisted_hidapi:
+            raise OSError("The libhidapi-hidraw0 backend is currently blacklisted for StreamDeck devices.")
+
+        import hid
         hid.enumerate(vid=0, pid=0)
 
     def enumerate(self, vid, pid):
