@@ -104,7 +104,7 @@ class StreamDeckXL(StreamDeck):
         standby image.
         """
 
-        payload = bytearray(2)
+        payload = bytearray(32)
         payload[0:2] = [0x03, 0x03]
         self.device.write_feature(payload)
 
