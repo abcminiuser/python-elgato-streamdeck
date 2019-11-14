@@ -17,9 +17,11 @@ if __name__ == "__main__":
     manager = DeviceManager(transport="dummy")
     streamdecks = manager.enumerate()
 
-    print("Got {} Dummy Stream Deck(s).\n".format(len(streamdecks)), flush=True)
+    logging.info("Got {} Dummy Stream Deck(s).\n".format(len(streamdecks)))
 
     for index, deck in enumerate(streamdecks):
+        logging.info("Using Deck Type: {}".format(deck.deck_type()))
+
         deck.open()
 
         connected = deck.connected()
