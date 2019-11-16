@@ -1,3 +1,7 @@
+Version 0.6.2:
+	- Fixed broken StreamDeck XL communications on Linux.
+	- Added blacklist for the `libhidapi-hidraw` system library which breaks StreamDeck Original communications.
+
 Version 0.6.1:
 	- Fixed broken HIDAPI backend probing.
 	- Fixed double-open of HID backend devices causing connection issues on some platforms.

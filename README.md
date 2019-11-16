@@ -41,6 +41,10 @@ Note that Windows systems requires additional manual installation of a DLL in
 order to function. The latest source for this DLL is the
 [libUSB GitHub project](https://github.com/libusb/hidapi/releases).
 
+On Linux, this HID library can use one of two system libraries for HID
+communication - `libhidapi-hidraw0` or `libhidapi-libusb0`. Only the latter will
+work, and the former (if present) should be uninstalled.
+
 Despite the additional setup, this will give the best results in terms of
 reliability and performance.
 
@@ -122,7 +126,9 @@ Thank you to the following contributors, large and small, for helping with the
 development and maintenance of this library:
 
 - [Aetherdyne](https://github.com/Aetherdyne)
+- [BS-Tek](https://github.com/BS-Tek)
 - [dirkk0](https://github.com/dirkk0)
+- [dubstech](https://github.com/dubstech)
 - [Kalle-Wirsch](https://github.com/Kalle-Wirsch)
 - [pointshader](https://github.com/pointshader)
 - [spidererrol](https://github.com/Spidererrol)
