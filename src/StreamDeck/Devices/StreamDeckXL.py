@@ -105,7 +105,7 @@ class StreamDeckXL(StreamDeck):
         """
 
         payload = bytearray(32)
-        payload[0:2] = [0x03, 0x03]
+        payload[0:2] = [0x03, 0x02]
         self.device.write_feature(payload)
 
     def set_brightness(self, percent):
