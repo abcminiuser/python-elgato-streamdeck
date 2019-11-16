@@ -30,7 +30,7 @@ appropriate to your chosen backend.
 The included examples require the PIL fork "Pillow", although it can be swapped
 out if desired by the user application for any other image manipulation library.
 
-### HID Backend
+### HID Backend (recommended)
 
 The recommended HID backend is the aptly named
 [HID Python library](https://pypi.org/project/hid/), which should work across
@@ -44,7 +44,7 @@ order to function. The latest source for this DLL is the
 Despite the additional setup, this will give the best results in terms of
 reliability and performance.
 
-### HIDAPI Backend
+### HIDAPI Backend (not recommended)
 
 Another option is the older
 [HIDAPI Python library](https://pypi.org/project/hidapi/), which originates from
@@ -75,7 +75,7 @@ git clone https://github.com/abcminiuser/python-elgato-streamdeck.git
 ## Raspberry Pi Installation:
 
 The following script has been verified working on a Raspberry Pi (Model 2 B)
-running a stock Debian Stretch image, to install all the required dependencies
+running a stock Debian Buster image, to install all the required dependencies
 needed by this project:
 
 ```
@@ -85,11 +85,14 @@ sudo apt update && sudo apt dist-upgrade -y
 # Install the pip Python package manager
 sudo apt install -y python3-pip
 
-# Install system packages needed for the Python hidapi package installation
+# Install system packages needed for the Python hid package installation
 sudo apt install -y libudev-dev libusb-1.0-0-dev
 
-# Install dependencies
-pip3 install hidapi
+# Install system packages needed for the Python Pillow package installation
+sudo apt install -y libjpeg-dev zlib1g-dev
+
+# Install python library dependencies
+pip3 install hid
 pip3 install pillow
 
 # Add udev rule to allow all users non-root access to Elgato StreamDeck devices:
