@@ -287,7 +287,7 @@ class StreamDeck(ABC):
     @abstractmethod
     def set_key_image(self, key, image):
         """
-        Sets the image of a button on the StremDeck to the given image. The
+        Sets the image of a button on the StreamDeck to the given image. The
         image being set should be in the correct format for the device, as an
         enumerable collection of bytes.
 
