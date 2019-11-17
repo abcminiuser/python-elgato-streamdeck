@@ -1,7 +1,6 @@
 .. mdinclude:: ../../README.md
 
 .. toctree::
-    :maxdepth: 2
     :numbered:
     :glob:
     :hidden:
