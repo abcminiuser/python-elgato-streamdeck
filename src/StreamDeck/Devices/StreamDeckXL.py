@@ -113,8 +113,12 @@ class StreamDeckXL(StreamDeck):
         Sets the global screen brightness of the StreamDeck, across all the
         physical buttons.
 
-        :param int/float percent: brightness percent, from [0-100] as an `int`.
+        :param int/float percent: brightness percent, from [0-100] as an `int`,
+                                  or normalized to [0.0-1.0] as a `float`.
         """
+
+        if isinstance(percent, float):
+            percent = int(100.0 * percent)
 
         percent = min(max(percent, 0), 100)
 
