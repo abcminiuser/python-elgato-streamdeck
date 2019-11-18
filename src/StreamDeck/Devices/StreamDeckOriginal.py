@@ -115,7 +115,7 @@ class StreamDeckOriginal(StreamDeck):
         """
 
         serial = self.device.read_feature(0x03, 17)
-        return str(bytes(serial[5:-1]), 'utf-8').rstrip(' \0')
+        return str(bytes(serial[5:]), 'utf-8').rstrip(' \0')
 
     def get_firmware_version(self):
         """
