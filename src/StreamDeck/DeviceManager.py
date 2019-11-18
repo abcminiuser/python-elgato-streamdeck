@@ -6,6 +6,7 @@
 #
 
 from .Devices.StreamDeckOriginal import StreamDeckOriginal
+from .Devices.StreamDeckOriginalV2 import StreamDeckOriginalV2
 from .Devices.StreamDeckMini import StreamDeckMini
 from .Devices.StreamDeckXL import StreamDeckXL
 from .Transport.Dummy import Dummy
@@ -26,7 +27,7 @@ class DeviceManager:
 
     USB_VID_ELGATO = 0x0fd9
     USB_PID_STREAMDECK_ORIGINAL = 0x0060
-    USB_PID_STREAMDECK_ORIGINAL_REV2 = 0x006d
+    USB_PID_STREAMDECK_ORIGINAL_V2 = 0x006d
     USB_PID_STREAMDECK_MINI = 0x0063
     USB_PID_STREAMDECK_XL = 0x006c
 
@@ -93,7 +94,7 @@ class DeviceManager:
 
         products = [
             (self.USB_VID_ELGATO, self.USB_PID_STREAMDECK_ORIGINAL, StreamDeckOriginal),
-            (self.USB_VID_ELGATO, self.USB_PID_STREAMDECK_ORIGINAL_REV2, StreamDeckOriginal),
+            (self.USB_VID_ELGATO, self.USB_PID_STREAMDECK_ORIGINAL_V2, StreamDeckOriginalV2),
             (self.USB_VID_ELGATO, self.USB_PID_STREAMDECK_MINI, StreamDeckMini),
             (self.USB_VID_ELGATO, self.USB_PID_STREAMDECK_XL, StreamDeckXL),
         ]
