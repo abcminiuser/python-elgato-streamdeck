@@ -27,7 +27,6 @@ class StreamDeckOriginal(StreamDeck):
 
     IMAGE_REPORT_LENGTH = 8191
     IMAGE_REPORT_HEADER_LENGTH = 16
-    IMAGE_REPORT_PAYLOAD_LENGTH = IMAGE_REPORT_LENGTH - IMAGE_REPORT_HEADER_LENGTH
 
     # 72 x 72 black BMP
     BLANK_KEY_IMAGE = [
@@ -147,14 +146,15 @@ class StreamDeckOriginal(StreamDeck):
             raise IndexError("Invalid key index {}.".format(key))
 
         image = bytes(image or self.BLANK_KEY_IMAGE)
+        image_report_payload_length = len(image) // 2
 
         key = self._convert_key_id_origin(key)
 
         page_number = 0
         bytes_remaining = len(image)
         while bytes_remaining > 0:
-            this_length = min(bytes_remaining, self.IMAGE_REPORT_PAYLOAD_LENGTH)
-            bytes_sent = page_number * self.IMAGE_REPORT_PAYLOAD_LENGTH
+            this_length = min(bytes_remaining, image_report_payload_length)
+            bytes_sent = page_number * image_report_payload_length
 
             header = [
                 0x02,
