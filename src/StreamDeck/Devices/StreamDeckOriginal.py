@@ -10,7 +10,7 @@ from .StreamDeck import StreamDeck
 
 class StreamDeckOriginal(StreamDeck):
     """
-    Represents a physically attached original StreamDeck device.
+    Represents a physically attached StreamDeck Original device.
     """
 
     KEY_COUNT = 15
@@ -23,7 +23,7 @@ class StreamDeckOriginal(StreamDeck):
     KEY_FLIP = (True, True)
     KEY_ROTATION = 0
 
-    DECK_TYPE = "Stream Deck (Original)"
+    DECK_TYPE = "Stream Deck Original"
 
     IMAGE_REPORT_LENGTH = 8191
     IMAGE_REPORT_HEADER_LENGTH = 16
