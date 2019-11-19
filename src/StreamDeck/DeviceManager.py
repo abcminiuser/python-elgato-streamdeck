@@ -15,6 +15,11 @@ from .Transport.HIDAPI import HIDAPI
 
 
 class ProbeError(Exception):
+    """
+    Exception thrown when attempting to probe for attached StreamDeck devices,
+    but no suitable valid transport was found.
+    """
+
     pass
 
 
