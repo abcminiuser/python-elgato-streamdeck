@@ -66,6 +66,14 @@ class StreamDeck(ABC):
         """
         pass
 
+    def _extract_string(self, data):
+        """
+        Extracts out a human-readable string from a collection of raw bytes,
+        removing any trailing whitespace or NUL bytes.
+        """
+
+        return str(bytes(data), 'utf-8').rstrip(' \0')
+
     def _read(self):
         """
         Read handler for the underlying transport, listening for button state

@@ -39,6 +39,7 @@ class StreamDeckOriginal(StreamDeck):
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00
     ] + [0] * (KEY_PIXEL_WIDTH * KEY_PIXEL_HEIGHT * 3)
 
+
     def _convert_key_id_origin(self, key):
         """
         Converts a key index from or to a origin at the physical top-left of
@@ -114,7 +115,7 @@ class StreamDeckOriginal(StreamDeck):
         """
 
         serial = self.device.read_feature(0x03, 17)
-        return str(bytes(serial[5:]), 'utf-8').rstrip(' \0')
+        return self._extract_string(serial[5:])
 
     def get_firmware_version(self):
         """
@@ -125,7 +126,7 @@ class StreamDeckOriginal(StreamDeck):
         """
 
         version = self.device.read_feature(0x04, 17)
-        return str(bytes(version[5:]), 'utf-8').rstrip(' \0')
+        return self._extract_string(version[5:])
 
     def set_key_image(self, key, image):
         """

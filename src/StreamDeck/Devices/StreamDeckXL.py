@@ -135,7 +135,7 @@ class StreamDeckXL(StreamDeck):
         """
 
         serial = self.device.read_feature(0x06, 32)
-        return str(bytes(serial[2:]), 'utf-8').rstrip(' \0')
+        return self._extract_string(serial[2:])
 
     def get_firmware_version(self):
         """
@@ -146,7 +146,7 @@ class StreamDeckXL(StreamDeck):
         """
 
         version = self.device.read_feature(0x05, 32)
-        return str(bytes(version[6:]), 'utf-8').rstrip(' \0')
+        return self._extract_string(version[6:])
 
     def set_key_image(self, key, image):
         """
