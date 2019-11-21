@@ -39,7 +39,6 @@ class StreamDeckOriginal(StreamDeck):
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00
     ] + [0] * (KEY_PIXEL_WIDTH * KEY_PIXEL_HEIGHT * 3)
 
-
     def _convert_key_id_origin(self, key):
         """
         Converts a key index from or to a origin at the physical top-left of

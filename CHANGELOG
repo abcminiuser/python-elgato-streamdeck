@@ -1,3 +1,6 @@
+Version 0.6.3:
+	- Added support for the new V2 hardware revision of the StreamDeck Original.
+
 Version 0.6.2:
 	- Fixed broken StreamDeck XL communications on Linux.
 	- Added blacklist for the `libhidapi-hidraw` system library which breaks StreamDeck Original communications.
