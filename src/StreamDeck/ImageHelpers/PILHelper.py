@@ -62,5 +62,5 @@ def to_native_format(deck, image):
 
     # We want a compressed image in a given codec, convert.
     compressed_image = io.BytesIO()
-    image.save(compressed_image, image_format['format'])
+    image.save(compressed_image, image_format['format'], quality=100)
     return compressed_image.getbuffer()
