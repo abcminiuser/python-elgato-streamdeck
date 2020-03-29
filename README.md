@@ -72,7 +72,6 @@ sudo apt install -y libjpeg-dev zlib1g-dev
 
 # Install python library dependencies
 pip3 install wheel
-pip3 install hid
 pip3 install pillow
 
 # Add udev rule to allow all users non-root access to Elgato StreamDeck devices:
