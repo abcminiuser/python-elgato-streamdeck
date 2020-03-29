@@ -282,9 +282,9 @@ class LibUSBHIDAPI(Transport):
             self.device_info = device_info
             self.device_handle = None
 
-        def __del__(self):
+        def __exit__(self):
             """
-            Deletion handler for the HID transport, automatically closing the
+            Exit handler for the HID transport, automatically closing the
             device if it is currently open.
             """
             self.close()
