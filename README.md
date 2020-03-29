@@ -76,7 +76,7 @@ Alternatively, manually clone the project repository:
 git clone https://github.com/abcminiuser/python-elgato-streamdeck.git
 ```
 
-## Raspberry Pi Installation:
+## Debian Installation:
 
 The following script has been verified working on a Raspberry Pi (Model 2 B)
 running a stock Debian Buster image, to install all the required dependencies
@@ -87,7 +87,7 @@ needed by this project:
 sudo apt update && sudo apt dist-upgrade -y
 
 # Install the pip Python package manager
-sudo apt install -y python3-pip
+sudo apt install -y python3-pip python3-setuptools
 
 # Install system packages needed for the Python hid package installation
 sudo apt install -y libudev-dev libusb-1.0-0-dev
@@ -96,6 +96,7 @@ sudo apt install -y libudev-dev libusb-1.0-0-dev
 sudo apt install -y libjpeg-dev zlib1g-dev
 
 # Install python library dependencies
+pip3 install wheel
 pip3 install hid
 pip3 install pillow
 
