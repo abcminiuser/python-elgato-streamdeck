@@ -80,7 +80,7 @@ class LibUSBHIDAPI(Transport):
             self.HIDAPI_INSTANCE.hid_exit.argtypes = []
             self.HIDAPI_INSTANCE.hid_exit.restype = ctypes.c_int
 
-            self.HIDAPI_INSTANCE.hid_enumerate.argtypes = [ctypes.c_short, ctypes.c_short]
+            self.HIDAPI_INSTANCE.hid_enumerate.argtypes = [ctypes.c_ushort, ctypes.c_ushort]
             self.HIDAPI_INSTANCE.hid_enumerate.restype = ctypes.POINTER(hid_device_info)
 
             self.HIDAPI_INSTANCE.hid_free_enumeration.argtypes = [ctypes.POINTER(hid_device_info)]
