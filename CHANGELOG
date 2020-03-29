@@ -1,3 +1,6 @@
+Version 0.7.0:
+	- Removed old HID and HIDAPI backends, added new ctypes based LibUSB-HIDAPI backend replacement.
+
 Version 0.6.3:
 	- Added support for the new V2 hardware revision of the StreamDeck Original.
 
