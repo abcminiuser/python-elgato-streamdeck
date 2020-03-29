@@ -8,7 +8,7 @@
 import logging
 import binascii
 
-from .Transport import Transport
+from .Transport import Transport, TransportError
 
 
 class Dummy(Transport):
@@ -38,7 +38,7 @@ class Dummy(Transport):
 
         def read_feature(self, report_id, length):
             logging.info('Deck feature read (length %s)', length)
-            raise IOError("Dummy device!")
+            raise TransportError("Dummy device!")
 
         def write(self, payload):
             logging.info('Deck report write (length %s): %s', len(payload), binascii.hexlify(payload))
@@ -46,7 +46,7 @@ class Dummy(Transport):
 
         def read(self, length):
             logging.info('Deck report read (length %s)', length)
-            raise IOError("Dummy device!")
+            raise TransportError("Dummy device!")
 
     @staticmethod
     def probe():

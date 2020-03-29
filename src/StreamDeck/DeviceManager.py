@@ -10,8 +10,7 @@ from .Devices.StreamDeckOriginalV2 import StreamDeckOriginalV2
 from .Devices.StreamDeckMini import StreamDeckMini
 from .Devices.StreamDeckXL import StreamDeckXL
 from .Transport.Dummy import Dummy
-from .Transport.HID import HID
-from .Transport.HIDAPI import HIDAPI
+from .Transport.LibUSBHIDAPI import LibUSBHIDAPI
 
 
 class ProbeError(Exception):
@@ -51,8 +50,7 @@ class DeviceManager:
 
         transports = {
             "dummy": Dummy,
-            "hid": HID,
-            "hidapi": HIDAPI,
+            "libusb": LibUSBHIDAPI,
         }
 
         if transport:
