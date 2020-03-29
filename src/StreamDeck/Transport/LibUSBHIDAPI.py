@@ -181,7 +181,7 @@ class LibUSBHIDAPI(Transport):
             :param Handle handle: Device handle to close.
             """
             if not handle:
-                return TransportError("No HID device.")
+                raise TransportError("No HID device.")
 
             result = self.hidapi.hid_close(handle)
             if result < 0:
@@ -201,7 +201,7 @@ class LibUSBHIDAPI(Transport):
             :return: Number of bytes successfully sent to the device.
             """
             if not handle:
-                return TransportError("No HID device.")
+                raise TransportError("No HID device.")
 
             result = self.hidapi.hid_send_feature_report(handle, data, len(data))
             if result < 0:
@@ -223,7 +223,7 @@ class LibUSBHIDAPI(Transport):
                      report that was read.
             """
             if not handle:
-                return TransportError("No HID device.")
+                raise TransportError("No HID device.")
 
             data = ctypes.create_string_buffer(length)
             data[0] = report_id
@@ -248,7 +248,7 @@ class LibUSBHIDAPI(Transport):
             :return: Number of bytes successfully sent to the device.
             """
             if not handle:
-                return TransportError("No HID device.")
+                raise TransportError("No HID device.")
 
             result = self.hidapi.hid_write(handle, data, len(data))
             if result < 0:
@@ -269,7 +269,7 @@ class LibUSBHIDAPI(Transport):
                      report that was read.
             """
             if not handle:
-                return TransportError("No HID device.")
+                raise TransportError("No HID device.")
 
             data = ctypes.create_string_buffer(length)
 
