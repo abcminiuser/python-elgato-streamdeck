@@ -21,48 +21,6 @@ Currently the following StreamDeck product variants are supported:
 * StreamDeck Mini
 * StreamDeck XL
 
-## Package Dependencies:
-
-The library core has no special dependencies, but does use one of (potentially)
-several HID backend libraries. You will need to install the dependencies
-appropriate to your chosen backend.
-
-The included examples require the PIL fork "Pillow", although it can be swapped
-out if desired by the user application for any other image manipulation library.
-
-### HID Backend (recommended)
-
-The recommended HID backend is the aptly named
-[HID Python library](https://pypi.org/project/hid/), which should work across
-the three major (Windows, Mac, Linux) OSes and is the most up-to-date. This can
-be installed via `pip3 install hid`.
-
-Note that Windows systems requires additional manual installation of a DLL in
-order to function. The latest source for this DLL is the
-[libUSB GitHub project](https://github.com/libusb/hidapi/releases).
-
-On Linux, this HID library can use one of two system libraries for HID
-communication - `libhidapi-hidraw0` or `libhidapi-libusb0`. Only the latter will
-work, and the former (if present) should be uninstalled.
-
-Despite the additional setup, this will give the best results in terms of
-reliability and performance.
-
-### HIDAPI Backend (not recommended)
-
-Another option is the older
-[HIDAPI Python library](https://pypi.org/project/hidapi/), which originates from
-the same original project as the HID library listed above, but is now entirely
-unmaintained. This can be installed via `pip3 install hidapi`.
-
-Several users report issues with this backend due to various bugs
-that have not been patched in the packaged library version, but support for it
-is included in this library due to its simple one-line setup on all three major
-platforms.
-
-Note the library package name conflicts with the HID backend above; only one or
-the other should be installed at the same time.
-
 ## Package Installation:
 
 Install the library via pip:
@@ -76,11 +34,28 @@ Alternatively, manually clone the project repository:
 git clone https://github.com/abcminiuser/python-elgato-streamdeck.git
 ```
 
+## Package Dependencies:
+
+The library core has no special dependencies, but does use one of (potentially)
+several HID backend libraries. You will need to install the dependencies
+appropriate to your chosen backend.
+
+The included examples require the PIL fork "Pillow", although it can be swapped
+out if desired by the user application for any other image manipulation library.
+
+### HID Backend
+
+Windows systems requires additional manual installation of a DLL in order to
+function. The latest source for this DLL is the
+[libUSB GitHub project](https://github.com/libusb/hidapi/releases).
+
+On Linux, the `libhidapi-libusb0` package is required.
+
 ## Debian Installation:
 
 The following script has been verified working on a Raspberry Pi (Model 2 B)
 running a stock Debian Buster image, to install all the required dependencies
-needed by this project:
+needed by this project on a fresh system:
 
 ```
 # Ensure system is up to date, upgrade all out of date packages
