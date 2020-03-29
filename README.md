@@ -64,8 +64,8 @@ sudo apt update && sudo apt dist-upgrade -y
 # Install the pip Python package manager
 sudo apt install -y python3-pip python3-setuptools
 
-# Install system packages needed for the Python hid package installation
-sudo apt install -y libudev-dev libusb-1.0-0-dev
+# Install system packages needed for the default LibUSB HIDAPI backend
+sudo apt install -y libudev-dev libusb-1.0-0-dev libhidapi-libusb0
 
 # Install system packages needed for the Python Pillow package installation
 sudo apt install -y libjpeg-dev zlib1g-dev
