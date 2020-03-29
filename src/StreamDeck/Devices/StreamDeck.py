@@ -5,6 +5,8 @@
 #         www.fourwalledcubicle.com
 #
 
+from ..Transport.Transport import TransportError
+
 from abc import ABC, abstractmethod
 
 import threading
@@ -41,9 +43,12 @@ class StreamDeck(ABC):
         """
         try:
             self._setup_reader(None)
+        except (TransportError, ValueError):
+            pass
 
+        try:
             self.device.close()
-        except (IOError, ValueError):
+        except (TransportError):
             pass
 
     @abstractmethod
@@ -90,7 +95,7 @@ class StreamDeck(ABC):
                             self.key_callback(self, k, new)
 
                 self.last_key_states = new_key_states
-            except (IOError, ValueError):
+            except (TransportError, ValueError):
                 self.run_read_thread = False
 
     def _setup_reader(self, callback):
