@@ -8,6 +8,7 @@
 from .Transport import Transport, TransportError
 
 import ctypes
+import atexit
 
 
 class LibUSBHIDAPI(Transport):
@@ -30,14 +31,27 @@ class LibUSBHIDAPI(Transport):
             'libhidapi.dylib',
         ]
 
-        @staticmethod
-        def _setup_hidapi_api_types(hidapi):
-            """
-            Set up a previously loaded instance of the LibUSB HIDAPI library
-            with the appropriate API definitions for ctypes.
+        HIDAPI_INSTANCE = None
 
-            :param ctypes.CDLL hidapi: Previously loaded HIDAPI library instance.
+        def _load_hidapi_library(self):
             """
+            Loads the given LibUSB HIDAPI dynamic library from the host system,
+            if available.
+
+            :rtype: ctypes.CDLL
+            :return: Loaded HIDAPI library instance, or None if no library was found.
+            """
+
+            if not self.HIDAPI_INSTANCE:
+                for lib_name in self.HIDAPI_LIBRARY_NAMES:
+                    try:
+                        self.HIDAPI_INSTANCE = ctypes.cdll.LoadLibrary(lib_name)
+                        break
+                    except OSError:
+                        pass
+
+                if not self.HIDAPI_INSTANCE:
+                    return None
 
             class hid_device_info(ctypes.Structure):
                 """
@@ -60,51 +74,40 @@ class LibUSBHIDAPI(Transport):
                 ("next", ctypes.POINTER(hid_device_info))
             ]
 
-            hidapi.hid_init.argtypes = []
-            hidapi.hid_init.restype = ctypes.c_int
+            self.HIDAPI_INSTANCE.hid_init.argtypes = []
+            self.HIDAPI_INSTANCE.hid_init.restype = ctypes.c_int
 
-            hidapi.hid_exit.argtypes = []
-            hidapi.hid_exit.restype = ctypes.c_int
+            self.HIDAPI_INSTANCE.hid_exit.argtypes = []
+            self.HIDAPI_INSTANCE.hid_exit.restype = ctypes.c_int
 
-            hidapi.hid_enumerate.argtypes = [ctypes.c_short, ctypes.c_short]
-            hidapi.hid_enumerate.restype = ctypes.POINTER(hid_device_info)
+            self.HIDAPI_INSTANCE.hid_enumerate.argtypes = [ctypes.c_short, ctypes.c_short]
+            self.HIDAPI_INSTANCE.hid_enumerate.restype = ctypes.POINTER(hid_device_info)
 
-            hidapi.hid_free_enumeration.argtypes = [ctypes.POINTER(hid_device_info)]
-            hidapi.hid_free_enumeration.restype = None
+            self.HIDAPI_INSTANCE.hid_free_enumeration.argtypes = [ctypes.POINTER(hid_device_info)]
+            self.HIDAPI_INSTANCE.hid_free_enumeration.restype = None
 
-            hidapi.hid_open_path.argtypes = [ctypes.c_char_p]
-            hidapi.hid_open_path.restype = ctypes.c_void_p
+            self.HIDAPI_INSTANCE.hid_open_path.argtypes = [ctypes.c_char_p]
+            self.HIDAPI_INSTANCE.hid_open_path.restype = ctypes.c_void_p
 
-            hidapi.hid_close.argtypes = [ctypes.c_void_p]
-            hidapi.hid_close.restype = None
+            self.HIDAPI_INSTANCE.hid_close.argtypes = [ctypes.c_void_p]
+            self.HIDAPI_INSTANCE.hid_close.restype = None
 
-            hidapi.hid_send_feature_report.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_char), ctypes.c_size_t]
-            hidapi.hid_send_feature_report.restype = ctypes.c_int
+            self.HIDAPI_INSTANCE.hid_send_feature_report.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_char), ctypes.c_size_t]
+            self.HIDAPI_INSTANCE.hid_send_feature_report.restype = ctypes.c_int
 
-            hidapi.hid_get_feature_report.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_char), ctypes.c_size_t]
-            hidapi.hid_get_feature_report.restype = ctypes.c_int
+            self.HIDAPI_INSTANCE.hid_get_feature_report.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_char), ctypes.c_size_t]
+            self.HIDAPI_INSTANCE.hid_get_feature_report.restype = ctypes.c_int
 
-            hidapi.hid_write.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_char), ctypes.c_size_t]
-            hidapi.hid_write.restype = ctypes.c_int
+            self.HIDAPI_INSTANCE.hid_write.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_char), ctypes.c_size_t]
+            self.HIDAPI_INSTANCE.hid_write.restype = ctypes.c_int
 
-            hidapi.hid_read.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_char), ctypes.c_size_t]
-            hidapi.hid_read.restype = ctypes.c_int
+            self.HIDAPI_INSTANCE.hid_read.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_char), ctypes.c_size_t]
+            self.HIDAPI_INSTANCE.hid_read.restype = ctypes.c_int
 
-        def _load_hidapi_library(self):
-            """
-            Loads the given LibUSB HIDAPI dynamic library from the host system,
-            if available.
+            self.HIDAPI_INSTANCE.hid_init()
+            atexit.register(self.HIDAPI_INSTANCE.hid_exit)
 
-            :rtype: ctypes.CDLL
-            :return: Loaded HIDAPI library instance, or None if no library was found.
-            """
-            for lib_name in self.HIDAPI_LIBRARY_NAMES:
-                try:
-                    return ctypes.cdll.LoadLibrary(lib_name)
-                except OSError:
-                    pass
-
-            return None
+            return self.HIDAPI_INSTANCE
 
         def __init__(self):
             """
@@ -115,20 +118,6 @@ class LibUSBHIDAPI(Transport):
             self.hidapi = self._load_hidapi_library()
             if not self.hidapi:
                 raise TransportError("No suitable HIDAPI library found on this system.")
-
-            self._setup_hidapi_api_types(self.hidapi)
-
-            self.hidapi.hid_init()
-
-        def __del__(self):
-            """
-            Deletion handler for the LibUSB HIDAPI library instance,
-            automatically closing the library on shutdown.
-            """
-            try:
-                self.hidapi.hid_exit()
-            except (OSError, AttributeError):
-                pass
 
         def enumerate(self, vendor_id=None, product_id=None):
             """
