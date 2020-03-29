@@ -172,7 +172,11 @@ class LibUSBHIDAPI(Transport):
             :rtype: Handle
             :return: Device handle if opened successfully, None if open failed.
             """
-            return self.hidapi.hid_open_path(path)
+            handle = self.hidapi.hid_open_path(path)
+            if not handle:
+                raise TransportError("Could not open HID device.")
+
+            return handle
 
         def close_device(self, handle):
             """
