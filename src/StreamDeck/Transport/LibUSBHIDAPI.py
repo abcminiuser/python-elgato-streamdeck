@@ -12,8 +12,8 @@ import ctypes
 
 class LibUSBHIDAPI(Transport):
     """
-    USB HID transport layer, using the `hid` Python wrapper. This transport can
-    be used to enumerate and communicate with HID devices.
+    USB HID transport layer, using the LibUSB HIDAPI dynamically linked library
+    directly via ctypes.
     """
 
     class Library():
@@ -32,7 +32,18 @@ class LibUSBHIDAPI(Transport):
 
         @staticmethod
         def _setup_hidapi_api_types(hidapi):
+            """
+            Set up a previously loaded instance of the LibUSB HIDAPI library
+            with the appropriate API definitions for ctypes.
+
+            :param ctypes.CDLL hidapi: Previously loaded HIDAPI library instance.
+            """
+
             class hid_device_info(ctypes.Structure):
+                """
+                Structure definition for the hid_device_info structure defined
+                in the LibUSB HIDAPI library API.
+                """
                 pass
 
             hid_device_info._fields_ = [
@@ -80,6 +91,13 @@ class LibUSBHIDAPI(Transport):
             hidapi.hid_read.restype = ctypes.c_int
 
         def _load_hidapi_library(self):
+            """
+            Loads the given LibUSB HIDAPI dynamic library from the host system,
+            if available.
+
+            :rtype: ctypes.CDLL
+            :return: Loaded HIDAPI library instance, or None if no library was found.
+            """
             for lib_name in self.HIDAPI_LIBRARY_NAMES:
                 try:
                     return ctypes.cdll.LoadLibrary(lib_name)
@@ -89,6 +107,11 @@ class LibUSBHIDAPI(Transport):
             return None
 
         def __init__(self):
+            """
+            Creates a new LibUSB HIDAPI library instance, used to interface with
+            HID devices attached tp the host system.
+            """
+
             self.hidapi = self._load_hidapi_library()
             if not self.hidapi:
                 raise TransportError("No suitable HIDAPI library found on this system.")
@@ -99,18 +122,33 @@ class LibUSBHIDAPI(Transport):
 
         def __del__(self):
             """
-            Deletion handler for the StreamDeck, automatically closing the transport
-            if it is currently open and terminating the transport reader thread.
+            Deletion handler for the LibUSB HIDAPI library instance,
+            automatically closing the library on shutdown.
             """
             try:
                 self.hidapi.hid_exit()
             except (OSError, AttributeError):
                 pass
 
-        def enumerate(self, vendor_id=0, product_id=0):
-            device_enumeration = self.hidapi.hid_enumerate(vendor_id, product_id)
+        def enumerate(self, vendor_id=None, product_id=None):
+            """
+            Enumerates all available USB HID devices on the system.
+
+            :param int vid: USB Vendor ID to filter all devices by, `None` if the
+                            device list should not be filtered by vendor.
+            :param int pid: USB Product ID to filter all devices by, `None` if the
+                            device list should not be filtered by product.
+
+            :rtype: list(dict())
+            :return: List of discovered USB HID device attributes.
+            """
+
+            vendor_id = vendor_id or 0
+            product_id = product_id or 0
 
             device_list = []
+
+            device_enumeration = self.hidapi.hid_enumerate(vendor_id, product_id)
 
             if device_enumeration:
                 current_device = device_enumeration.contents
@@ -128,15 +166,40 @@ class LibUSBHIDAPI(Transport):
             return device_list
 
         def open_device(self, path):
+            """
+            Opens a HID device by its canonical path on the host system.
+
+            :rtype: Handle
+            :return: Device handle if opened successfully, None if open failed.
+            """
             return self.hidapi.hid_open_path(path)
 
         def close_device(self, handle):
+            """
+            Closes a HID device by its open device handle on the host system.
+
+            :param Handle handle: Device handle to close.
+            """
             if not handle:
                 return TransportError("No HID device.")
 
-            return self.hidapi.hid_close(handle)
+            result = self.hidapi.hid_close(handle)
+            if result < 0:
+                raise TransportError("Failed to close device (%d)" % result)
 
         def send_feature_report(self, handle, data):
+            """
+            Sends a HID Feature report to an open HID device.
+
+            :param Handle handle: Device handle to access.
+            :param bytearray() data: Array of bytes to send to the device, as a
+                                     feature report. The first byte of the
+                                     report should be the Report ID of the
+                                     report being sent.
+
+            :rtype: int
+            :return: Number of bytes successfully sent to the device.
+            """
             if not handle:
                 return TransportError("No HID device.")
 
@@ -144,30 +207,74 @@ class LibUSBHIDAPI(Transport):
             if result < 0:
                 raise TransportError("Failed to write feature report (%d)" % result)
 
-        def get_feature_report(self, handle, report_id, size):
+            return result
+
+        def get_feature_report(self, handle, report_id, length):
+            """
+            Retrieves a HID Feature report from an open HID device.
+
+            :param Handle handle: Device handle to access.
+            :param int report_id: Report ID of the report being read.
+            :param int length: Maximum length of the Feature report to read.
+
+            :rtype: bytearray()
+            :return: Array of bytes containing the read Feature report. The
+                     first byte of the report will be the Report ID of the
+                     report that was read.
+            """
             if not handle:
                 return TransportError("No HID device.")
 
-            data = ctypes.create_string_buffer(size)
+            data = ctypes.create_string_buffer(length)
             data[0] = report_id
 
-            self.hidapi.hid_get_feature_report(handle, data, len(data))
-            return data.raw[:size]
+            result = self.hidapi.hid_get_feature_report(handle, data, len(data))
+            if result < 0:
+                raise TransportError("Failed to read feature report (%d)" % result)
+
+            return bytearray(data.raw[:length])
 
         def write(self, handle, data):
+            """
+            Writes a HID Out report to an open HID device.
+
+            :param Handle handle: Device handle to access.
+            :param bytearray() data: Array of bytes to send to the device, as an
+                                     out report. The first byte of the report
+                                     should be the Report ID of the report being
+                                     sent.
+
+            :rtype: int
+            :return: Number of bytes successfully sent to the device.
+            """
             if not handle:
                 return TransportError("No HID device.")
 
-            return self.hidapi.hid_write(handle, data, len(data))
+            result = self.hidapi.hid_write(handle, data, len(data))
+            if result < 0:
+                raise TransportError("Failed to write out report (%d)" % result)
 
-        def read(self, handle, size):
+            return result
+
+        def read(self, handle, length):
+            """
+            Performs a blocking read of a HID In report from an open HID device.
+
+            :param Handle handle: Device handle to access.
+            :param int length: Maximum length of the In report to read.
+
+            :rtype: bytearray()
+            :return: Array of bytes containing the read In report. The
+                     first byte of the report will be the Report ID of the
+                     report that was read.
+            """
             if not handle:
                 return TransportError("No HID device.")
 
-            data = ctypes.create_string_buffer(size)
+            data = ctypes.create_string_buffer(length)
 
             self.hidapi.hid_read(handle, data, len(data))
-            return data.raw[:size]
+            return data.raw[:length]
 
     class Device(Transport.Device):
         def __init__(self, hidapi, device_info):
@@ -296,7 +403,6 @@ class LibUSBHIDAPI(Transport):
                      of the report will be the Report ID of the report that was
                      read.
             """
-
             return self.hidapi.read(self.device_handle, length)
 
     @staticmethod
