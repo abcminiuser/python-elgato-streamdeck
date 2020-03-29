@@ -36,9 +36,9 @@ class StreamDeck(ABC):
         self.run_read_thread = False
         self.key_callback = None
 
-    def __del__(self):
+    def __exit__(self):
         """
-        Deletion handler for the StreamDeck, automatically closing the transport
+        Exit handler for the StreamDeck, automatically closing the transport
         if it is currently open and terminating the transport reader thread.
         """
         try:
