@@ -78,16 +78,16 @@ class LibUSBHIDAPI(Transport):
             hidapi.hid_close.argtypes = [ctypes.c_void_p]
             hidapi.hid_close.restype = None
 
-            hidapi.hid_send_feature_report.argtypes = [ctypes.c_void_p, ctypes.c_void_p, ctypes.c_size_t]
+            hidapi.hid_send_feature_report.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_char), ctypes.c_size_t]
             hidapi.hid_send_feature_report.restype = ctypes.c_int
 
-            hidapi.hid_get_feature_report.argtypes = [ctypes.c_void_p, ctypes.c_void_p, ctypes.c_size_t]
+            hidapi.hid_get_feature_report.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_char), ctypes.c_size_t]
             hidapi.hid_get_feature_report.restype = ctypes.c_int
 
-            hidapi.hid_write.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_size_t]
+            hidapi.hid_write.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_char), ctypes.c_size_t]
             hidapi.hid_write.restype = ctypes.c_int
 
-            hidapi.hid_read.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_size_t]
+            hidapi.hid_read.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_char), ctypes.c_size_t]
             hidapi.hid_read.restype = ctypes.c_int
 
         def _load_hidapi_library(self):
