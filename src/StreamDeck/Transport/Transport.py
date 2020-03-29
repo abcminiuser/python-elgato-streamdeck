@@ -8,6 +8,16 @@
 from abc import ABC, abstractmethod
 
 
+class TransportError(Exception):
+    """
+    Exception thrown when attempting to access a device using a backend
+    transport that has failed (for example, if the requested device could not
+    be accessed).
+    """
+
+    pass
+
+
 class Transport(ABC):
     """
     Base transport layer, representing an abstract communication back-end which
