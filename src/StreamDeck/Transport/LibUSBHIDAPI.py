@@ -320,12 +320,12 @@ class LibUSBHIDAPI(Transport):
             .. seealso:: See :func:`~~HID.Device.open` for the corresponding
                          open method.
             """
-            if self.device_handle:
-                try:
-                    self.hidapi.close_device(self.device_handle)
-                    self.device_handle = None
-                except Exception:  # nosec
-                    pass
+            try:
+                self.hidapi.close_device(self.device_handle)
+            except Exception:  # nosec
+                pass
+
+            self.device_handle = None
 
         def connected(self):
             """
