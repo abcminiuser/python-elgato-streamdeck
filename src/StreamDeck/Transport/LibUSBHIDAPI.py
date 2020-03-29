@@ -173,12 +173,8 @@ class LibUSBHIDAPI(Transport):
 
             :param Handle handle: Device handle to close.
             """
-            if not handle:
-                raise TransportError("No HID device.")
-
-            result = self.hidapi.hid_close(handle)
-            if result < 0:
-                raise TransportError("Failed to close device (%d)" % result)
+            if handle:
+                self.hidapi.hid_close(handle)
 
         def send_feature_report(self, handle, data):
             """
@@ -196,7 +192,7 @@ class LibUSBHIDAPI(Transport):
             if not handle:
                 raise TransportError("No HID device.")
 
-            result = self.hidapi.hid_send_feature_report(handle, data, len(data))
+            result = self.hidapi.hid_send_feature_report(handle, bytes(data), len(data))
             if result < 0:
                 raise TransportError("Failed to write feature report (%d)" % result)
 
@@ -243,7 +239,7 @@ class LibUSBHIDAPI(Transport):
             if not handle:
                 raise TransportError("No HID device.")
 
-            result = self.hidapi.hid_write(handle, data, len(data))
+            result = self.hidapi.hid_write(handle, bytes(data), len(data))
             if result < 0:
                 raise TransportError("Failed to write out report (%d)" % result)
 
@@ -309,12 +305,9 @@ class LibUSBHIDAPI(Transport):
             .. seealso:: See :func:`~~HID.Device.open` for the corresponding
                          open method.
             """
-            try:
+            if self.device_handle:
                 self.hidapi.close_device(self.device_handle)
-            except Exception:  # nosec
-                pass
-
-            self.device_handle = None
+                self.device_handle = None
 
         def connected(self):
             """
@@ -349,9 +342,6 @@ class LibUSBHIDAPI(Transport):
             :rtype: int
             :return: Number of bytes successfully sent to the device.
             """
-            if type(payload) is bytearray:
-                payload = bytes(payload)
-
             return self.hidapi.send_feature_report(self.device_handle, payload)
 
         def read_feature(self, report_id, length):
@@ -380,9 +370,6 @@ class LibUSBHIDAPI(Transport):
             :rtype: int
             :return: Number of bytes successfully sent to the device.
             """
-            if type(payload) is bytearray:
-                payload = bytes(payload)
-
             return self.hidapi.write(self.device_handle, payload)
 
         def read(self, length):
