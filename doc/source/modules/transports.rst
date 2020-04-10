@@ -9,17 +9,9 @@ Transport (Abstract Base)
    :members:
 
 
-'HID' Library Transport
-=======================
+'LibUSB HIDAPI' Library Transport
+=================================
 
-.. automodule:: StreamDeck.Transport.HID
-   :members:
-   :show-inheritance:
-
-
-'HIDAPI' Library Transport
-==========================
-
-.. automodule:: StreamDeck.Transport.HIDAPI
+.. automodule:: StreamDeck.Transport.LibUSBHIDAPI
    :members:
    :show-inheritance:
