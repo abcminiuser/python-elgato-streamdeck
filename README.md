@@ -32,26 +32,34 @@ pip install streamdeck
 Alternatively, manually clone the project repository:
 ```
 git clone https://github.com/abcminiuser/python-elgato-streamdeck.git
+
 ```
-
-## Package Dependencies:
-
-The library core has no special dependencies, but does use one of (potentially)
-several HID backend libraries. You will need to install the dependencies
-appropriate to your chosen backend.
 
 The included examples require the PIL fork "Pillow", although it can be swapped
 out if desired by the user application for any other image manipulation library.
 
-### HID Backend
+## HID Backend Installation
+
+The library core is structured so that it can use one of (potentially) several
+alternative HID backend libraries for the actual device low level
+communications. You will need to install the dependencies appropriate to your
+chosen backend for the library to work correctly.
+
+### LibUSB HID Backend
+
+This is the default and recommended backend - a cross platform library for
+communicating with HID devices. Most systems will have this as a system package
+available for easy installation.
+
+#### Windows
 
 Windows systems requires additional manual installation of a DLL in order to
 function. The latest source for this DLL is the
 [libUSB GitHub project](https://github.com/libusb/hidapi/releases).
 
-On Linux, the `libhidapi-libusb0` package is required.
+#### Linux (Ubuntu/Debian)
 
-## Debian Installation:
+On Linux, the `libhidapi-libusb0` package is required.
 
 The following script has been verified working on a Raspberry Pi (Model 2 B)
 running a stock Debian Buster image, to install all the required dependencies
