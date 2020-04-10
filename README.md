@@ -35,13 +35,14 @@ git clone https://github.com/abcminiuser/python-elgato-streamdeck.git
 
 ```
 
-The included examples require the PIL fork "Pillow", although it can be swapped
+The included examples require the PIL fork `pillow`, although it can be swapped
 out if desired by the user application for any other image manipulation library.
+This can be installed via the `pip` package manager.
 
 ## HID Backend Installation
 
 The library core is structured so that it can use one of (potentially) several
-alternative HID backend libraries for the actual device low level
+alternative HID backend libraries for the actual low level device
 communications. You will need to install the dependencies appropriate to your
 chosen backend for the library to work correctly.
 
@@ -54,12 +55,20 @@ available for easy installation.
 #### Windows
 
 Windows systems requires additional manual installation of a DLL in order to
-function. The latest source for this DLL is the
-[libUSB GitHub project](https://github.com/libusb/hidapi/releases).
+function. The latest source for the `hidapi.dll` DLL is the
+[releases page of the libUSB GitHub project](https://github.com/libusb/hidapi/releases).
+
+#### MacOS (Darwin)
+
+On MacOS systems, you can choose to either compile the
+[HIDAPI project](https://github.com/libusb/hidapi/) yourself, or install it via
+one of the multiple third party package managers (e.g. `brew install hidapi`,
+when using Homebrew).
 
 #### Linux (Ubuntu/Debian)
 
-On Linux, the `libhidapi-libusb0` package is required.
+On Linux, the `libhidapi-libusb0` package is required can can be installed via
+the system's package manager.
 
 The following script has been verified working on a Raspberry Pi (Model 2 B)
 running a stock Debian Buster image, to install all the required dependencies
@@ -89,10 +98,6 @@ sudo tee /etc/udev/rules.d/10-streamdeck.rules << EOF
 
 # Install the latest version of the StreamDeck library via pip
 pip3 install streamdeck
-
-# Alternatively, install git and check out the repository
-#sudo apt install -y git
-#git clone https://github.com/abcminiuser/python-elgato-streamdeck.git
 ```
 
 Note that after adding the `udev` rule, a restart will be required in order for
