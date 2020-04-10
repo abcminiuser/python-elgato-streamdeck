@@ -117,7 +117,16 @@ class LibUSBHIDAPI(Transport):
 
             self.hidapi = self._load_hidapi_library()
             if not self.hidapi:
-                raise TransportError("No suitable HIDAPI library found on this system.")
+                import platform
+
+                os_resolution_hints = {
+                    "Windows": " Is the 'hidapi.dll' library installed?",
+                    "Linux": "Is the 'libhidapi-libusb0' package installed?",
+                    "Darwin": "Is the 'libhidapi.dylib' library installed?",
+                }
+                resolution_hint = os_resolution_hints.get(platform.system(), "")
+
+                raise TransportError("No suitable LibUSB HIDAPI library found on this system." + resolution_hint)
 
         def enumerate(self, vendor_id=None, product_id=None):
             """
