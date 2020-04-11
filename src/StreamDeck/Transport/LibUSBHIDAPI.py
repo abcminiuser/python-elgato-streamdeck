@@ -7,8 +7,9 @@
 
 from .Transport import Transport, TransportError
 
-import ctypes
 import atexit
+import ctypes
+import platform
 
 
 class LibUSBHIDAPI(Transport):
@@ -18,22 +19,9 @@ class LibUSBHIDAPI(Transport):
     """
 
     class Library():
-        HIDAPI_LIBRARY_NAMES = [
-            # Windows:
-            'hidapi.dll',
-            'libhidapi-0.dll'
-
-            # Linux:
-            'libhidapi-libusb.so',
-            'libhidapi-libusb.so.0',
-
-            # MacOS:
-            'libhidapi.dylib',
-        ]
-
         HIDAPI_INSTANCE = None
 
-        def _load_hidapi_library(self):
+        def _load_hidapi_library(self, library_search_list):
             """
             Loads the given LibUSB HIDAPI dynamic library from the host system,
             if available.
@@ -42,16 +30,17 @@ class LibUSBHIDAPI(Transport):
             :return: Loaded HIDAPI library instance, or None if no library was found.
             """
 
-            if not self.HIDAPI_INSTANCE:
-                for lib_name in self.HIDAPI_LIBRARY_NAMES:
-                    try:
-                        self.HIDAPI_INSTANCE = ctypes.cdll.LoadLibrary(lib_name)
-                        break
-                    except OSError:
-                        pass
+            if self.HIDAPI_INSTANCE:
+                return self.HIDAPI_INSTANCE
 
-                if not self.HIDAPI_INSTANCE:
-                    return None
+            for lib_name in library_search_list:
+                try:
+                    self.HIDAPI_INSTANCE = ctypes.cdll.LoadLibrary(lib_name)
+                    break
+                except OSError:
+                    pass
+            else:
+                return None
 
             class hid_device_info(ctypes.Structure):
                 """
@@ -115,18 +104,21 @@ class LibUSBHIDAPI(Transport):
             HID devices attached tp the host system.
             """
 
-            self.hidapi = self._load_hidapi_library()
+            search_library_names = {
+                "Windows": ["hidapi.dll", "libhidapi-0.dll"],
+                "Linux": ["libhidapi-libusb.so", "libhidapi-libusb.so.0"],
+                "Darwin": ["libhidapi.dylib"],
+            }
+
+            platform_name = platform.system()
+            platform_seach_library_names = search_library_names.get(platform_name)
+
+            if not platform_seach_library_names:
+                raise TransportError("No suitable LibUSB HIDAPI library search names were found for this system.")
+
+            self.hidapi = self._load_hidapi_library(platform_seach_library_names)
             if not self.hidapi:
-                import platform
-
-                os_resolution_hints = {
-                    "Windows": " Is the 'hidapi.dll' library installed?",
-                    "Linux": "Is the 'libhidapi-libusb0' package installed?",
-                    "Darwin": "Is the 'libhidapi.dylib' library installed?",
-                }
-                resolution_hint = os_resolution_hints.get(platform.system(), "")
-
-                raise TransportError("No suitable LibUSB HIDAPI library found on this system." + resolution_hint)
+                raise TransportError("No suitable LibUSB HIDAPI library found on this system. Is the '{}' library installed?".format(platform_seach_library_names[0]))
 
         def enumerate(self, vendor_id=None, product_id=None):
             """
