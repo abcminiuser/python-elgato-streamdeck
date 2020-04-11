@@ -50,17 +50,17 @@ class LibUSBHIDAPI(Transport):
                 pass
 
             hid_device_info._fields_ = [
-                ("path", ctypes.c_char_p),
-                ("vendor_id", ctypes.c_ushort),
-                ("product_id", ctypes.c_ushort),
-                ("serial_number", ctypes.c_wchar_p),
-                ("release_number", ctypes.c_ushort),
-                ("manufacturer_string", ctypes.c_wchar_p),
-                ("product_string", ctypes.c_wchar_p),
-                ("usage_page", ctypes.c_ushort),
-                ("usage", ctypes.c_ushort),
-                ("interface_number", ctypes.c_int),
-                ("next", ctypes.POINTER(hid_device_info))
+                ('path', ctypes.c_char_p),
+                ('vendor_id', ctypes.c_ushort),
+                ('product_id', ctypes.c_ushort),
+                ('serial_number', ctypes.c_wchar_p),
+                ('release_number', ctypes.c_ushort),
+                ('manufacturer_string', ctypes.c_wchar_p),
+                ('product_string', ctypes.c_wchar_p),
+                ('usage_page', ctypes.c_ushort),
+                ('usage', ctypes.c_ushort),
+                ('interface_number', ctypes.c_int),
+                ('next', ctypes.POINTER(hid_device_info))
             ]
 
             self.HIDAPI_INSTANCE.hid_init.argtypes = []
@@ -144,9 +144,9 @@ class LibUSBHIDAPI(Transport):
                 current_device = device_enumeration.contents
                 while current_device:
                     device_list.append({
-                        "path": current_device.path,
-                        "vendor_id": current_device.vendor_id,
-                        "product_id": current_device.vendor_id,
+                        'path': current_device.path,
+                        'vendor_id': current_device.vendor_id,
+                        'product_id': current_device.vendor_id,
                     })
 
                     current_device = current_device.next
@@ -297,7 +297,7 @@ class LibUSBHIDAPI(Transport):
             if self.device_handle:
                 self.close()
 
-            self.device_handle = self.hidapi.open_device(self.device_info["path"])
+            self.device_handle = self.hidapi.open_device(self.device_info['path'])
 
         def close(self):
             """

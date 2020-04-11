@@ -197,10 +197,10 @@ class StreamDeck(ABC):
                  (size, image format, image mirroring and rotation).
         """
         return {
-            "size": (self.KEY_PIXEL_WIDTH, self.KEY_PIXEL_HEIGHT),
-            "format": self.KEY_IMAGE_FORMAT,
-            "flip": self.KEY_FLIP,
-            "rotation": self.KEY_ROTATION,
+            'size': (self.KEY_PIXEL_WIDTH, self.KEY_PIXEL_HEIGHT),
+            'format': self.KEY_IMAGE_FORMAT,
+            'flip': self.KEY_FLIP,
+            'rotation': self.KEY_ROTATION,
         }
 
     def set_key_callback(self, callback):

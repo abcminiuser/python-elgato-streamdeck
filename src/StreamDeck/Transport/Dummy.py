@@ -21,10 +21,10 @@ class Dummy(Transport):
             self.id = device_id
 
         def open(self):
-            logging.info('Deck opened')
+            logging.info("Deck opened")
 
         def close(self):
-            logging.info('Deck closed')
+            logging.info("Deck closed")
 
         def connected(self):
             return True
@@ -33,19 +33,19 @@ class Dummy(Transport):
             return self.id
 
         def write_feature(self, payload):
-            logging.info('Deck feature write (length %s): %s', len(payload), binascii.hexlify(payload))
+            logging.info("Deck feature write (length %s): %s", len(payload), binascii.hexlify(payload))
             return True
 
         def read_feature(self, report_id, length):
-            logging.info('Deck feature read (length %s)', length)
+            logging.info("Deck feature read (length %s)", length)
             raise TransportError("Dummy device!")
 
         def write(self, payload):
-            logging.info('Deck report write (length %s): %s', len(payload), binascii.hexlify(payload))
+            logging.info("Deck report write (length %s): %s", len(payload), binascii.hexlify(payload))
             return True
 
         def read(self, length):
-            logging.info('Deck report read (length %s)', length)
+            logging.info("Deck report read (length %s)", length)
             raise TransportError("Dummy device!")
 
     @staticmethod
