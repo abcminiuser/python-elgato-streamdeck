@@ -146,7 +146,7 @@ class LibUSBHIDAPI(Transport):
                     device_list.append({
                         'path': current_device.path,
                         'vendor_id': current_device.vendor_id,
-                        'product_id': current_device.vendor_id,
+                        'product_id': current_device.product_id,
                     })
 
                     current_device = current_device.next
