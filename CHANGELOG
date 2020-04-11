@@ -1,3 +1,7 @@
+Version 0.7.1:
+	- Cleaned up new LibUSB HIDAPI transport backend, so that it only searches for OS-specific library files.
+	- Fixed minor typo in the libUSB HIDAPI transport backend probe failure message.
+
 Version 0.7.0:
 	- Removed old HID and HIDAPI backends, added new ctypes based LibUSB-HIDAPI backend replacement.
 
