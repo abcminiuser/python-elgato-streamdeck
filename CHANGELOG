@@ -1,3 +1,6 @@
+Version 0.7.2:
+	- Documentation restructuring to move installation out of the readme and into the library documentation.
+
 Version 0.7.1:
 	- Cleaned up new LibUSB HIDAPI transport backend, so that it only searches for OS-specific library files.
 	- Fixed minor typo in the libUSB HIDAPI transport backend probe failure message.
