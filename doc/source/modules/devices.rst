@@ -1,7 +1,8 @@
-===========================
+***************************
 Modules: StreamDeck Devices
-===========================
+***************************
 
+==========================
 StreamDeck (Abstract Base)
 ==========================
 
@@ -9,6 +10,7 @@ StreamDeck (Abstract Base)
    :members:
 
 
+===================
 StreamDeck Original
 ===================
 
@@ -17,6 +19,7 @@ StreamDeck Original
    :show-inheritance:
 
 
+===============
 StreamDeck Mini
 ===============
 
@@ -25,6 +28,7 @@ StreamDeck Mini
    :show-inheritance:
 
 
+=============
 StreamDeck XL
 =============
 

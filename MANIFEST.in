@@ -4,3 +4,4 @@ include src/example*.py
 include *.md
 include VERSION
 include CHANGELOG
+include LICENSE

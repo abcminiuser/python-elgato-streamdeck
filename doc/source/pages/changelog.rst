@@ -2,4 +2,4 @@
 Library Changelog
 *****************
 
-.. literalinclude:: ../../CHANGELOG
+.. literalinclude:: ../../../CHANGELOG
