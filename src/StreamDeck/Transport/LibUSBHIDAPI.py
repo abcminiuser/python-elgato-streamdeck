@@ -141,15 +141,16 @@ class LibUSBHIDAPI(Transport):
             device_enumeration = self.hidapi.hid_enumerate(vendor_id, product_id)
 
             if device_enumeration:
-                current_device = device_enumeration.contents
+                current_device = device_enumeration
+
                 while current_device:
                     device_list.append({
-                        'path': current_device.path,
-                        'vendor_id': current_device.vendor_id,
-                        'product_id': current_device.product_id,
+                        'path': current_device.contents.path,
+                        'vendor_id': current_device.contents.vendor_id,
+                        'product_id': current_device.contents.product_id,
                     })
 
-                    current_device = current_device.next
+                    current_device = current_device.contents.next
 
             self.hidapi.hid_free_enumeration(device_enumeration)
 
@@ -318,7 +319,8 @@ class LibUSBHIDAPI(Transport):
             :rtype: bool
             :return: `True` if the device is still connected, `False` otherwise.
             """
-            return any([d['path'] == self.hid_info['path'] for d in self.hidapi.enumerate()])
+
+            return any([d['path'] == self.device_info['path'] for d in self.hidapi.enumerate()])
 
         def path(self):
             """
