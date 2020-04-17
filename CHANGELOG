@@ -1,3 +1,7 @@
+Version 0.7.3:
+	- Fix crash in new LibUSB HIDAPI transport backend on systems with multiple connected StreamDeck devices
+	- Fix crash in new LibUSB HIDAPI transport backend when connected() was called on a StreamDeck instance.
+
 Version 0.7.2:
 	- Documentation restructuring to move installation out of the readme and into the library documentation.
 
