@@ -2,6 +2,7 @@ graft src/StreamDeck
 graft src/Assets
 include src/example*.py
 include *.md
+include *.jpg
 include VERSION
 include CHANGELOG
 include LICENSE
