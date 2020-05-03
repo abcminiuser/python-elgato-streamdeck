@@ -24,11 +24,25 @@ ASSETS_PATH = os.path.join(os.path.dirname(__file__), "Assets")
 
 # Generates an image that is correctly sized to fit across all keys of a given
 # StreamDeck.
-def create_full_deck_sized_image(deck, image_filename):
-    key_width, key_height = deck.key_image_format()['size']
+def create_full_deck_sized_image(deck, key_spacing, image_filename):
     key_rows, key_cols = deck.key_layout()
+    key_width, key_height = deck.key_image_format()['size']
+    spacing_x, spacing_y = key_spacing
 
-    full_deck_image_size = (key_width * key_cols, key_height * key_rows)
+    # Compute total size of the full StreamDeck image, based on the number of
+    # buttons along each axis. This doesn't take into account the spaces between
+    # the buttons that are hidden by the bezel.
+    key_width *= key_cols
+    key_height *= key_rows
+
+    # Compute the total number of extra non-visible pixels that are obscured by
+    # the bezel of the StreamDeck.
+    spacing_x *= key_cols - 1
+    spacing_y *= key_rows - 1
+
+    # Compute final full deck image size, based on the number of buttons and
+    # obscured pixels.
+    full_deck_image_size = (key_width + spacing_x, key_height + spacing_y)
 
     # Resize the image to suit the StreamDeck's full image size (note: will not
     # preserve the correct aspect ratio).
@@ -38,17 +52,23 @@ def create_full_deck_sized_image(deck, image_filename):
 
 # Crops out a key-sized image from a larger deck-sized image, at the location
 # occupied by the given key index.
-def crop_key_image_from_deck_sized_image(deck, image, key):
-    key_width, key_height = deck.key_image_format()['size']
+def crop_key_image_from_deck_sized_image(deck, image, key_spacing, key):
     key_rows, key_cols = deck.key_layout()
+    key_width, key_height = deck.key_image_format()['size']
+    spacing_x, spacing_y = key_spacing
 
     # Determine which row and column the requested key is located on.
     row = key // key_cols
     col = key % key_cols
 
+    # Compute the starting X and Y offsets into the full size image that the
+    # requested key should display.
+    start_x = col * (key_width + spacing_x)
+    start_y = row * (key_height + spacing_y)
+
     # Compute the region of the larger deck image that is occupied by the given
-    # key.
-    region = (col * key_width, row * key_height, (col + 1) * key_width, (row + 1) * key_height)
+    # key, and crop out that segment of the full image.
+    region = (start_x, start_y, start_x + key_width, start_y + key_height)
     segment = image.crop(region)
 
     # Create a new key-sized image, and paste in the cropped section of the
@@ -82,14 +102,20 @@ if __name__ == "__main__":
         # Set initial screen brightness to 30%.
         deck.set_brightness(30)
 
+        # Approximate number of (non-visible) pixels between each key, so we can
+        # take those into account when cutting up the image to show on the keys.
+        key_spacing = (36, 36)
+
         # Load and resize a source image so that it will fill the given
         # StreamDeck.
-        image = create_full_deck_sized_image(deck, "Harold.jpg")
+        image = create_full_deck_sized_image(deck, key_spacing, "Harold.jpg")
+
+        print("Created full deck image size of {}x{} pixels.".format(image.width, image.height))
 
         for k in range(deck.key_count()):
             # Extract out the section of the image that is occupied by the
             # current key.
-            key_image = crop_key_image_from_deck_sized_image(deck, image, k)
+            key_image = crop_key_image_from_deck_sized_image(deck, image, key_spacing, k)
 
             # Show the section of the main image onto the key.
             deck.set_key_image(k, key_image)
