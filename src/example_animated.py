@@ -62,9 +62,9 @@ def create_animation_frames(deck, image_filename):
 
 # Closes the StreamDeck device on key state change.
 def key_change_callback(deck, key, state):
-    # First take the lock, so we can ensure we're the only thread that's
-    # updating the StreamDeck right now.
-    with deck.animation_lock:
+    # Use a scoped-with on the deck to ensure we're the only thread using it
+    # right now.
+    with deck:
         # Reset deck, clearing all button images.
         deck.reset()
 
@@ -80,11 +80,6 @@ if __name__ == "__main__":
     for index, deck in enumerate(streamdecks):
         deck.open()
         deck.reset()
-
-        # We will be using the deck from multiple threads, and we want to be
-        # able to update it atomically. Create a mutex we can use to ensure we
-        # have exclusive access to this StreamDeck.
-        deck.animation_lock = threading.Lock()
 
         print("Opened '{}' device (serial number: '{}')".format(deck.deck_type(), deck.get_serial_number()))
 
@@ -110,9 +105,9 @@ if __name__ == "__main__":
         # Helper function that is run periodically, to update the images on
         # each key.
         def update_frames():
-            # First take the lock, so we can ensure we're the only thread that's
-            # updating the StreamDeck right now.
-            with deck.animation_lock:
+            # Use a scoped-with on the deck to ensure we're the only thread using it
+            # right now.
+            with deck:
                 try:
                     # Update the key images with the next animation frame.
                     for key, frames in key_images.items():

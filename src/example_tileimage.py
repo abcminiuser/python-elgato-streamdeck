@@ -81,11 +81,14 @@ def crop_key_image_from_deck_sized_image(deck, image, key_spacing, key):
 
 # Closes the StreamDeck device on key state change.
 def key_change_callback(deck, key, state):
-    # Reset deck, clearing all button images.
-    deck.reset()
+    # Use a scoped-with on the deck to ensure we're the only thread using it
+    # right now.
+    with deck:
+        # Reset deck, clearing all button images.
+        deck.reset()
 
-    # Close deck handle, terminating internal worker threads.
-    deck.close()
+        # Close deck handle, terminating internal worker threads.
+        deck.close()
 
 
 if __name__ == "__main__":

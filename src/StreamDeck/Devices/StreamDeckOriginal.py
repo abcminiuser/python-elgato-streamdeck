@@ -62,7 +62,11 @@ class StreamDeckOriginal(StreamDeck):
         :return: Button states, with the origin at the top-left of the deck.
         """
 
-        states = self.device.read(1 + self.KEY_COUNT)[1:]
+        states = self.device.read(1 + self.KEY_COUNT)
+        if states is None:
+            return None
+
+        states = states[1:]
         return [bool(states[s]) for s in map(self._convert_key_id_origin, range(self.KEY_COUNT))]
 
     def _reset_key_stream(self):

@@ -11,6 +11,8 @@ import atexit
 import ctypes
 import platform
 
+import threading
+
 
 class LibUSBHIDAPI(Transport):
     """
@@ -81,6 +83,9 @@ class LibUSBHIDAPI(Transport):
             self.HIDAPI_INSTANCE.hid_close.argtypes = [ctypes.c_void_p]
             self.HIDAPI_INSTANCE.hid_close.restype = None
 
+            self.HIDAPI_INSTANCE.hid_set_nonblocking.argtypes = [ctypes.c_void_p, ctypes.c_int]
+            self.HIDAPI_INSTANCE.hid_set_nonblocking.restype = ctypes.c_int
+
             self.HIDAPI_INSTANCE.hid_send_feature_report.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_char), ctypes.c_size_t]
             self.HIDAPI_INSTANCE.hid_send_feature_report.restype = ctypes.c_int
 
@@ -119,6 +124,8 @@ class LibUSBHIDAPI(Transport):
             self.hidapi = self._load_hidapi_library(platform_seach_library_names)
             if not self.hidapi:
                 raise TransportError("No suitable LibUSB HIDAPI library found on this system. Is the '{}' library installed?".format(platform_seach_library_names[0]))
+
+            self.mutex = threading.Lock()
 
         def enumerate(self, vendor_id=None, product_id=None):
             """
@@ -163,10 +170,13 @@ class LibUSBHIDAPI(Transport):
             :rtype: Handle
             :return: Device handle if opened successfully, None if open failed.
             """
+
             handle = self.hidapi.hid_open_path(path)
+
             if not handle:
                 raise TransportError("Could not open HID device.")
 
+            self.hidapi.hid_set_nonblocking(handle, 1)
             return handle
 
         def close_device(self, handle):
@@ -194,7 +204,9 @@ class LibUSBHIDAPI(Transport):
             if not handle:
                 raise TransportError("No HID device.")
 
-            result = self.hidapi.hid_send_feature_report(handle, bytes(data), len(data))
+            with self.mutex:
+                result = self.hidapi.hid_send_feature_report(handle, bytes(data), len(data))
+
             if result < 0:
                 raise TransportError("Failed to write feature report (%d)" % result)
 
@@ -219,7 +231,9 @@ class LibUSBHIDAPI(Transport):
             data = ctypes.create_string_buffer(length)
             data[0] = report_id
 
-            result = self.hidapi.hid_get_feature_report(handle, data, len(data))
+            with self.mutex:
+                result = self.hidapi.hid_get_feature_report(handle, data, len(data))
+
             if result < 0:
                 raise TransportError("Failed to read feature report (%d)" % result)
 
@@ -241,7 +255,9 @@ class LibUSBHIDAPI(Transport):
             if not handle:
                 raise TransportError("No HID device.")
 
-            result = self.hidapi.hid_write(handle, bytes(data), len(data))
+            with self.mutex:
+                result = self.hidapi.hid_write(handle, bytes(data), len(data))
+
             if result < 0:
                 raise TransportError("Failed to write out report (%d)" % result)
 
@@ -264,7 +280,14 @@ class LibUSBHIDAPI(Transport):
 
             data = ctypes.create_string_buffer(length)
 
-            self.hidapi.hid_read(handle, data, len(data))
+            with self.mutex:
+                result = self.hidapi.hid_read(handle, data, len(data))
+
+            if result < 0:
+                raise TransportError("Failed to read in report (%d)" % result)
+            elif result == 0:
+                return None
+
             return data.raw[:length]
 
     class Device(Transport.Device):

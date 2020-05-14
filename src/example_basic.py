@@ -78,8 +78,11 @@ def update_key_image(deck, key, state):
     # Generate the custom key with the requested image and label.
     image = render_key_image(deck, key_style["icon"], key_style["font"], key_style["label"])
 
-    # Update requested key with the generated image.
-    deck.set_key_image(key, image)
+    # Use a scoped-with on the deck to ensure we're the only thread using it
+    # right now.
+    with deck:
+        # Update requested key with the generated image.
+        deck.set_key_image(key, image)
 
 
 # Prints key state change information, updates rhe key image and performs any
@@ -97,11 +100,14 @@ def key_change_callback(deck, key, state):
 
         # When an exit button is pressed, close the application.
         if key_style["name"] == "exit":
-            # Reset deck, clearing all button images.
-            deck.reset()
+            # Use a scoped-with on the deck to ensure we're the only thread using it
+            # right now.
+            with deck:
+                # Reset deck, clearing all button images.
+                deck.reset()
 
-            # Close deck handle, terminating internal worker threads.
-            deck.close()
+                # Close deck handle, terminating internal worker threads.
+                deck.close()
 
 
 if __name__ == "__main__":
