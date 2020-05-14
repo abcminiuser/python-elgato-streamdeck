@@ -100,8 +100,8 @@ def key_change_callback(deck, key, state):
 
         # When an exit button is pressed, close the application.
         if key_style["name"] == "exit":
-            # Use a scoped-with on the deck to ensure we're the only thread using it
-            # right now.
+            # Use a scoped-with on the deck to ensure we're the only thread
+            # using it right now.
             with deck:
                 # Reset deck, clearing all button images.
                 deck.reset()
