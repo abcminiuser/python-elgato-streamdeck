@@ -105,8 +105,8 @@ if __name__ == "__main__":
         # Helper function that is run periodically, to update the images on
         # each key.
         def update_frames():
-            # Use a scoped-with on the deck to ensure we're the only thread using it
-            # right now.
+            # Use a scoped-with on the deck to ensure we're the only thread
+            # using it right now.
             with deck:
                 try:
                     # Update the key images with the next animation frame.

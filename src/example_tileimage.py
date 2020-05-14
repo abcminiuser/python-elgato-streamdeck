@@ -120,8 +120,11 @@ if __name__ == "__main__":
             # current key.
             key_image = crop_key_image_from_deck_sized_image(deck, image, key_spacing, k)
 
-            # Show the section of the main image onto the key.
-            deck.set_key_image(k, key_image)
+            # Use a scoped-with on the deck to ensure we're the only thread
+            # using it right now.
+            with deck:
+                # Show the section of the main image onto the key.
+                deck.set_key_image(k, key_image)
 
         # Register callback function for when a key state changes.
         deck.set_key_callback(key_change_callback)
