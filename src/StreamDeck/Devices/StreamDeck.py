@@ -10,6 +10,7 @@ from ..Transport.Transport import TransportError
 from abc import ABC, abstractmethod
 
 import threading
+import time
 
 
 class StreamDeck(ABC):
@@ -36,9 +37,11 @@ class StreamDeck(ABC):
         self.run_read_thread = False
         self.key_callback = None
 
-    def __exit__(self):
+        self.update_lock = threading.RLock()
+
+    def __del__(self):
         """
-        Exit handler for the StreamDeck, automatically closing the transport
+        Delete handler for the StreamDeck, automatically closing the transport
         if it is currently open and terminating the transport reader thread.
         """
         try:
@@ -50,6 +53,22 @@ class StreamDeck(ABC):
             self.device.close()
         except (TransportError):
             pass
+
+    def __enter__(self):
+        """
+        Enter handler for the StreamDeck, taking the exclusive update lock on
+        the deck. This can be used in a `with` statement to ensure that only one
+        thread is currently updating the deck, even if it is doing multiple
+        operations (e.g. setting the image on multiple keys).
+        """
+        self.update_lock.acquire()
+
+    def __exit__(self, type, value, traceback):
+        """
+        Exit handler for the StreamDeck, releasing the exclusive update lock on
+        the deck.
+        """
+        self.update_lock.release()
 
     @abstractmethod
     def _read_key_states(self):
@@ -88,6 +107,9 @@ class StreamDeck(ABC):
         while self.run_read_thread:
             try:
                 new_key_states = self._read_key_states()
+                if new_key_states is None:
+                    time.sleep(.05)
+                    continue
 
                 if self.key_callback is not None:
                     for k, (old, new) in enumerate(zip(self.last_key_states, new_key_states)):
@@ -95,7 +117,7 @@ class StreamDeck(ABC):
                             self.key_callback(self, k, new)
 
                 self.last_key_states = new_key_states
-            except (TransportError, ValueError):
+            except (TransportError):
                 self.run_read_thread = False
 
     def _setup_reader(self, callback):
