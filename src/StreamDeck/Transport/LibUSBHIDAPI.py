@@ -101,7 +101,7 @@ class LibUSBHIDAPI(Transport):
         def __init__(self):
             """
             Creates a new LibUSB HIDAPI library instance, used to interface with
-            HID devices attached tp the host system.
+            HID devices attached to the host system.
             """
 
             search_library_names = {
