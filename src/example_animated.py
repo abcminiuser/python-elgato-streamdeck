@@ -18,6 +18,7 @@ import threading
 from PIL import Image, ImageSequence
 from StreamDeck.DeviceManager import DeviceManager
 from StreamDeck.ImageHelpers import PILHelper
+from StreamDeck.Transport.Transport import TransportError
 
 
 # Folder location of image assets used by this example.
@@ -61,11 +62,14 @@ def create_animation_frames(deck, image_filename):
 
 # Closes the StreamDeck device on key state change.
 def key_change_callback(deck, key, state):
-    # Reset deck, clearing all button images.
-    deck.reset()
+    # First take the lock, so we can ensure we're the only thread that's
+    # updating the StreamDeck right now.
+    with deck.animation_lock:
+        # Reset deck, clearing all button images.
+        deck.reset()
 
-    # Close deck handle, terminating internal worker threads.
-    deck.close()
+        # Close deck handle, terminating internal worker threads.
+        deck.close()
 
 
 if __name__ == "__main__":
@@ -76,6 +80,11 @@ if __name__ == "__main__":
     for index, deck in enumerate(streamdecks):
         deck.open()
         deck.reset()
+
+        # We will be using the deck from multiple threads, and we want to be
+        # able to update it atomically. Create a mutex we can use to ensure we
+        # have exclusive access to this StreamDeck.
+        deck.animation_lock = threading.Lock()
 
         print("Opened '{}' device (serial number: '{}')".format(deck.deck_type(), deck.get_serial_number()))
 
@@ -101,17 +110,20 @@ if __name__ == "__main__":
         # Helper function that is run periodically, to update the images on
         # each key.
         def update_frames():
-            try:
-                # Update the key images with the next animation frame.
-                for key, frames in key_images.items():
-                    deck.set_key_image(key, next(frames))
+            # First take the lock, so we can ensure we're the only thread that's
+            # updating the StreamDeck right now.
+            with deck.animation_lock:
+                try:
+                    # Update the key images with the next animation frame.
+                    for key, frames in key_images.items():
+                        deck.set_key_image(key, next(frames))
 
-                # Schedule the next periodic animation frame update.
-                threading.Timer(1.0 / FRAMES_PER_SECOND, update_frames).start()
-            except (IOError, ValueError):
-                # Something went wrong (deck closed?) - don't re-schedule the
-                # next animation frame.
-                pass
+                    # Schedule the next periodic animation frame update.
+                    threading.Timer(1.0 / FRAMES_PER_SECOND, update_frames).start()
+                except (TransportError):
+                    # Something went wrong while communicating with the device
+                    # (closed?) - don't re-schedule the next animation frame.
+                    pass
 
         # Kick off the first animation update, which will also schedule the
         # next animation frame.
