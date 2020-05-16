@@ -145,21 +145,22 @@ class LibUSBHIDAPI(Transport):
 
             device_list = []
 
-            device_enumeration = self.hidapi.hid_enumerate(vendor_id, product_id)
+            with self.mutex:
+                device_enumeration = self.hidapi.hid_enumerate(vendor_id, product_id)
 
-            if device_enumeration:
-                current_device = device_enumeration
+                if device_enumeration:
+                    current_device = device_enumeration
 
-                while current_device:
-                    device_list.append({
-                        'path': current_device.contents.path,
-                        'vendor_id': current_device.contents.vendor_id,
-                        'product_id': current_device.contents.product_id,
-                    })
+                    while current_device:
+                        device_list.append({
+                            'path': current_device.contents.path,
+                            'vendor_id': current_device.contents.vendor_id,
+                            'product_id': current_device.contents.product_id,
+                        })
 
-                    current_device = current_device.contents.next
+                        current_device = current_device.contents.next
 
-            self.hidapi.hid_free_enumeration(device_enumeration)
+                self.hidapi.hid_free_enumeration(device_enumeration)
 
             return device_list
 
@@ -171,12 +172,14 @@ class LibUSBHIDAPI(Transport):
             :return: Device handle if opened successfully, None if open failed.
             """
 
-            handle = self.hidapi.hid_open_path(path)
+            with self.mutex:
+                handle = self.hidapi.hid_open_path(path)
 
-            if not handle:
-                raise TransportError("Could not open HID device.")
+                if not handle:
+                    raise TransportError("Could not open HID device.")
 
-            self.hidapi.hid_set_nonblocking(handle, 1)
+                self.hidapi.hid_set_nonblocking(handle, 1)
+
             return handle
 
         def close_device(self, handle):
@@ -186,7 +189,8 @@ class LibUSBHIDAPI(Transport):
             :param Handle handle: Device handle to close.
             """
             if handle:
-                self.hidapi.hid_close(handle)
+                with self.mutex:
+                    self.hidapi.hid_close(handle)
 
         def send_feature_report(self, handle, data):
             """
