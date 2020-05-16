@@ -21,8 +21,7 @@ chosen backend for the library to work correctly.
 **Backends:**
 
 .. toctree::
-    :numbered:
     :glob:
     :maxdepth: 1
 
-    backend_libusb.rst
+    backend_libusb_hidapi.rst
