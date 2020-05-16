@@ -115,14 +115,14 @@ if __name__ == "__main__":
 
         print("Created full deck image size of {}x{} pixels.".format(image.width, image.height))
 
-        for k in range(deck.key_count()):
-            # Extract out the section of the image that is occupied by the
-            # current key.
-            key_image = crop_key_image_from_deck_sized_image(deck, image, key_spacing, k)
+        # Use a scoped-with on the deck to ensure we're the only thread
+        # using it right now.
+        with deck:
+            for k in range(deck.key_count()):
+                # Extract out the section of the image that is occupied by the
+                # current key.
+                key_image = crop_key_image_from_deck_sized_image(deck, image, key_spacing, k)
 
-            # Use a scoped-with on the deck to ensure we're the only thread
-            # using it right now.
-            with deck:
                 # Show the section of the main image onto the key.
                 deck.set_key_image(k, key_image)
 
