@@ -34,10 +34,10 @@ class LibUSBHIDAPI(Transport):
 
             if self.HIDAPI_INSTANCE:
                 return self.HIDAPI_INSTANCE
-
+            
             for lib_name in library_search_list:
                 try:
-                    self.HIDAPI_INSTANCE = ctypes.cdll.LoadLibrary(lib_name)
+                    LibUSBHIDAPI.Library.HIDAPI_INSTANCE = ctypes.cdll.LoadLibrary(lib_name)
                     break
                 except OSError:
                     pass
@@ -314,6 +314,9 @@ class LibUSBHIDAPI(Transport):
             """
             self.close()
 
+        def __del__(self):
+            self.__exit__()
+    
         def open(self):
             """
             Opens the HID device for input/output. This must be called prior to
@@ -323,7 +326,7 @@ class LibUSBHIDAPI(Transport):
                          close method.
             """
             if self.device_handle:
-                self.close()
+                return
 
             self.device_handle = self.hidapi.open_device(self.device_info['path'])
 
@@ -439,5 +442,5 @@ class LibUSBHIDAPI(Transport):
         """
 
         hidapi = LibUSBHIDAPI.Library()
-
+        
         return [LibUSBHIDAPI.Device(hidapi, d) for d in hidapi.enumerate(vendor_id=vid, product_id=pid)]

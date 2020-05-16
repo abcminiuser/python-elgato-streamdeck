@@ -103,7 +103,7 @@ class DeviceManager:
         ]
 
         streamdecks = list()
-
+        
         for vid, pid, class_type in products:
             found_devices = self.transport.enumerate(vid=vid, pid=pid)
             streamdecks.extend([class_type(d) for d in found_devices])
