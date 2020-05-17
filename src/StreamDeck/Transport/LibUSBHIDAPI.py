@@ -37,7 +37,7 @@ class LibUSBHIDAPI(Transport):
 
             for lib_name in library_search_list:
                 try:
-                    self.HIDAPI_INSTANCE = ctypes.cdll.LoadLibrary(lib_name)
+                    type(self).HIDAPI_INSTANCE = ctypes.cdll.LoadLibrary(lib_name)
                     break
                 except OSError:
                     pass
@@ -307,6 +307,13 @@ class LibUSBHIDAPI(Transport):
             self.device_info = device_info
             self.device_handle = None
 
+        def __del__(self):
+            """
+            Deletion handler for the HID transport, automatically closing the
+            device if it is currently open.
+            """
+            self.close()
+
         def __exit__(self):
             """
             Exit handler for the HID transport, automatically closing the
@@ -323,7 +330,7 @@ class LibUSBHIDAPI(Transport):
                          close method.
             """
             if self.device_handle:
-                self.close()
+                return
 
             self.device_handle = self.hidapi.open_device(self.device_info['path'])
 
