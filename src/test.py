@@ -12,7 +12,6 @@ import logging
 from StreamDeck.DeviceManager import DeviceManager
 from StreamDeck.ImageHelpers import PILHelper
 
-
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
 

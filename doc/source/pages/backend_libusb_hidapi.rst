@@ -58,9 +58,13 @@ needed by this project on a fresh system::
     	SUBSYSTEMS=="usb", ATTRS{idVendor}=="0fd9", GROUP="users"
     	EOF
 
+    # Reload udev rules to ensure the new permissions take effect
+	sudo udevadm control --reload-rules
+
     # Install the latest version of the StreamDeck library via pip
     pip3 install streamdeck
 
-Note that after adding the ``udev`` rule, a restart will be required in order for
-it to take effect and allow access to the StreamDeck device without requiring
-root privileges.
+Note that after adding the ``udev`` rules, you will need to remove and
+re-attach any existing StreamDeck devices to ensure they adopt the new
+permissions. This should allow you to access StreamDeck devices *without*
+needing root permissions.

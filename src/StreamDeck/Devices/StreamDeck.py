@@ -5,9 +5,9 @@
 #         www.fourwalledcubicle.com
 #
 
-from abc import ABC, abstractmethod
 import threading
 import time
+from abc import ABC, abstractmethod
 
 from ..Transport.Transport import TransportError
 

@@ -5,9 +5,9 @@
 #         www.fourwalledcubicle.com
 #
 
+from .Devices.StreamDeckMini import StreamDeckMini
 from .Devices.StreamDeckOriginal import StreamDeckOriginal
 from .Devices.StreamDeckOriginalV2 import StreamDeckOriginalV2
-from .Devices.StreamDeckMini import StreamDeckMini
 from .Devices.StreamDeckXL import StreamDeckXL
 from .Transport.Dummy import Dummy
 from .Transport.LibUSBHIDAPI import LibUSBHIDAPI
