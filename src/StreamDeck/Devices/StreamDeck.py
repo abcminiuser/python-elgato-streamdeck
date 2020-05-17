@@ -5,12 +5,11 @@
 #         www.fourwalledcubicle.com
 #
 
-from ..Transport.Transport import TransportError
-
 from abc import ABC, abstractmethod
-
 import threading
 import time
+
+from ..Transport.Transport import TransportError
 
 
 class StreamDeck(ABC):

@@ -12,9 +12,10 @@
 # device's native image format, and displaying them with a periodic
 # timer.
 
-import os
 import itertools
+import os
 import threading
+
 from PIL import Image, ImageSequence
 from StreamDeck.DeviceManager import DeviceManager
 from StreamDeck.ImageHelpers import PILHelper

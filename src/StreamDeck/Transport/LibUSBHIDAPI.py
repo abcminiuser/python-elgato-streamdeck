@@ -5,13 +5,12 @@
 #         www.fourwalledcubicle.com
 #
 
-from .Transport import Transport, TransportError
-
 import atexit
 import ctypes
 import platform
-
 import threading
+
+from .Transport import Transport, TransportError
 
 
 class LibUSBHIDAPI(Transport):

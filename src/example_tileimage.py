@@ -13,6 +13,7 @@
 
 import os
 import threading
+
 from PIL import Image
 from StreamDeck.DeviceManager import DeviceManager
 from StreamDeck.ImageHelpers import PILHelper

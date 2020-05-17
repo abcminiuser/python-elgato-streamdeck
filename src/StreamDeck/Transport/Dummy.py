@@ -5,8 +5,8 @@
 #         www.fourwalledcubicle.com
 #
 
-import logging
 import binascii
+import logging
 
 from .Transport import Transport, TransportError
 
