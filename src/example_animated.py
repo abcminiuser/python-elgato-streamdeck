@@ -106,20 +106,20 @@ if __name__ == "__main__":
         # Helper function that is run periodically, to update the images on
         # each key.
         def update_frames():
-            # Use a scoped-with on the deck to ensure we're the only thread
-            # using it right now.
-            with deck:
-                try:
+            try:
+                # Use a scoped-with on the deck to ensure we're the only thread
+                # using it right now.
+                with deck:
                     # Update the key images with the next animation frame.
                     for key, frames in key_images.items():
                         deck.set_key_image(key, next(frames))
 
-                    # Schedule the next periodic animation frame update.
-                    threading.Timer(1.0 / FRAMES_PER_SECOND, update_frames).start()
-                except (TransportError):
-                    # Something went wrong while communicating with the device
-                    # (closed?) - don't re-schedule the next animation frame.
-                    pass
+                # Schedule the next periodic animation frame update.
+                threading.Timer(1.0 / FRAMES_PER_SECOND, update_frames).start()
+            except (TransportError):
+                # Something went wrong while communicating with the device
+                # (closed?) - don't re-schedule the next animation frame.
+                pass
 
         # Kick off the first animation update, which will also schedule the
         # next animation frame.
