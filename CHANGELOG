@@ -1,3 +1,6 @@
+Version 0.8.1:
+	- Fixed memory leak in LibUSB HIDAPI transport backend.
+
 Version 0.8.0:
 	- Fix random crashes in LibUSB HIDAPI transport backend on Windows, as the API is not thread safe.
 	- Added support for atomic updates of StreamDeck instances via the Python `with` scope syntax.
