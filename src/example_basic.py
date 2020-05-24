@@ -24,15 +24,9 @@ ASSETS_PATH = os.path.join(os.path.dirname(__file__), "Assets")
 # Generates a custom tile with run-time generated text and custom image via the
 # PIL module.
 def render_key_image(deck, icon_filename, font_filename, label_text):
-    # Create new key image of the correct dimensions, black background.
-    image = PILHelper.create_image(deck)
-
     # Resize the source image asset to best-fit the dimensions of a single key,
     # and paste it onto our blank frame centered as closely as possible.
-    icon = Image.open(icon_filename).convert("RGBA")
-    icon.thumbnail((image.width, image.height - 20), Image.LANCZOS)
-    icon_pos = ((image.width - icon.width) // 2, 0)
-    image.paste(icon, icon_pos, icon)
+    image = PILHelper.load_scaled_image(deck, icon_filename)
 
     # Load a custom TrueType font and use it to overlay the key index, draw key
     # label onto the image.
