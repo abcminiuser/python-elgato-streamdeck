@@ -29,6 +29,7 @@ def create_image(deck, background='black'):
 
     return Image.new("RGB", image_format['size'], background)
 
+
 def load_scaled_image(deck, image_path, background='black'):
     """
     Loads an image from image_path and scales it to fit the given StreamDeck
@@ -41,7 +42,9 @@ def load_scaled_image(deck, image_path, background='black'):
     :rtrype: PIL.Image
     :return: Loaded PIL image scaled and centered
     """
-    image = PILHelper.create_image(deck, background=background)
+    from PIL import Image
+
+    image = create_image(deck, background=background)
 
     # Resize the source image asset to best-fit the dimensions of a single key,
     # and paste it onto our blank frame centered as closely as possible.
@@ -51,6 +54,7 @@ def load_scaled_image(deck, image_path, background='black'):
     image.paste(icon, icon_pos, icon)
 
     return image
+
 
 def to_native_format(deck, image):
     """
