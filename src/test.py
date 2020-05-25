@@ -8,12 +8,10 @@
 #
 
 import logging
-import os
 
 from StreamDeck.DeviceManager import DeviceManager
 from StreamDeck.ImageHelpers import PILHelper
-
-ASSETS_PATH = os.path.join(os.path.dirname(__file__), "Assets")
+from PIL import Image
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
@@ -40,8 +38,7 @@ if __name__ == "__main__":
             test_key_image = PILHelper.create_image(deck)
             test_key_image = PILHelper.to_native_format(deck, test_key_image)
 
-            scaled_image_path = os.path.join(ASSETS_PATH, "Pressed.png")
-            test_scaled_image = PILHelper.load_scaled_image(deck, scaled_image_path)
+            test_scaled_image = PILHelper.create_scaled_image(deck, Image.new("RGB", (5, 5)))
 
             deck.set_key_callback(None)
             deck.reset()

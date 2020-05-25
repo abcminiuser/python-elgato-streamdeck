@@ -39,21 +39,15 @@ def create_animation_frames(deck, image_filename):
 
     # Iterate through each animation frame of the source image
     for frame in ImageSequence.Iterator(icon):
-        # We need source frames in RGBA format, convert now before we resize it.
-        icon_frame = frame.convert("RGBA")
-
         # Create new key image of the correct dimensions, black background.
-        image = PILHelper.create_image(deck)
+        frame_image = PILHelper.create_scaled_image(deck, frame)
 
-        # Resize the animation frame to best-fit the dimensions of a single key,
-        # and paste it onto our blank frame centered as closely as possible.
-        icon_frame.thumbnail(image.size, Image.LANCZOS)
-        icon_frame_pos = ((image.width - icon_frame.width) // 2, (image.height - icon_frame.height) // 2)
-        image.paste(icon_frame, icon_frame_pos, icon_frame)
+        # Pre-convert the generated image to the native format of the StreamDeck
+        # so we don't need to keep converting it when showing it on the device.
+        native_frame_image = PILHelper.to_native_format(deck, frame_image)
 
-        # Store the rendered animation frame in the device's native image
-        # format for later use, so we don't need to keep converting it.
-        icon_frames.append(PILHelper.to_native_format(deck, image))
+        # Store the rendered animation frame for later user.
+        icon_frames.append(native_frame_image)
 
     # Return an infinite cycle generator that returns the next animation frame
     # each time it is called.

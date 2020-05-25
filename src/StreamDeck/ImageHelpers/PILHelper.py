@@ -30,17 +30,22 @@ def create_image(deck, background='black'):
     return Image.new("RGB", image_format['size'], background)
 
 
-def load_scaled_image(deck, image_path, background='black'):
+def create_scaled_image(deck, image, margins=[0, 0, 0, 0], background='black'):
     """
-    Loads an image, scales it to fit the given StreamDeck device's keys, and
-    centers it. The aspect ratio of the image is preserved.
+    Creates a new key image that contains a scaled version of a given image,
+    resized to best fit the given StreamDeck device's keys with the given
+    margins around each side.
+
+    The scaled image is centered within the new key image, offset by the given
+    margins. The aspect ratio of the image is preserved.
 
     .. seealso:: See :func:`~PILHelper.to_native_format` method for converting a
                  PIL image instance to the native image format of a given
                  StreamDeck device.
 
     :param StreamDeck deck: StreamDeck device to generate a compatible image for.
-    :param str image_path: Image path of the source image to load.
+    :param Image image: PIL Image object to scale
+    :param list(int): Array of margin pixels in (top, right, bottom, left) order.
     :param str background: Background color to use, compatible with `PIL.Image.new()`.
 
     :rtrype: PIL.Image
@@ -48,16 +53,23 @@ def load_scaled_image(deck, image_path, background='black'):
     """
     from PIL import Image
 
-    image = create_image(deck, background=background)
+    if len(margins) != 4:
+        raise ValueError("Margins should be given as an array of four integers.")
 
-    # Resize the source image asset to best-fit the dimensions of a single key,
-    # and paste it onto our blank frame centered as closely as possible.
-    icon = Image.open(image_path).convert("RGBA")
-    icon.thumbnail((image.width, image.height), Image.LANCZOS)
-    icon_pos = ((image.width - icon.width) // 2, (image.height - icon.height) // 2)
-    image.paste(icon, icon_pos, icon)
+    final_image = create_image(deck, background=background)
 
-    return image
+    thumbnail_max_width = final_image.width - (margins[1] + margins[3])
+    thumbnail_max_height = final_image.height - (margins[0] + margins[2])
+
+    thumbnail = image.convert("RGBA")
+    thumbnail.thumbnail((thumbnail_max_width, thumbnail_max_height), Image.LANCZOS)
+
+    thumbnail_x = (margins[3] + (thumbnail_max_width - thumbnail.width) // 2)
+    thumbnail_y = (margins[0] + (thumbnail_max_height - thumbnail.height) // 2)
+
+    final_image.paste(thumbnail, (thumbnail_x, thumbnail_y), thumbnail)
+
+    return final_image
 
 
 def to_native_format(deck, image):

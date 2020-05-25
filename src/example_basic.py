@@ -13,7 +13,7 @@
 import os
 import threading
 
-from PIL import ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFont
 from StreamDeck.DeviceManager import DeviceManager
 from StreamDeck.ImageHelpers import PILHelper
 
@@ -25,8 +25,10 @@ ASSETS_PATH = os.path.join(os.path.dirname(__file__), "Assets")
 # PIL module.
 def render_key_image(deck, icon_filename, font_filename, label_text):
     # Resize the source image asset to best-fit the dimensions of a single key,
-    # and paste it onto our blank frame centered as closely as possible.
-    image = PILHelper.load_scaled_image(deck, icon_filename)
+    # leaving a margin at the bottom so that we can draw the key title
+    # afterwards.
+    icon = Image.open(icon_filename)
+    image = PILHelper.create_scaled_image(deck, icon, margins=[0, 0, 20, 0])
 
     # Load a custom TrueType font and use it to overlay the key index, draw key
     # label onto the image.
