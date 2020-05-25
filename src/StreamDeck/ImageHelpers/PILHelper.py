@@ -32,12 +32,16 @@ def create_image(deck, background='black'):
 
 def load_scaled_image(deck, image_path, background='black'):
     """
-    Loads an image from image_path and scales it to fit the given StreamDeck
-    device's keys, and centers it.
+    Loads an image, scales it to fit the given StreamDeck device's keys, and
+    centers it. The aspect ratio of the image is preserved.
 
     .. seealso:: See :func:`~PILHelper.to_native_format` method for converting a
                  PIL image instance to the native image format of a given
-                 StreamDeck device
+                 StreamDeck device.
+
+    :param StreamDeck deck: StreamDeck device to generate a compatible image for.
+    :param str image_path: Image path of the source image to load.
+    :param str background: Background color to use, compatible with `PIL.Image.new()`.
 
     :rtrype: PIL.Image
     :return: Loaded PIL image scaled and centered
