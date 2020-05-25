@@ -56,6 +56,7 @@ development and maintenance of this library:
 - [BS-Tek](https://github.com/BS-Tek)
 - [dirkk0](https://github.com/dirkk0)
 - [dubstech](https://github.com/dubstech)
+- [jmudge14](https://github.com/jmudge14)
 - [Kalle-Wirsch](https://github.com/Kalle-Wirsch)
 - [pointshader](https://github.com/pointshader)
 - [spidererrol](https://github.com/Spidererrol)
