@@ -62,19 +62,12 @@ def test_key_pattern(deck):
         deck.close()
 
 
-tests = {
-    "PIL Helpers": test_pil_helpers,
-    "Basic APIs": test_basic_apis,
-    "Key Pattern": test_key_pattern,
-}
-
-
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
 
-    parser = argparse.ArgumentParser(description='StreamDeck Library test.')
-    parser.add_argument('--model', required=False, help='Stream Deck model name to test')
-    parser.add_argument('--test', required=False, help='Stream Deck test to run')
+    parser = argparse.ArgumentParser(description="StreamDeck Library test.")
+    parser.add_argument("--model", help="Stream Deck model name to test")
+    parser.add_argument("--test", help="Stream Deck test to run")
     args = parser.parse_args()
 
     manager = DeviceManager(transport="dummy")
@@ -87,6 +80,12 @@ if __name__ == "__main__":
     if len(test_streamdecks) == 0:
         logging.error("Error: No Stream Decks to test. Known models: {}".format([d.deck_type() for d in streamdecks]))
         sys.exit(1)
+
+    tests = {
+        "PIL Helpers": test_pil_helpers,
+        "Basic APIs": test_basic_apis,
+        "Key Pattern": test_key_pattern,
+    }
 
     test_runners = tests
     if args.test:
