@@ -38,3 +38,8 @@ steps:
   commands:
   - python setup.py sdist bdist_wheel
   - twine check dist/*
+  depends_on:
+  - Flake8
+  - Bandit
+  - Tests
+  - Documentation
