@@ -152,7 +152,7 @@ class LibUSBHIDAPI(Transport):
 
                     while current_device:
                         device_list.append({
-                            'path': current_device.contents.path,
+                            'path': current_device.contents.path.decode('utf-8'),
                             'vendor_id': current_device.contents.vendor_id,
                             'product_id': current_device.contents.product_id,
                         })
@@ -172,6 +172,9 @@ class LibUSBHIDAPI(Transport):
             """
 
             with self.mutex:
+                if type(path) is not bytes:
+                    path = bytes(path, 'utf-8')
+
                 handle = self.hidapi.hid_open_path(path)
 
                 if not handle:
