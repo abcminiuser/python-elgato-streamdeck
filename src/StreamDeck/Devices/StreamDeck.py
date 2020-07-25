@@ -14,7 +14,7 @@ from ..Transport.Transport import TransportError
 
 class StreamDeck(ABC):
     """
-    Represents a physically attached original StreamDeck device.
+    Represents a physically attached StreamDeck device.
     """
 
     KEY_COUNT = None

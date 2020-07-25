@@ -10,7 +10,7 @@ from .StreamDeck import StreamDeck
 
 class StreamDeckXL(StreamDeck):
     """
-    Represents a physically attached StreamDeck Original device.
+    Represents a physically attached StreamDeck XL device.
     """
 
     KEY_COUNT = 32
