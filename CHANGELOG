@@ -1,3 +1,8 @@
+Version 0.8.2:
+	- Added new PILHelper.create_scaled_image() function to easily generate scaled/padded key images for a given deck.
+	- Updated LibUSB transport backend so that device paths are returned as UTF-8 strings, not raw bytes.
+	- Updated version/serial number string extraction from StreamDecks so that invalid characters are substituted, rather than raising a UnicodeDecodeError error.
+
 Version 0.8.1:
 	- Fixed memory leak in LibUSB HIDAPI transport backend.
 
