@@ -95,7 +95,7 @@ class StreamDeck(ABC):
         removing any trailing whitespace or NUL bytes.
         """
 
-        return str(bytes(data), 'utf-8').rstrip(' \0')
+        return str(bytes(data), 'ascii', 'replace').rstrip(' \0')
 
     def _read(self):
         """
