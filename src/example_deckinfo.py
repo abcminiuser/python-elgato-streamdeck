@@ -28,7 +28,7 @@ def print_deck_info(index, deck):
     print("\t - ID: {}".format(deck.id()))
     print("\t - Serial: '{}'".format(deck.get_serial_number()))
     print("\t - Firmware Version: '{}'".format(deck.get_firmware_version()))
-    print("\t - Key Count: {} ({}x{} grid)".format(
+    print("\t - Key Count: {} (in a {}x{} grid)".format(
         deck.key_count(),
         deck.key_layout()[0],
         deck.key_layout()[1]))
