@@ -234,7 +234,8 @@ class LibUSBHIDAPI(Transport):
             if not handle:
                 raise TransportError("No HID device.")
 
-            data = ctypes.create_string_buffer(length)
+            # We need to oversize our read due a bug in some versions of HIDAPI
+            data = ctypes.create_string_buffer(length + 1)
             data[0] = report_id
 
             with self.mutex:
@@ -242,8 +243,13 @@ class LibUSBHIDAPI(Transport):
 
             if result < 0:
                 raise TransportError("Failed to read feature report (%d)" % result)
+            elif result == (length + 1):
+                # Mac HIDAPI 0.9.0 bug, we read one less than we expected (not including report ID).
+                # We requested an over-sized report, so we actually got the amount we wanted.
+                return data.raw
 
-            return bytearray(data.raw[:length])
+            # We read an extra byte (as expected). Just return the first length requested bytes.
+            return data.raw[:length]
 
         def write(self, handle, data):
             """
