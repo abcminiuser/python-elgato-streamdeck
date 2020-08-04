@@ -15,23 +15,37 @@ Index
 #####
 
 .. toctree::
-    :numbered:
-    :glob:
+    :caption: Installation and Setup
 
     pages/installation.rst
+
+
+.. toctree::
+    :caption: Module Documentation
+    :numbered:
 
     modules/discovery.rst
     modules/devices.rst
     modules/transports.rst
     modules/imagehelpers.rst
 
+
+.. toctree::
+    :caption: Library Examples
+    :numbered:
+
     examples/deckinfo.rst
     examples/basic.rst
     examples/tiled.rst
     examples/animated.rst
 
+
+.. toctree::
+    :caption: About
+
     pages/changelog.rst
     pages/license.rst
+
 
 ##################
 Indices and tables
