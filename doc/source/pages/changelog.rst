@@ -1,5 +1,5 @@
-*****************
-Library Changelog
-*****************
+*********
+Changelog
+*********
 
 .. include:: ../../../CHANGELOG

@@ -43,6 +43,7 @@ Index
 .. toctree::
     :caption: About
 
+    pages/source.rst
     pages/changelog.rst
     pages/license.rst
 
