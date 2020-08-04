@@ -1,7 +1,7 @@
 Version 0.8.2:
-	- Added new PILHelper.create_scaled_image() function to easily generate scaled/padded key images for a given deck.
+	- Added new ``PILHelper.create_scaled_image()`` function to easily generate scaled/padded key images for a given deck.
 	- Updated LibUSB transport backend so that device paths are returned as UTF-8 strings, not raw bytes.
-	- Updated version/serial number string extraction from StreamDecks so that invalid characters are substituted, rather than raising a UnicodeDecodeError error.
+	- Updated version/serial number string extraction from StreamDecks so that invalid characters are substituted, rather than raising a ``UnicodeDecodeError`` error.
 	- Added LibUSB transport workaround for a bug on Mac platforms when using older versions of the library.
 
 Version 0.8.1:
@@ -9,11 +9,11 @@ Version 0.8.1:
 
 Version 0.8.0:
 	- Fix random crashes in LibUSB HIDAPI transport backend on Windows, as the API is not thread safe.
-	- Added support for atomic updates of StreamDeck instances via the Python `with` scope syntax.
+	- Added support for atomic updates of StreamDeck instances via the Python ``with`` scope syntax.
 
 Version 0.7.3:
 	- Fix crash in new LibUSB HIDAPI transport backend on systems with multiple connected StreamDeck devices.
-	- Fix crash in new LibUSB HIDAPI transport backend when connected() was called on a StreamDeck instance.
+	- Fix crash in new LibUSB HIDAPI transport backend when ``connected()`` was called on a StreamDeck instance.
 
 Version 0.7.2:
 	- Documentation restructuring to move installation out of the readme and into the library documentation.
@@ -23,22 +23,22 @@ Version 0.7.1:
 	- Fixed minor typo in the libUSB HIDAPI transport backend probe failure message.
 
 Version 0.7.0:
-	- Removed old HID and HIDAPI backends, added new ctypes based LibUSB-HIDAPI backend replacement.
+	- Removed old HID and HIDAPI backends, added new ``ctypes`` based LibUSB-HIDAPI backend replacement.
 
 Version 0.6.3:
 	- Added support for the new V2 hardware revision of the StreamDeck Original.
 
 Version 0.6.2:
 	- Fixed broken StreamDeck XL communications on Linux.
-	- Added blacklist for the `libhidapi-hidraw` system library which breaks StreamDeck Original communications.
+	- Added blacklist for the ``libhidapi-hidraw`` system library which breaks StreamDeck Original communications.
 
 Version 0.6.1:
 	- Fixed broken HIDAPI backend probing.
 	- Fixed double-open of HID backend devices causing connection issues on some platforms.
 
 Version 0.6.0:
-	- Added support for the 'HID' Python package. This new HID backend is strongly recommended over the old HIDAPI backend.
-	- Added autoprobing of installed backends, if no specific transport is supplied when constructing a DeviceManager instance.
+	- Added support for the ``HID`` Python package. This new HID backend is strongly recommended over the old HIDAPI backend.
+	- Added auto-probing of installed backends, if no specific transport is supplied when constructing a DeviceManager instance.
 
 Version 0.5.1:
 	- Fixed StreamDeck XL reporting swapped rows/columns count.
@@ -47,7 +47,7 @@ Version 0.5.1:
 Version 0.5.0:
 	- Fixed StreamDeck devices occasionally showing partial old frames on initial connection.
 	- Removed support for RAW pixel images, StreamDeck Mini and Original take BMP images.
-	- Removed "width" and "height" information from Deck key image dict, now returned as "size" tuple entry.
+	- Removed ``width`` and ``height`` information from Deck key image dict, now returned as ``size`` tuple entry.
 
 Version 0.4.0:
 	- Added StreamDeck XL support.
@@ -63,8 +63,8 @@ Version 0.3:
 	  top-left of all supported devices.
 
 Version 0.2.4:
-	- Added new StreamDeck.get_serial_number() function.
-	- Added new StreamDeck.get_firmware_version() function.
+	- Added new ``StreamDeck.get_serial_number()`` function.
+	- Added new ``StreamDeck.get_firmware_version()`` function.
 
 Version 0.2.3:
-	- Added new StreamDeck.ImageHelpers modules for easier key image generation.
+	- Added new ``StreamDeck.ImageHelpers modules`` for easier key image generation.
