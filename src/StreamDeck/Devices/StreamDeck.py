@@ -192,7 +192,7 @@ class StreamDeck(ABC):
         Retrieves the model of Stream Deck.
 
         :rtype: str
-        :return: Text corresponding to the specific type of the device.
+        :return: String containing the model name of the StreamDeck device..
         """
         return self.DECK_TYPE
 
@@ -257,7 +257,7 @@ class StreamDeck(ABC):
 
         :param function async_callback: Asynchronous callback function to fire
                                         each time a button state changes.
-        :param function loop: Asyncio loop to dispatch the callback into
+        :param asyncio.loop loop: Asyncio loop to dispatch the callback into
         """
         import asyncio
 
@@ -274,8 +274,8 @@ class StreamDeck(ABC):
 
         :rtype: list(bool)
         :return: List describing the current states of each of the buttons on
-                 the device (`True` if the button is being pressed,
-                 `False` otherwise).
+                 the device (`True` if the button is being pressed, `False`
+                 otherwise).
         """
         return self.last_key_states
 
