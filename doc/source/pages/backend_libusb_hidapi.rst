@@ -47,7 +47,7 @@ needed by this project on a fresh system::
     sudo apt install -y libudev-dev libusb-1.0-0-dev libhidapi-libusb0
 
     # Install system packages needed for the Python Pillow package installation
-    sudo apt install -y libjpeg-dev zlib1g-dev
+    sudo apt install -y libjpeg-dev zlib1g-dev libopenjp2-7 libtiff5
 
     # Install python library dependencies
     pip3 install wheel
