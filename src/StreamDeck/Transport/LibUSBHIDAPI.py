@@ -115,14 +115,14 @@ class LibUSBHIDAPI(Transport):
             }
 
             self.platform_name = platform.system()
-            platform_seach_library_names = search_library_names.get(self.platform_name)
+            platform_search_library_names = search_library_names.get(self.platform_name)
 
-            if not platform_seach_library_names:
+            if not platform_search_library_names:
                 raise TransportError("No suitable LibUSB HIDAPI library search names were found for this system.")
 
-            self.hidapi = self._load_hidapi_library(platform_seach_library_names)
+            self.hidapi = self._load_hidapi_library(platform_search_library_names)
             if not self.hidapi:
-                raise TransportError("No suitable LibUSB HIDAPI library found on this system. Is the '{}' library installed?".format(platform_seach_library_names[0]))
+                raise TransportError("No suitable LibUSB HIDAPI library found on this system. Is the '{}' library installed?".format(platform_search_library_names[0]))
 
             self.mutex = threading.Lock()
 
