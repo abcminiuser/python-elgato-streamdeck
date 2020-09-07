@@ -114,8 +114,8 @@ class LibUSBHIDAPI(Transport):
                 "Darwin": ["libhidapi.dylib"],
             }
 
-            platform_name = platform.system()
-            platform_seach_library_names = search_library_names.get(platform_name)
+            self.platform_name = platform.system()
+            platform_seach_library_names = search_library_names.get(self.platform_name)
 
             if not platform_seach_library_names:
                 raise TransportError("No suitable LibUSB HIDAPI library search names were found for this system.")
@@ -243,9 +243,11 @@ class LibUSBHIDAPI(Transport):
 
             if result < 0:
                 raise TransportError("Failed to read feature report (%d)" % result)
-            elif result == (length + 1):
+            elif self.platform_name == 'Darwin' and result == (length + 1):
                 # Mac HIDAPI 0.9.0 bug, we read one less than we expected (not including report ID).
                 # We requested an over-sized report, so we actually got the amount we wanted.
+                # Only do this for Mac, as on Linux sometimes the last byte will be \x01 with length + 1,
+                # Which can break self._extract_string in StreamDeckXL.py
                 return data.raw
 
             # We read an extra byte (as expected). Just return the first length requested bytes.
