@@ -14,7 +14,7 @@
 import os
 import threading
 
-from PIL import Image
+from PIL import Image, ImageOps
 from StreamDeck.DeviceManager import DeviceManager
 from StreamDeck.ImageHelpers import PILHelper
 
@@ -44,10 +44,12 @@ def create_full_deck_sized_image(deck, key_spacing, image_filename):
     # obscured pixels.
     full_deck_image_size = (key_width + spacing_x, key_height + spacing_y)
 
-    # Resize the image to suit the StreamDeck's full image size (note: will not
-    # preserve the correct aspect ratio).
+    # Resize the image to suit the StreamDeck's full image size. We use the
+    # helper function in Pillow's ImageOps module so that the image's aspect
+    # ratio is preserved.
     image = Image.open(os.path.join(ASSETS_PATH, image_filename)).convert("RGBA")
-    return image.resize(full_deck_image_size, Image.LANCZOS)
+    image = ImageOps.fit(image, full_deck_image_size, Image.LANCZOS)
+    return image
 
 
 # Crops out a key-sized image from a larger deck-sized image, at the location
