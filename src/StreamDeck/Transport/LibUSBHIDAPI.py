@@ -234,8 +234,12 @@ class LibUSBHIDAPI(Transport):
             if not handle:
                 raise TransportError("No HID device.")
 
-            # We need to oversize our read due a bug in some versions of HIDAPI
-            data = ctypes.create_string_buffer(length + 1)
+            # We may need to oversize our read due a bug in some versions of
+            # HIDAPI. Only applied on Mac systems, as this will cause other
+            # issues on other platforms.
+            read_length = (length + 1) if self.platform_name == 'Darwin' else length
+
+            data = ctypes.create_string_buffer(read_length)
             data[0] = report_id
 
             with self.mutex:
@@ -243,11 +247,10 @@ class LibUSBHIDAPI(Transport):
 
             if result < 0:
                 raise TransportError("Failed to read feature report (%d)" % result)
-            elif self.platform_name == 'Darwin' and result == (length + 1):
+
+            if length < read_length and result == read_length:
                 # Mac HIDAPI 0.9.0 bug, we read one less than we expected (not including report ID).
                 # We requested an over-sized report, so we actually got the amount we wanted.
-                # Only do this for Mac, as on Linux sometimes the last byte will be \x01 with length + 1,
-                # Which can break self._extract_string in StreamDeckXL.py
                 return data.raw
 
             # We read an extra byte (as expected). Just return the first length requested bytes.
