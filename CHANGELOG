@@ -1,3 +1,6 @@
+Version 0.8.3:
+	- Altered LibUSB transport workaround to only apply on Mac.
+
 Version 0.8.2:
 	- Added new ``PILHelper.create_scaled_image()`` function to easily generate scaled/padded key images for a given deck.
 	- Updated LibUSB transport backend so that device paths are returned as UTF-8 strings, not raw bytes.

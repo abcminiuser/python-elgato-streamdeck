@@ -62,6 +62,7 @@ development and maintenance of this library:
 - [spidererrol](https://github.com/Spidererrol)
 - [Subsentient](https://github.com/Subsentient)
 - [shanna](https://github.com/shanna)
+- [theslimshaney](https://github.com/theslimshaney)
 
 If you've contributed in some manner, but I've accidentally missed you in the
 list above, please let me know.
