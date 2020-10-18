@@ -15,6 +15,13 @@ Windows systems requires additional manual installation of a DLL in order to
 function. The latest source for the ``hidapi.dll`` DLL is the `releases page of
 the libUSB GitHub project <https://github.com/libusb/hidapi/releases>`_.
 
+Place the DLL into a folder that has been added to your system ``%PATH%``
+directory list (typically this includes the ``C:\Windows\System32`` folder but
+adding a new path would be recommended instead of modiying your Windows
+directory).
+
+Ensure you use the correct DLL version for your installed Python version; i.e.
+if you are using 32-bit Python, install the 32-bit ``hidapi.dll``.
 
 ^^^^^^^^^^^^^^
 MacOS (Darwin)
@@ -33,9 +40,9 @@ Linux (Ubuntu/Debian)
 On Linux, the ``libhidapi-libusb0`` package is required can can be installed via
 the system's package manager.
 
-The following script has been verified working on a Raspberry Pi (Model 2 B)
-running a stock Debian Buster image, to install all the required dependencies
-needed by this project on a fresh system::
+The following script has been verified working on a Raspberry Pi (Models 2B and
+4B) running a stock Debian Buster image, to install all the required
+dependencies needed by this project on a fresh system::
 
     # Ensure system is up to date, upgrade all out of date packages
     sudo apt update && sudo apt dist-upgrade -y
