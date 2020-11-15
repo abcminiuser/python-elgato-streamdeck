@@ -1,5 +1,6 @@
 Version 0.8.3:
 	- Altered LibUSB transport workaround to only apply on Mac.
+	- Fixed internal _extract_string() method to discard all data after the first NUL byte, fixing corrupt serial number strings being returned in some cases.
 
 Version 0.8.2:
 	- Added new ``PILHelper.create_scaled_image()`` function to easily generate scaled/padded key images for a given deck.
