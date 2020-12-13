@@ -146,15 +146,13 @@ if __name__ == "__main__":
                 #
                 # `sleep_interval` can be a negative number when current FPS
                 # setting is too high for the combination of host and
-                # StreamDeck to handle.
-                #
-                # It would mean that we are running late and don't have to
-                # sleep at all before rendering the next frame.
+                # StreamDeck to handle. If this is the case, we skip sleeping
+                # immediately render the next frame to try to catch up.
                 if sleep_interval >= 0:
                     time.sleep(sleep_interval)
 
         # Kick off the key image animating thread.
-        threading.Thread(target=animate, args=(FRAMES_PER_SECOND,)).start()
+        threading.Thread(target=animate, args=[FRAMES_PER_SECOND]).start()
 
         # Register callback function for when a key state changes.
         deck.set_key_callback(key_change_callback)
