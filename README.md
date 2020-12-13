@@ -58,6 +58,7 @@ development and maintenance of this library:
 - [dubstech](https://github.com/dubstech)
 - [jmudge14](https://github.com/jmudge14)
 - [Kalle-Wirsch](https://github.com/Kalle-Wirsch)
+- [matrixinius](https://github.com/matrixinius)
 - [pointshader](https://github.com/pointshader)
 - [spidererrol](https://github.com/Spidererrol)
 - [Subsentient](https://github.com/Subsentient)

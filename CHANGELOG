@@ -1,3 +1,6 @@
+Version 0.8.4:
+	- Updated animated example script to attempt to maintain a constant FPS, regardless of rendering time.
+
 Version 0.8.3:
 	- Altered LibUSB transport workaround to only apply on Mac.
 	- Fixed internal _extract_string() method to discard all data after the first NUL byte, fixing corrupt serial number strings being returned in some cases.
