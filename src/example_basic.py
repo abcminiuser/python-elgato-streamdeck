@@ -31,12 +31,10 @@ def render_key_image(deck, icon_filename, font_filename, label_text):
     image = PILHelper.create_scaled_image(deck, icon, margins=[0, 0, 20, 0])
 
     # Load a custom TrueType font and use it to overlay the key index, draw key
-    # label onto the image.
+    # label onto the image a few pixels from the bottom of the key.
     draw = ImageDraw.Draw(image)
     font = ImageFont.truetype(font_filename, 14)
-    label_w, label_h = draw.textsize(label_text, font=font)
-    label_pos = ((image.width - label_w) // 2, image.height - 20)
-    draw.text(label_pos, text=label_text, font=font, fill="white")
+    draw.text((image.width / 2, image.height - 5), text=label_text, font=font, anchor="ms", fill="white")
 
     return PILHelper.to_native_format(deck, image)
 
