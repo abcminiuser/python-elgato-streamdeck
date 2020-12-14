@@ -114,7 +114,7 @@ if __name__ == "__main__":
             #
             # Drifting comes from an overhead of scheduling the sleep itself -
             # it takes some small amount of time for `time.sleep()` to execute.
-            next_frame = Fraction(time.time())
+            next_frame = Fraction(time.monotonic())
 
             # Periodic loop that will render every frame at the set FPS until
             # the StreamDeck device we're using is closed.
@@ -140,7 +140,7 @@ if __name__ == "__main__":
 
                 # Knowing the start of the next frame we can calculate how long
                 # we have to sleep until its start.
-                sleep_interval = float(next_frame) - time.time()
+                sleep_interval = float(next_frame) - time.monotonic()
 
                 # Schedule the next periodic frame update.
                 #
