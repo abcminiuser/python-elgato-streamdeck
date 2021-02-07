@@ -58,11 +58,12 @@ development and maintenance of this library:
 - [dubstech](https://github.com/dubstech)
 - [jmudge14](https://github.com/jmudge14)
 - [Kalle-Wirsch](https://github.com/Kalle-Wirsch)
+- [m-weigand](https://github.com/m-weigand)
 - [matrixinius](https://github.com/matrixinius)
 - [pointshader](https://github.com/pointshader)
+- [shanna](https://github.com/shanna)
 - [spidererrol](https://github.com/Spidererrol)
 - [Subsentient](https://github.com/Subsentient)
-- [shanna](https://github.com/shanna)
 - [theslimshaney](https://github.com/theslimshaney)
 
 If you've contributed in some manner, but I've accidentally missed you in the

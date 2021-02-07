@@ -62,7 +62,7 @@ dependencies needed by this project on a fresh system::
 
     # Add udev rule to allow all users non-root access to Elgato StreamDeck devices:
     sudo tee /etc/udev/rules.d/10-streamdeck.rules << EOF
-    	SUBSYSTEMS=="usb", ATTRS{idVendor}=="0fd9", GROUP="users"
+    	SUBSYSTEMS=="usb", ATTRS{idVendor}=="0fd9", GROUP="users", TAG+="uaccess"
     	EOF
 
     # Reload udev rules to ensure the new permissions take effect
