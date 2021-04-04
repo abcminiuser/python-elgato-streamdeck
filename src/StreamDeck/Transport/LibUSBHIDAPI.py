@@ -319,6 +319,7 @@ class LibUSBHIDAPI(Transport):
             self.hidapi = hidapi
             self.device_info = device_info
             self.device_handle = None
+            self.mutex = threading.Lock()
 
         def __del__(self):
             """
@@ -342,10 +343,11 @@ class LibUSBHIDAPI(Transport):
             .. seealso:: See :func:`~HID.Device.close` for the corresponding
                          close method.
             """
-            if self.device_handle:
-                return
+            with self.mutex:
+                if self.device_handle:
+                    return
 
-            self.device_handle = self.hidapi.open_device(self.device_info['path'])
+                self.device_handle = self.hidapi.open_device(self.device_info['path'])
 
         def close(self):
             """
@@ -354,9 +356,10 @@ class LibUSBHIDAPI(Transport):
             .. seealso:: See :func:`~~HID.Device.open` for the corresponding
                          open method.
             """
-            if self.device_handle:
-                self.hidapi.close_device(self.device_handle)
-                self.device_handle = None
+            with self.mutex:
+                if self.device_handle:
+                    self.hidapi.close_device(self.device_handle)
+                    self.device_handle = None
 
         def connected(self):
             """
@@ -367,7 +370,8 @@ class LibUSBHIDAPI(Transport):
             :return: `True` if the device is still connected, `False` otherwise.
             """
 
-            return any([d['path'] == self.device_info['path'] for d in self.hidapi.enumerate()])
+            with self.mutex:
+                return any([d['path'] == self.device_info['path'] for d in self.hidapi.enumerate()])
 
         def path(self):
             """
@@ -392,7 +396,8 @@ class LibUSBHIDAPI(Transport):
             :rtype: int
             :return: Number of bytes successfully sent to the device.
             """
-            return self.hidapi.send_feature_report(self.device_handle, payload)
+            with self.mutex:
+                return self.hidapi.send_feature_report(self.device_handle, payload)
 
         def read_feature(self, report_id, length):
             """
@@ -406,7 +411,8 @@ class LibUSBHIDAPI(Transport):
                      first byte of the report will be the Report ID of the
                      report that was read.
             """
-            return self.hidapi.get_feature_report(self.device_handle, report_id, length)
+            with self.mutex:
+                return self.hidapi.get_feature_report(self.device_handle, report_id, length)
 
         def write(self, payload):
             """
@@ -420,7 +426,8 @@ class LibUSBHIDAPI(Transport):
             :rtype: int
             :return: Number of bytes successfully sent to the device.
             """
-            return self.hidapi.write(self.device_handle, payload)
+            with self.mutex:
+                return self.hidapi.write(self.device_handle, payload)
 
         def read(self, length):
             """
@@ -433,7 +440,8 @@ class LibUSBHIDAPI(Transport):
                      of the report will be the Report ID of the report that was
                      read.
             """
-            return self.hidapi.read(self.device_handle, length)
+            with self.mutex:
+                return self.hidapi.read(self.device_handle, length)
 
     @staticmethod
     def probe():
