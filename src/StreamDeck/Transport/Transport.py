@@ -134,6 +134,15 @@ class Transport(ABC):
             pass
 
     @abstractmethod
+    def probe():
+        """
+        Attempts to determine if the back-end is installed and usable. It is
+        expected that probe failures throw exceptions detailing their exact
+        cause of failure.
+        """
+        pass
+
+    @abstractmethod
     def enumerate(self, vid, pid):
         """
         Enumerates all available devices on the system using the current
@@ -147,14 +156,5 @@ class Transport(ABC):
         :rtype: list(Transport.Device)
         :return: List of discovered devices that are available through this
                  transport back-end.
-        """
-        pass
-
-    @abstractmethod
-    def probe():
-        """
-        Attempts to determine if the back-end is installed and usable. It is
-        expected that probe failures throw exceptions detailing their exact
-        cause of failure.
         """
         pass

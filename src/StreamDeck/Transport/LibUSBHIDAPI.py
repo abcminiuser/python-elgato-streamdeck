@@ -170,10 +170,11 @@ class LibUSBHIDAPI(Transport):
             :rtype: Handle
             :return: Device handle if opened successfully, None if open failed.
             """
-            if type(path) is not bytes:
-                path = bytes(path, 'utf-8')
 
             with self.mutex:
+                if type(path) is not bytes:
+                    path = bytes(path, 'utf-8')
+
                 handle = self.hidapi.hid_open_path(path)
 
                 if not handle:
@@ -189,8 +190,8 @@ class LibUSBHIDAPI(Transport):
 
             :param Handle handle: Device handle to close.
             """
-            with self.mutex:
-                if handle:
+            if handle:
+                with self.mutex:
                     self.hidapi.hid_close(handle)
 
         def send_feature_report(self, handle, data):
@@ -206,10 +207,10 @@ class LibUSBHIDAPI(Transport):
             :rtype: int
             :return: Number of bytes successfully sent to the device.
             """
-            with self.mutex:
-                if not handle:
-                    raise TransportError("No HID device.")
+            if not handle:
+                raise TransportError("No HID device.")
 
+            with self.mutex:
                 result = self.hidapi.hid_send_feature_report(handle, bytes(data), len(data))
 
             if result < 0:
@@ -230,6 +231,9 @@ class LibUSBHIDAPI(Transport):
                      first byte of the report will be the Report ID of the
                      report that was read.
             """
+            if not handle:
+                raise TransportError("No HID device.")
+
             # We may need to oversize our read due a bug in some versions of
             # HIDAPI. Only applied on Mac systems, as this will cause other
             # issues on other platforms.
@@ -239,9 +243,6 @@ class LibUSBHIDAPI(Transport):
             data[0] = report_id
 
             with self.mutex:
-                if not handle:
-                    raise TransportError("No HID device.")
-
                 result = self.hidapi.hid_get_feature_report(handle, data, len(data))
 
             if result < 0:
@@ -268,10 +269,10 @@ class LibUSBHIDAPI(Transport):
             :rtype: int
             :return: Number of bytes successfully sent to the device.
             """
-            with self.mutex:
-                if not handle:
-                    raise TransportError("No HID device.")
+            if not handle:
+                raise TransportError("No HID device.")
 
+            with self.mutex:
                 result = self.hidapi.hid_write(handle, bytes(data), len(data))
 
             if result < 0:
@@ -291,12 +292,12 @@ class LibUSBHIDAPI(Transport):
                      first byte of the report will be the Report ID of the
                      report that was read.
             """
+            if not handle:
+                raise TransportError("No HID device.")
+
             data = ctypes.create_string_buffer(length)
 
             with self.mutex:
-                if not handle:
-                    raise TransportError("No HID device.")
-
                 result = self.hidapi.hid_read(handle, data, len(data))
 
             if result < 0:
@@ -434,6 +435,16 @@ class LibUSBHIDAPI(Transport):
             """
             return self.hidapi.read(self.device_handle, length)
 
+    @staticmethod
+    def probe():
+        """
+        Attempts to determine if the back-end is installed and usable. It is
+        expected that probe failures throw exceptions detailing their exact
+        cause of failure.
+        """
+
+        LibUSBHIDAPI.Library()
+
     def enumerate(self, vid, pid):
         """
         Enumerates all available USB HID devices on the system.
@@ -450,13 +461,3 @@ class LibUSBHIDAPI(Transport):
         hidapi = LibUSBHIDAPI.Library()
 
         return [LibUSBHIDAPI.Device(hidapi, d) for d in hidapi.enumerate(vendor_id=vid, product_id=pid)]
-
-    @staticmethod
-    def probe():
-        """
-        Attempts to determine if the back-end is installed and usable. It is
-        expected that probe failures throw exceptions detailing their exact
-        cause of failure.
-        """
-
-        LibUSBHIDAPI.Library()
