@@ -34,6 +34,7 @@ class DeviceManager:
     USB_PID_STREAMDECK_ORIGINAL_V2 = 0x006d
     USB_PID_STREAMDECK_MINI = 0x0063
     USB_PID_STREAMDECK_XL = 0x006c
+    USB_PID_STREAMDECK_MK2 = 0x0080
 
     @staticmethod
     def _get_transport(transport):
@@ -100,6 +101,7 @@ class DeviceManager:
             (self.USB_VID_ELGATO, self.USB_PID_STREAMDECK_ORIGINAL_V2, StreamDeckOriginalV2),
             (self.USB_VID_ELGATO, self.USB_PID_STREAMDECK_MINI, StreamDeckMini),
             (self.USB_VID_ELGATO, self.USB_PID_STREAMDECK_XL, StreamDeckXL),
+            (self.USB_VID_ELGATO, self.USB_PID_STREAMDECK_MK2, StreamDeckOriginalV2),
         ]
 
         streamdecks = list()
