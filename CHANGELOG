@@ -1,3 +1,6 @@
+Version 0.8.5:
+	- Add support for the new StreamDeck MK2.
+
 Version 0.8.4:
 	- Updated animated example script to attempt to maintain a constant FPS, regardless of rendering time.
 	- Fixed a race condition in the LibUSB HIDAPI transport backend that could cause crashes when a device was closed.
