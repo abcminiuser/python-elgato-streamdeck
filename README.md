@@ -56,6 +56,7 @@ development and maintenance of this library:
 - [BS-Tek](https://github.com/BS-Tek)
 - [dirkk0](https://github.com/dirkk0)
 - [dubstech](https://github.com/dubstech)
+- [jakobbuis](https://github.com/jakobbuis)
 - [jmudge14](https://github.com/jmudge14)
 - [Kalle-Wirsch](https://github.com/Kalle-Wirsch)
 - [m-weigand](https://github.com/m-weigand)
