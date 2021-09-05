@@ -34,6 +34,7 @@ class StreamDeck(ABC):
         self.last_key_states = [False] * self.KEY_COUNT
         self.read_thread = None
         self.run_read_thread = False
+        self.read_poll_hz = 20
         self.key_callback = None
 
         self.update_lock = threading.RLock()
@@ -107,7 +108,7 @@ class StreamDeck(ABC):
             try:
                 new_key_states = self._read_key_states()
                 if new_key_states is None:
-                    time.sleep(.05)
+                    time.sleep(1.0 / self.read_poll_hz)
                     continue
 
                 if self.key_callback is not None:
@@ -223,6 +224,18 @@ class StreamDeck(ABC):
             'flip': self.KEY_FLIP,
             'rotation': self.KEY_ROTATION,
         }
+
+    def set_poll_frequency(self, hz):
+        """
+        Sets the frequency of the button polling reader thread, determining how
+        often the StreamDeck will be polled for button changes.
+
+        A higher frequency will result in a higher CPU usage, but a lower
+        latency between a physical button press and a event from the library.
+
+        :param int hz: Reader thread frequency, in Hz (1-1000).
+        """
+        self.read_poll_hz = min(max(hz, 1), 1000)
 
     def set_key_callback(self, callback):
         """
