@@ -282,7 +282,7 @@ class LibUSBHIDAPI(Transport):
 
         def read(self, handle, length):
             """
-            Performs a blocking read of a HID In report from an open HID device.
+            Performs a non-blocking read of a HID In report from an open HID device.
 
             :param Handle handle: Device handle to access.
             :param int length: Maximum length of the In report to read.
@@ -431,7 +431,7 @@ class LibUSBHIDAPI(Transport):
 
         def read(self, length):
             """
-            Performs a blocking read of a HID In report from the open HID device.
+            Performs a non-blocking read of a HID In report from the open HID device.
 
             :param int length: Maximum length of the In report to read.
 
