@@ -17,7 +17,7 @@ the libUSB GitHub project <https://github.com/libusb/hidapi/releases>`_.
 
 Place the DLL into a folder that has been added to your system ``%PATH%``
 directory list (typically this includes the ``C:\Windows\System32`` folder but
-adding a new path would be recommended instead of modiying your Windows
+adding a new path would be recommended instead of modifying your Windows
 directory).
 
 Ensure you use the correct DLL version for your installed Python version; i.e.
