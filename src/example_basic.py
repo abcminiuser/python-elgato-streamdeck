@@ -128,8 +128,7 @@ if __name__ == "__main__":
         # Wait until all application threads have terminated (for this example,
         # this is when all deck handles are closed).
         for t in threading.enumerate():
-            if t is threading.currentThread():
-                continue
-
-            if t.is_alive():
+            try:
                 t.join()
+            except RuntimeError:
+                pass

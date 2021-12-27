@@ -131,7 +131,11 @@ class StreamDeck(ABC):
         """
         if self.read_thread is not None:
             self.run_read_thread = False
-            self.read_thread.join()
+
+            try:
+                self.read_thread.join()
+            except RuntimeError:
+                pass
 
         if callback is not None:
             self.run_read_thread = True
