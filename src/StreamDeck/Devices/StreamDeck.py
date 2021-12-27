@@ -163,6 +163,15 @@ class StreamDeck(ABC):
         """
         self.device.close()
 
+    def is_open(self):
+        """
+        Indicattes if the StreamDeck device is currently open and ready for use..
+
+        :rtype: bool
+        :return: `True` if the deck is open, `False` otherwise.
+        """
+        return self.device.is_open()
+
     def connected(self):
         """
         Indicates if the physical StreamDeck device this instance is attached to

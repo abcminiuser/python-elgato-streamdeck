@@ -52,6 +52,17 @@ class Transport(ABC):
             pass
 
         @abstractmethod
+        def is_open(self):
+            """
+            Indicates if the physical device object this instance is attached
+            to has been opened by the host.
+
+            :rtype: bool
+            :return: `True` if the device is open, `False` otherwise.
+            """
+            pass
+
+        @abstractmethod
         def connected(self):
             """
             Indicates if the physical device object this instance is attached

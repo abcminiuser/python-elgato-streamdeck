@@ -118,7 +118,7 @@ if __name__ == "__main__":
 
             # Periodic loop that will render every frame at the set FPS until
             # the StreamDeck device we're using is closed.
-            while True:
+            while deck.is_open():
                 try:
                     # Use a scoped-with on the deck to ensure we're the only
                     # thread using it right now.
@@ -138,7 +138,7 @@ if __name__ == "__main__":
                 # adding the frame time we calculated earlier.
                 next_frame += frame_time
 
-                # Knowing the start of the next frame we can calculate how long
+                # Knowing the start of the next frame, we can calculate how long
                 # we have to sleep until its start.
                 sleep_interval = float(next_frame) - time.monotonic()
 

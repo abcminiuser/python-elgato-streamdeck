@@ -35,6 +35,9 @@ class Dummy(Transport):
             logging.info("Deck closed")
             self.is_open = False
 
+        def is_open(self):
+            return True
+
         def connected(self):
             return True
 
