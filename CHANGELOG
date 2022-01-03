@@ -1,6 +1,7 @@
 Version 0.9.0:
 	- Added new `set_poll_frequency()` function.
 	- Added new `is_open()` function.
+	- Fixed a possible internal thread join error when a deck object was closed.
 
 Version 0.8.5:
 	- Add support for the new StreamDeck MK2.
