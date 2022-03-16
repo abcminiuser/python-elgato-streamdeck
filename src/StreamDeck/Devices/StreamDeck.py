@@ -119,6 +119,7 @@ class StreamDeck(ABC):
                 self.last_key_states = new_key_states
             except (TransportError):
                 self.run_read_thread = False
+                self.close()
 
     def _setup_reader(self, callback):
         """
@@ -165,7 +166,7 @@ class StreamDeck(ABC):
 
     def is_open(self):
         """
-        Indicattes if the StreamDeck device is currently open and ready for use..
+        Indicates if the StreamDeck device is currently open and ready for use.
 
         :rtype: bool
         :return: `True` if the deck is open, `False` otherwise.
