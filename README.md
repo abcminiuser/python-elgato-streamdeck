@@ -57,6 +57,7 @@ development and maintenance of this library:
 - [dirkk0](https://github.com/dirkk0)
 - [dodgyrabbit](https://github.com/dodgyrabbit)
 - [dubstech](https://github.com/dubstech)
+- [impala454](https://github.com/impala454)
 - [jakobbuis](https://github.com/jakobbuis)
 - [jmudge14](https://github.com/jmudge14)
 - [Kalle-Wirsch](https://github.com/Kalle-Wirsch)

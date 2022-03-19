@@ -31,8 +31,8 @@ FRAMES_PER_SECOND = 30
 
 
 # Loads in a source image, extracts out the individual animation frames (if
-# any) and returns an infinite generator that returns the next animation frame,
-# in the StreamDeck device's native image format.
+# any) and returns a list of animation frames  in the StreamDeck device's
+# native image format.
 def create_animation_frames(deck, image_filename):
     icon_frames = list()
 
@@ -51,9 +51,9 @@ def create_animation_frames(deck, image_filename):
         # Store the rendered animation frame for later user.
         icon_frames.append(native_frame_image)
 
-    # Return an infinite cycle generator that returns the next animation frame
-    # each time it is called.
-    return itertools.cycle(icon_frames)
+    # Return the decoded list of frames - the caller will need to decide how to
+    # sequence them for display.
+    return icon_frames
 
 
 # Closes the StreamDeck device on key state change.
@@ -96,7 +96,9 @@ if __name__ == "__main__":
         # be displayed.
         key_images = dict()
         for k in range(deck.key_count()):
-            key_images[k] = animations[k % len(animations)]
+            # Each key gets an infinite cycle generator bound to the animation
+            # frames, so it will loop the animated sequence forever.
+            key_images[k] = itertools.cycle(animations[k % len(animations)])
 
         # Helper function that will run a periodic loop which updates the
         # images on each key.
