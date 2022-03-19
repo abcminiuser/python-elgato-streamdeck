@@ -55,6 +55,7 @@ development and maintenance of this library:
 - [Aetherdyne](https://github.com/Aetherdyne)
 - [BS-Tek](https://github.com/BS-Tek)
 - [dirkk0](https://github.com/dirkk0)
+- [dodgyrabbit](https://github.com/dodgyrabbit)
 - [dubstech](https://github.com/dubstech)
 - [jakobbuis](https://github.com/jakobbuis)
 - [jmudge14](https://github.com/jmudge14)

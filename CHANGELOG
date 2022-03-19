@@ -1,3 +1,6 @@
+Version 0.9.1:
+	- Transport errors now trigger a closing of the underlying StreamDeck device, so further API calls will throw correctly (and ``is_open()`` will return ``False``).
+
 Version 0.9.0:
 	- Added new `set_poll_frequency()` function.
 	- Added new `is_open()` function.
