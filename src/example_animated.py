@@ -90,13 +90,14 @@ if __name__ == "__main__":
             "RGB_color_space_animated_view.gif",
             "Simple_CV_Joint_animated.gif"
         ]
-        print("Ready.")
 
         # Create a mapping of StreamDeck keys to animation image sets that will
         # be displayed.
         key_images = dict()
         for k in range(deck.key_count()):
             key_images[k] = create_animation_frames(deck, gifs[k % len(gifs)])
+
+        print("Ready.")
 
         # Helper function that will run a periodic loop which updates the
         # images on each key.
