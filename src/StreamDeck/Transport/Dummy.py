@@ -56,7 +56,7 @@ class Dummy(Transport):
                 raise TransportError("Deck feature read while deck not open.")
 
             logging.info("Deck feature read (length %s)", length)
-            raise TransportError("Dummy device!")
+            return bytearray(length)
 
         def write(self, payload):
             if not self.is_open:
@@ -70,7 +70,7 @@ class Dummy(Transport):
                 raise TransportError("Deck read while deck not open.")
 
             logging.info("Deck report read (length %s)", length)
-            raise TransportError("Dummy device!")
+            return bytearray(length)
 
     @staticmethod
     def probe():
