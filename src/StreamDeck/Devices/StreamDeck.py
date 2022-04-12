@@ -305,7 +305,7 @@ class StreamDeck(ABC):
                  otherwise).
         """
         return self.last_key_states
-    
+
     def is_visual(self):
         """
         Returns whether the Stream Deck has a visual display.
