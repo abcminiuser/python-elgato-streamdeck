@@ -112,14 +112,14 @@ if __name__ == "__main__":
     for index, deck in enumerate(streamdecks):
         if not deck.is_visual():
             continue
-        
+
         deck.open()
         deck.reset()
 
         print("Opened '{}' device (serial number: '{}', fw: '{}')".format(
             deck.deck_type(), deck.get_serial_number(), deck.get_firmware_version()
         ))
-        
+
         # Set initial screen brightness to 30%.
         deck.set_brightness(30)
 
