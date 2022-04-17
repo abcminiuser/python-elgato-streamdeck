@@ -24,6 +24,7 @@ class StreamDeckOriginalV2(StreamDeck):
     KEY_ROTATION = 0
 
     DECK_TYPE = "Stream Deck Original (V2)"
+    DECK_VISUAL = True
 
     IMAGE_REPORT_LENGTH = 1024
     IMAGE_REPORT_HEADER_LENGTH = 8

@@ -31,7 +31,7 @@ FRAMES_PER_SECOND = 30
 
 
 # Loads in a source image, extracts out the individual animation frames (if
-# any) and returns a list of animation frames  in the StreamDeck device's
+# any) and returns a list of animation frames in the StreamDeck device's
 # native image format.
 def create_animation_frames(deck, image_filename):
     icon_frames = list()
@@ -74,6 +74,10 @@ if __name__ == "__main__":
     print("Found {} Stream Deck(s).\n".format(len(streamdecks)))
 
     for index, deck in enumerate(streamdecks):
+        # This example only works with devices that have screens.
+        if not deck.is_visual():
+            continue
+
         deck.open()
         deck.reset()
 

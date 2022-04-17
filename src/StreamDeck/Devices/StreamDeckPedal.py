@@ -18,6 +18,7 @@ class StreamDeckPedal(StreamDeck):
     KEY_ROWS = 1
 
     DECK_TYPE = "Stream Deck Pedal"
+    DECK_VISUAL = False
 
     def _read_key_states(self):
         """
@@ -75,12 +76,6 @@ class StreamDeckPedal(StreamDeck):
 
         version = self.device.read_feature(0x05, 32)
         return self._extract_string(version[6:])
-
-    def is_visual(self):
-        """
-        Returns whether the Stream Deck has a visual display.
-        """
-        return False
 
     def set_key_image(self, key, image):
         """

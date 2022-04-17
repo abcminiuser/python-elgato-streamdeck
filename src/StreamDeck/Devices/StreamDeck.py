@@ -28,6 +28,7 @@ class StreamDeck(ABC):
     KEY_ROTATION = None
 
     DECK_TYPE = None
+    DECK_VISUAL = None
 
     def __init__(self, device):
         self.device = device
@@ -211,6 +212,15 @@ class StreamDeck(ABC):
         """
         return self.DECK_TYPE
 
+    def is_visual(self):
+        """
+        Returns whether the Stream Deck has a visual display output.
+
+        :rtype: bool
+        :return: `True` if the deck has a screen, `False` otherwise.
+        """
+        return self.DECK_VISUAL
+
     def key_layout(self):
         """
         Retrieves the physical button layout on the attached StreamDeck device.
@@ -305,12 +315,6 @@ class StreamDeck(ABC):
                  otherwise).
         """
         return self.last_key_states
-
-    def is_visual(self):
-        """
-        Returns whether the Stream Deck has a visual display.
-        """
-        return True
 
     @abstractmethod
     def reset(self):

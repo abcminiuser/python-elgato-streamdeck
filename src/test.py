@@ -19,6 +19,7 @@ from PIL import Image, ImageDraw
 def test_pil_helpers(deck):
     if not deck.is_visual():
         return
+
     test_scaled_image = PILHelper.create_scaled_image(deck, Image.new("RGB", (1, 1)))     # noqa: F841
 
     test_key_image = PILHelper.create_image(deck)
@@ -34,8 +35,7 @@ def test_basic_apis(deck):
         key_count = deck.key_count()     # noqa: F841
         deck_type = deck.deck_type()     # noqa: F841
         key_layout = deck.key_layout()     # noqa: F841
-        if deck.is_visual():
-            image_format = deck.key_image_format()     # noqa: F841
+        image_format = deck.key_image_format() if deck.is_visual() else None     # noqa: F841
         key_states = deck.key_states()     # noqa: F841
 
         deck.set_key_callback(None)
@@ -56,6 +56,7 @@ def test_basic_apis(deck):
 def test_key_pattern(deck):
     if not deck.is_visual():
         return
+
     test_key_image = PILHelper.create_image(deck)
 
     draw = ImageDraw.Draw(test_key_image)

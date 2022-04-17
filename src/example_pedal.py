@@ -7,8 +7,9 @@
 #         www.fourwalledcubicle.com
 #
 
-# Example script showing basic library usage - updating key images with new
-# tiles generated at runtime, and responding to button state change events.
+# Example script showing basic library usage, printing button presses. This
+# example only shows key events, and is intended to demonstrate how to get
+# such events from device that lack screens, i.e. the StreamDeck Pedal.
 
 import threading
 
@@ -25,9 +26,6 @@ if __name__ == "__main__":
     print("Found {} Stream Deck(s).\n".format(len(streamdecks)))
 
     for index, deck in enumerate(streamdecks):
-        if deck.deck_type() != 'Stream Deck Pedal':
-            continue
-
         deck.open()
 
         print("Opened '{}' device (serial number: '{}', fw: '{}')".format(

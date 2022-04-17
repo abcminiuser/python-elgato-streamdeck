@@ -35,3 +35,12 @@ StreamDeck XL
 .. automodule:: StreamDeck.Devices.StreamDeckXL
    :members:
    :show-inheritance:
+
+
+================
+StreamDeck Pedal
+================
+
+.. automodule:: StreamDeck.Devices.StreamDeckPedal
+   :members:
+   :show-inheritance:

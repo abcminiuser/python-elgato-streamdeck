@@ -21,6 +21,7 @@ Currently the following StreamDeck product variants are supported:
 * StreamDeck Original (both V1 and V2 hardware variants)
 * StreamDeck Mini
 * StreamDeck XL
+* SteeamDeck Pedal
 
 
 ## Package Installation:
@@ -63,6 +64,7 @@ development and maintenance of this library:
 - [Kalle-Wirsch](https://github.com/Kalle-Wirsch)
 - [m-weigand](https://github.com/m-weigand)
 - [matrixinius](https://github.com/matrixinius)
+- [philco](https://github.com/phillco)
 - [pointshader](https://github.com/pointshader)
 - [shanna](https://github.com/shanna)
 - [spidererrol](https://github.com/Spidererrol)

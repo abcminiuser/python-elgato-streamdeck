@@ -24,6 +24,7 @@ class StreamDeckMini(StreamDeck):
     KEY_ROTATION = 90
 
     DECK_TYPE = "Stream Deck Mini"
+    DECK_VISUAL = True
 
     IMAGE_REPORT_LENGTH = 1024
     IMAGE_REPORT_HEADER_LENGTH = 16

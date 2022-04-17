@@ -32,12 +32,15 @@ def print_deck_info(index, deck):
         deck.key_count(),
         deck.key_layout()[0],
         deck.key_layout()[1]))
-    print("\t - Key Images: {}x{} pixels, {} format, rotated {} degrees, {}".format(
-        image_format['size'][0],
-        image_format['size'][1],
-        image_format['format'],
-        image_format['rotation'],
-        flip_description[image_format['flip']]))
+    if deck.is_visual():
+        print("\t - Key Images: {}x{} pixels, {} format, rotated {} degrees, {}".format(
+            image_format['size'][0],
+            image_format['size'][1],
+            image_format['format'],
+            image_format['rotation'],
+            flip_description[image_format['flip']]))
+    else:
+        print("\t - No Visual Output")
 
 
 if __name__ == "__main__":
