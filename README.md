@@ -21,7 +21,7 @@ Currently the following StreamDeck product variants are supported:
 * StreamDeck Original (both V1 and V2 hardware variants)
 * StreamDeck Mini
 * StreamDeck XL
-* SteeamDeck Pedal
+* StreamDeck Pedal
 
 
 ## Package Installation:
