@@ -20,14 +20,16 @@ class StreamDeckOriginal(StreamDeck):
     KEY_PIXEL_WIDTH = 72
     KEY_PIXEL_HEIGHT = 72
     KEY_IMAGE_FORMAT = "BMP"
+    KEY_PIXEL_DEPTH = 3
     KEY_FLIP = (True, True)
     KEY_ROTATION = 0
-
+    KEY_IMAGE_SIZE = KEY_PIXEL_WIDTH * KEY_PIXEL_HEIGHT * KEY_PIXEL_DEPTH
     DECK_TYPE = "Stream Deck Original"
     DECK_VISUAL = True
 
     IMAGE_REPORT_LENGTH = 8191
     IMAGE_REPORT_HEADER_LENGTH = 16
+    IMAGE_BYTES_PAGE_1 = 2583 * 3
 
     # 72 x 72 black BMP
     BLANK_KEY_IMAGE = [
@@ -147,42 +149,37 @@ class StreamDeckOriginal(StreamDeck):
                                  color.
         """
 
+        image = bytes(image or self.KEY_IMAGE_SIZE)
+
         if min(max(key, 0), self.KEY_COUNT) != key:
             raise IndexError("Invalid key index {}.".format(key))
 
-        image = bytes(image or self.BLANK_KEY_IMAGE)
-        image_report_payload_length = len(image) // 2
+        if len(image) != self.KEY_IMAGE_SIZE:
+            raise ValueError("Invalid image size {}.".format(len(image)))
 
         key = self._convert_key_id_origin(key)
 
-        page_number = 0
-        bytes_remaining = len(image)
-        while bytes_remaining > 0:
-            this_length = min(bytes_remaining, image_report_payload_length)
-            bytes_sent = page_number * image_report_payload_length
+        is_start_page = 0x01
+        is_not_start_page = 0x00
+        
+        header_1 = [
+            0x02, 0x01, is_start_page, 0x00, 0x00, key + 1, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x42, 0x4d, 0xf6, 0x3c, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x36, 0x00, 0x00, 0x00, 0x28, 0x00,
+            0x00, 0x00, 0x48, 0x00, 0x00, 0x00, 0x48, 0x00,
+            0x00, 0x00, 0x01, 0x00, 0x18, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0xc0, 0x3c, 0x00, 0x00, 0xc4, 0x0e,
+            0x00, 0x00, 0xc4, 0x0e, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+        ]
+        header_2 = [
+            0x02, 0x01, 0x02, is_not_start_page, 0x01, key + 1, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+        ]
 
-            header = [
-                0x02,
-                0x01,
-                page_number + 1,
-                0,
-                1 if this_length == bytes_remaining else 0,
-                key + 1,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-            ]
+        payload_1 = bytes(header_1) + image[: self.IMAGE_BYTES_PAGE_1]
+        payload_2 = bytes(header_2) + image[self.IMAGE_BYTES_PAGE_1:]
 
-            payload = bytes(header) + image[bytes_sent:bytes_sent + this_length]
-            padding = bytearray(self.IMAGE_REPORT_LENGTH - len(payload))
-            self.device.write(payload + padding)
-
-            bytes_remaining = bytes_remaining - this_length
-            page_number = page_number + 1
+        self.device.write(payload_1)
+        self.device.write(payload_2)
