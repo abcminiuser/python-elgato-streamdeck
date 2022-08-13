@@ -12,7 +12,8 @@ from .Devices.StreamDeckXL import StreamDeckXL
 from .Devices.StreamDeckPedal import StreamDeckPedal
 from .Transport.Dummy import Dummy
 from .Transport.LibUSBHIDAPI import LibUSBHIDAPI
-
+from .ProductIDs import USBVendorIDs
+from .ProductIDs import USBProductIDs
 
 class ProbeError(Exception):
     """
@@ -99,12 +100,12 @@ class DeviceManager:
         """
 
         products = [
-            (self.USB_VID_ELGATO, self.USB_PID_STREAMDECK_ORIGINAL, StreamDeckOriginal),
-            (self.USB_VID_ELGATO, self.USB_PID_STREAMDECK_ORIGINAL_V2, StreamDeckOriginalV2),
-            (self.USB_VID_ELGATO, self.USB_PID_STREAMDECK_MINI, StreamDeckMini),
-            (self.USB_VID_ELGATO, self.USB_PID_STREAMDECK_XL, StreamDeckXL),
-            (self.USB_VID_ELGATO, self.USB_PID_STREAMDECK_MK2, StreamDeckOriginalV2),
-            (self.USB_VID_ELGATO, self.USB_PID_STREAMDECK_PEDAL, StreamDeckPedal),
+            (USBVendorIDs.USB_VID_ELGATO, USBProductIDs.USB_PID_STREAMDECK_ORIGINAL, StreamDeckOriginal),
+            (USBVendorIDs.USB_VID_ELGATO, USBProductIDs.USB_PID_STREAMDECK_ORIGINAL_V2, StreamDeckOriginalV2),
+            (USBVendorIDs.USB_VID_ELGATO, USBProductIDs.USB_PID_STREAMDECK_MINI, StreamDeckMini),
+            (USBVendorIDs.USB_VID_ELGATO, USBProductIDs.USB_PID_STREAMDECK_XL, StreamDeckXL),
+            (USBVendorIDs.USB_VID_ELGATO, USBProductIDs.USB_PID_STREAMDECK_MK2, StreamDeckOriginalV2),
+            (USBVendorIDs.USB_VID_ELGATO, USBProductIDs.USB_PID_STREAMDECK_PEDAL, StreamDeckPedal),
         ]
 
         streamdecks = list()
