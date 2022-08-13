@@ -18,6 +18,13 @@ steps:
   commands:
   - bandit -r src/
 
+- name: MyPy
+  image: abcminiuser/docker-ci-python:latest
+  pull: always
+  commands:
+  - pip install mypy
+  - mypy --ignore-missing-imports src/
+
 - name: Tests
   image: abcminiuser/docker-ci-python:latest
   pull: always
@@ -41,5 +48,6 @@ steps:
   depends_on:
   - Flake8
   - Bandit
+  - MyPy
   - Tests
   - Documentation
