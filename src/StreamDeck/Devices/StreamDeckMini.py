@@ -6,6 +6,7 @@
 #
 
 from .StreamDeck import StreamDeck
+from ..ProductIDs import USBVendorIDs, USBProductIDs
 
 
 class StreamDeckMini(StreamDeck):
@@ -70,7 +71,8 @@ class StreamDeckMini(StreamDeck):
         self.device.write_feature(payload)
 
     def get_serial_number(self):
-        serial = self.device.read_feature(0x03, 17)
+        report_read_length = 17 if self.device.product_id() == USBProductIDs.USB_PID_STREAMDECK_MINI else 32
+        serial = self.device.read_feature(0x03, report_read_length)
         return self._extract_string(serial[5:])
 
     def get_firmware_version(self):

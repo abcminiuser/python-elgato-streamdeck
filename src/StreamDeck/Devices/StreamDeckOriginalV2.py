@@ -23,7 +23,7 @@ class StreamDeckOriginalV2(StreamDeck):
     KEY_FLIP = (True, True)
     KEY_ROTATION = 0
 
-    DECK_TYPE = "Stream Deck Original (V2)"
+    DECK_TYPE = "Stream Deck Original"
     DECK_VISUAL = True
 
     IMAGE_REPORT_LENGTH = 1024

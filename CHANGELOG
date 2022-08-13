@@ -1,3 +1,6 @@
+Version 0.9.2:
+	- Added support for a new sub-variant of the StreamDeck Mini.
+
 Version 0.9.1:
 	- Transport errors now trigger a closing of the underlying StreamDeck device, so further API calls will throw correctly (and ``is_open()`` will return ``False``).
 	- Updated animated example script to use separate cycle generators for each key, so the animations play at the correct rate regardless of key count.
