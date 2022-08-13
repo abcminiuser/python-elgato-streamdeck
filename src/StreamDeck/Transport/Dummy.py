@@ -17,8 +17,10 @@ class Dummy(Transport):
     """
 
     class Device(Transport.Device):
-        def __init__(self, device_id):
-            self.id = device_id
+        def __init__(self, vid, pid):
+            self.vid = vid
+            self.pid = pid
+            self.id = "{}:{}".format(vid, pid)
             self.is_open = False
 
         def open(self):
@@ -40,6 +42,12 @@ class Dummy(Transport):
 
         def connected(self):
             return True
+
+        def vendor_id(self):
+            return self.vid
+
+        def product_id(self):
+            return self.pid
 
         def path(self):
             return self.id
@@ -77,4 +85,4 @@ class Dummy(Transport):
         pass
 
     def enumerate(self, vid, pid):
-        return [Dummy.Device("{}:{}".format(vid, pid))]
+        return [Dummy.Device(vid=vid, pid=pid)]

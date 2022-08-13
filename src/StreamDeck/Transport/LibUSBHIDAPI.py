@@ -385,6 +385,24 @@ class LibUSBHIDAPI(Transport):
             with self.mutex:
                 return any([d['path'] == self.device_info['path'] for d in self.hidapi.enumerate()])
 
+        def vendor_id(self):
+            """
+            Retrieves the vendor ID value of the attached device.
+
+            :rtype: int
+            :return: Vendor ID of the attached device.
+            """
+            return self.device_info['vendor_id']
+
+        def product_id(self):
+            """
+            Retrieves the product ID value of the attached device.
+
+            :rtype: int
+            :return: Product ID of the attached device.
+            """
+            return self.device_info['product_id']
+
         def path(self):
             """
             Retrieves the logical path of the attached HID device within the

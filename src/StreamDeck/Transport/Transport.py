@@ -86,6 +86,38 @@ class Transport(ABC):
             pass
 
         @abstractmethod
+        def vendor_id(self):
+            """
+            Retrieves the vendor ID value of the attached device.
+
+            :rtype: int
+            :return: Vendor ID of the attached device.
+            """
+            pass
+
+        @abstractmethod
+        def product_id(self):
+            """
+            Retrieves the product ID value of the attached device.
+
+            :rtype: int
+            :return: Product ID of the attached device.
+            """
+            pass
+
+        @abstractmethod
+        def path(self):
+            """
+            Retrieves the logical path of the attached device within the
+            current system. This can be used to uniquely differentiate one
+            device from another.
+
+            :rtype: str
+            :return: Logical device path for the attached device.
+            """
+            pass
+
+        @abstractmethod
         def write_feature(self, payload):
             """
             Sends a HID Feature report to the open HID device.
