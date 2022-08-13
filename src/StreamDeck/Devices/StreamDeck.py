@@ -184,6 +184,26 @@ class StreamDeck(ABC):
         """
         return self.device.connected()
 
+    def vendor_id(self):
+        """
+        Retrieves the vendor ID attached StreamDeck. This can be used
+        to determine the exact type of attached StreamDeck.
+
+        :rtype: int
+        :return: Vendor ID of the attached device.
+        """
+        return self.device.vendor_id()
+
+    def product_id(self):
+        """
+        Retrieves the product ID attached StreamDeck. This can be used
+        to determine the exact type of attached StreamDeck.
+
+        :rtype: int
+        :return: Product ID of the attached device.
+        """
+        return self.device.product_id()
+
     def id(self):
         """
         Retrieves the physical ID of the attached StreamDeck. This can be used

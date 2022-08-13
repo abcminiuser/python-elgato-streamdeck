@@ -33,6 +33,8 @@ def test_basic_apis(deck):
         connected = deck.connected()     # noqa: F841
         deck_id = deck.id()     # noqa: F841
         key_count = deck.key_count()     # noqa: F841
+        vendor_id = deck.vendor_id()     # noqa: F841
+        product_id = deck.product_id()     # noqa: F841
         deck_type = deck.deck_type()     # noqa: F841
         key_layout = deck.key_layout()     # noqa: F841
         image_format = deck.key_image_format() if deck.is_visual() else None     # noqa: F841
