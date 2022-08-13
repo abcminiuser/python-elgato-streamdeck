@@ -23,7 +23,7 @@ class StreamDeck(ABC):
 
     KEY_PIXEL_WIDTH = None
     KEY_PIXEL_HEIGHT = None
-    KEY_IMAGE_CODEC = None
+    KEY_IMAGE_FORMAT = None
     KEY_FLIP = None
     KEY_ROTATION = None
 
