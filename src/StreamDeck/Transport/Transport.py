@@ -106,18 +106,6 @@ class Transport(ABC):
             pass
 
         @abstractmethod
-        def path(self):
-            """
-            Retrieves the logical path of the attached device within the
-            current system. This can be used to uniquely differentiate one
-            device from another.
-
-            :rtype: str
-            :return: Logical device path for the attached device.
-            """
-            pass
-
-        @abstractmethod
         def write_feature(self, payload):
             """
             Sends a HID Feature report to the open HID device.
