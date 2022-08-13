@@ -5,12 +5,14 @@
 #         www.fourwalledcubicle.com
 #
 
+
 class USBVendorIDs:
     """
     USB Vendor IDs for known StreamDeck devices..
     """
 
     USB_VID_ELGATO = 0x0fd9
+
 
 class USBProductIDs:
     """

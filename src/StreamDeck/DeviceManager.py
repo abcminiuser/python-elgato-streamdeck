@@ -14,6 +14,7 @@ from .Transport.Dummy import Dummy
 from .Transport.LibUSBHIDAPI import LibUSBHIDAPI
 from .ProductIDs import USBVendorIDs, USBProductIDs
 
+
 class ProbeError(Exception):
     """
     Exception thrown when attempting to probe for attached StreamDeck devices,

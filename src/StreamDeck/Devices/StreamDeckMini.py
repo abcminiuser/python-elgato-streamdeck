@@ -6,7 +6,7 @@
 #
 
 from .StreamDeck import StreamDeck
-from ..ProductIDs import USBVendorIDs, USBProductIDs
+from ..ProductIDs import USBProductIDs
 
 
 class StreamDeckMini(StreamDeck):

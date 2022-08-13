@@ -17,18 +17,18 @@ class StreamDeck(ABC):
     Represents a physically attached StreamDeck device.
     """
 
-    KEY_COUNT = None
-    KEY_COLS = None
-    KEY_ROWS = None
+    KEY_COUNT = 0
+    KEY_COLS = 0
+    KEY_ROWS = 0
 
-    KEY_PIXEL_WIDTH = None
-    KEY_PIXEL_HEIGHT = None
-    KEY_IMAGE_FORMAT = None
-    KEY_FLIP = None
-    KEY_ROTATION = None
+    KEY_PIXEL_WIDTH = 0
+    KEY_PIXEL_HEIGHT = 0
+    KEY_IMAGE_FORMAT = ""
+    KEY_FLIP = (False, False)
+    KEY_ROTATION = 0
 
-    DECK_TYPE = None
-    DECK_VISUAL = None
+    DECK_TYPE = ""
+    DECK_VISUAL = False
 
     def __init__(self, device):
         self.device = device
