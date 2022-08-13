@@ -176,6 +176,7 @@ class Transport(ABC):
             """
             pass
 
+    @staticmethod
     @abstractmethod
     def probe():
         """
