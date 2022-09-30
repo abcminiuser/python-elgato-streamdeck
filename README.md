@@ -66,7 +66,7 @@ development and maintenance of this library:
 - [Kalle-Wirsch](https://github.com/Kalle-Wirsch)
 - [m-weigand](https://github.com/m-weigand)
 - [matrixinius](https://github.com/matrixinius)
-- [philco](https://github.com/phillco)
+- [phillco](https://github.com/phillco)
 - [pointshader](https://github.com/pointshader)
 - [shanna](https://github.com/shanna)
 - [spidererrol](https://github.com/Spidererrol)
