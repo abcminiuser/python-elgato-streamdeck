@@ -71,6 +71,7 @@ development and maintenance of this library:
 - [shanna](https://github.com/shanna)
 - [spidererrol](https://github.com/Spidererrol)
 - [Subsentient](https://github.com/Subsentient)
+- [swedishmike](https://github.com/swedishmike)
 - [theslimshaney](https://github.com/theslimshaney)
 
 If you've contributed in some manner, but I've accidentally missed you in the
