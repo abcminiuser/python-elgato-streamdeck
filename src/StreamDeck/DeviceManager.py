@@ -10,6 +10,7 @@ from .Devices.StreamDeckOriginal import StreamDeckOriginal
 from .Devices.StreamDeckOriginalV2 import StreamDeckOriginalV2
 from .Devices.StreamDeckXL import StreamDeckXL
 from .Devices.StreamDeckPedal import StreamDeckPedal
+from .Devices.StreamDeckPlus import StreamDeckPlus
 from .Transport.Dummy import Dummy
 from .Transport.LibUSBHIDAPI import LibUSBHIDAPI
 from .ProductIDs import USBVendorIDs, USBProductIDs
@@ -38,6 +39,7 @@ class DeviceManager:
     USB_PID_STREAMDECK_XL = 0x006c
     USB_PID_STREAMDECK_MK2 = 0x0080
     USB_PID_STREAMDECK_PEDAL = 0x0086
+    USB_PID_STREAMDECK_PLUS = 0x0084
 
     @staticmethod
     def _get_transport(transport):
@@ -106,6 +108,7 @@ class DeviceManager:
             (USBVendorIDs.USB_VID_ELGATO, USBProductIDs.USB_PID_STREAMDECK_XL, StreamDeckXL),
             (USBVendorIDs.USB_VID_ELGATO, USBProductIDs.USB_PID_STREAMDECK_MK2, StreamDeckOriginalV2),
             (USBVendorIDs.USB_VID_ELGATO, USBProductIDs.USB_PID_STREAMDECK_PEDAL, StreamDeckPedal),
+            (USBVendorIDs.USB_VID_ELGATO, USBProductIDs.USB_PID_STREAMDECK_PLUS, StreamDeckPlus),
             (USBVendorIDs.USB_VID_ELGATO, USBProductIDs.USB_PID_STREAMDECK_MINI_MK2, StreamDeckMini),
             (USBVendorIDs.USB_VID_ELGATO, USBProductIDs.USB_PID_STREAMDECK_XL_V2, StreamDeckXL),
         ]
