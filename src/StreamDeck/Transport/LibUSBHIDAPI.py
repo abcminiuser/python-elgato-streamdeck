@@ -23,6 +23,7 @@ class LibUSBHIDAPI(Transport):
 
     class Library():
         HIDAPI_INSTANCE = None
+        HOMEBREW_PREFIX = None
 
         def _load_hidapi_library(self, library_search_list):
             """
@@ -33,8 +34,23 @@ class LibUSBHIDAPI(Transport):
             :return: Loaded HIDAPI library instance, or None if no library was found.
             """
 
+            # If the library's already loaded, we can use the existing instance and skip the slow load process.
             if self.HIDAPI_INSTANCE:
                 return self.HIDAPI_INSTANCE
+
+            # If we're running on MacOS, we very likely need to search for the library in the Homebrew path if it's installed.
+            # The ctypes loader won't look in there by default unless the user has a Homebrew installed python, which gets patched
+            # on installation.
+            if self.platform_name == "Darwin" and not self.HOMEBREW_PREFIX:
+                self.HOMEBREW_PREFIX = os.environ.get('HOMEBREW_PREFIX')
+
+                if not self.HOMEBREW_PREFIX:
+                    import subprocess
+
+                    try:
+                        self.HOMEBREW_PREFIX = subprocess.run(['brew', '--prefix'], stdout=subprocess.PIPE, text=True).stdout.strip()
+                    except Exception:
+                        pass
 
             for lib_name in library_search_list:
                 # We'll try to use ctypes' utility function to find the library first, using
@@ -42,6 +58,14 @@ class LibUSBHIDAPI(Transport):
                 # path prefix and extension suffix).
                 library_name_no_extension = os.path.basename(os.path.splitext(lib_name)[0])
                 found_lib = ctypes.util.find_library(library_name_no_extension)
+
+                # If we've running with a Homebrew installation, and find_library() didn't find the library in
+                # any of the default search paths, we'll look in Homebrew instead as a fallback.
+                if not found_lib and self.HOMEBREW_PREFIX:
+                    library_path_homebrew = os.path.join(self.HOMEBREW_PREFIX, 'lib', lib_name)
+
+                    if os.path.exists(library_path_homebrew):
+                        found_lib = library_path_homebrew
 
                 try:
                     type(self).HIDAPI_INSTANCE = ctypes.cdll.LoadLibrary(found_lib if found_lib else lib_name)
@@ -124,23 +148,6 @@ class LibUSBHIDAPI(Transport):
 
             self.platform_name = platform.system()
             platform_search_library_names = search_library_names.get(self.platform_name)
-
-            # If we're running on MacOS, we very likely need to search for the library in the Homebrew path if it's installed.
-            # The ctypes loader won't look in there by default unless the user has a Homebrew installed python, which gets patched
-            # on installation.
-            if self.platform_name == "Darwin":
-                homebrew_prefix = os.environ.get('HOMEBREW_PREFIX')
-
-                if not homebrew_prefix:
-                    import subprocess
-
-                    try:
-                        homebrew_prefix = subprocess.run(['brew', '--prefix'], stdout=subprocess.PIPE, text=True).stdout.strip()
-                    except Exception:
-                        pass
-
-                if homebrew_prefix:
-                    platform_search_library_names += [os.path.join(homebrew_prefix, 'lib', name) for name in platform_search_library_names]
 
             if not platform_search_library_names:
                 raise TransportError("No suitable LibUSB HIDAPI library search names were found for this system.")
