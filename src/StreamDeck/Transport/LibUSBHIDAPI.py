@@ -129,11 +129,11 @@ class LibUSBHIDAPI(Transport):
             # The ctypes loader won't look in there by default unless the user has a Homebrew installed python, which gets patched
             # on installation.
             if self.platform_name == "Darwin":
-                import subprocess
+                homebrew_prefix = os.environ.get('HOMEBREW_PREFIX')
 
-                if 'HOMEBREW_PREFIX' in os.environ:
-                    homebrew_prefix = os.environ['HOMEBREW_PREFIX']
-                else:
+                if not homebrew_prefix:
+                    import subprocess
+
                     try:
                         homebrew_prefix = subprocess.Popen(['brew', '--prefix'], stdout=subprocess.PIPE)
                         homebrew_prefix = homebrew_prefix.stdout.read().strip().decode('utf-8')
