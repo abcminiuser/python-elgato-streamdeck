@@ -7,6 +7,8 @@
 
 import atexit
 import ctypes
+import ctypes.util
+import os
 import platform
 import threading
 
@@ -35,8 +37,14 @@ class LibUSBHIDAPI(Transport):
                 return self.HIDAPI_INSTANCE
 
             for lib_name in library_search_list:
+                # We'll try to use ctypes' utility function to find the library first, using
+                # its default search paths. It requires the name of the library only (minus all
+                # path prefix and extension suffix).
+                library_name_no_extension = os.path.basename(os.path.splitext(lib_name)[0])
+                found_lib = ctypes.util.find_library(library_name_no_extension)
+
                 try:
-                    type(self).HIDAPI_INSTANCE = ctypes.cdll.LoadLibrary(lib_name)
+                    type(self).HIDAPI_INSTANCE = ctypes.cdll.LoadLibrary(found_lib if found_lib else lib_name)
                     break
                 except OSError:
                     pass
