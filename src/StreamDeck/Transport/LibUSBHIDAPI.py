@@ -135,8 +135,7 @@ class LibUSBHIDAPI(Transport):
                     import subprocess
 
                     try:
-                        homebrew_prefix = subprocess.Popen(['brew', '--prefix'], stdout=subprocess.PIPE)
-                        homebrew_prefix = homebrew_prefix.stdout.read().strip().decode('utf-8')
+                        homebrew_prefix = subprocess.run(['brew', '--prefix'], stdout=subprocess.PIPE, text=True).stdout.strip()
                     except Exception:
                         pass
 
