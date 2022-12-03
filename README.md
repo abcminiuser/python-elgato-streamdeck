@@ -70,6 +70,7 @@ development and maintenance of this library:
 - [pointshader](https://github.com/pointshader)
 - [shanna](https://github.com/shanna)
 - [spidererrol](https://github.com/Spidererrol)
+- [spyoungtech](https://github.com/spyoungtech)
 - [Subsentient](https://github.com/Subsentient)
 - [swedishmike](https://github.com/swedishmike)
 - [theslimshaney](https://github.com/theslimshaney)
