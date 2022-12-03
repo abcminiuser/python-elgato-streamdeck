@@ -125,6 +125,24 @@ class LibUSBHIDAPI(Transport):
             self.platform_name = platform.system()
             platform_search_library_names = search_library_names.get(self.platform_name)
 
+            # If we're running on MacOS, we very likely need to search for the library in the Homebrew path if it's installed.
+            # The ctypes loader won't look in there by default unless the user has a Homebrew installed python, which gets patched
+            # on installation.
+            if self.platform_name == "Darwin":
+                import subprocess
+
+                if 'HOMEBREW_PREFIX' in os.environ:
+                    homebrew_prefix = os.environ['HOMEBREW_PREFIX']
+                else:
+                    try:
+                        homebrew_prefix = subprocess.Popen(['brew', '--prefix'], stdout=subprocess.PIPE)
+                        homebrew_prefix = homebrew_prefix.stdout.read().strip().decode('utf-8')
+                    except Exception:
+                        pass
+
+                if homebrew_prefix:
+                    platform_search_library_names += [os.path.join(homebrew_prefix, 'lib', name) for name in platform_search_library_names]
+
             if not platform_search_library_names:
                 raise TransportError("No suitable LibUSB HIDAPI library search names were found for this system.")
 
