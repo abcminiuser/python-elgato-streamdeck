@@ -45,11 +45,11 @@ class LibUSBHIDAPI(Transport):
                 self.HOMEBREW_PREFIX = os.environ.get('HOMEBREW_PREFIX')
 
                 if not self.HOMEBREW_PREFIX:
-                    import subprocess
-
                     try:
-                        self.HOMEBREW_PREFIX = subprocess.run(['brew', '--prefix'], stdout=subprocess.PIPE, text=True).stdout.strip()
-                    except Exception:
+                        import subprocess # nosec B404
+
+                        self.HOMEBREW_PREFIX = subprocess.run(['brew', '--prefix'], stdout=subprocess.PIPE, text=True, check=True).stdout.strip() # nosec
+                    except Exception: # nosec B110
                         pass
 
             for lib_name in library_search_list:
