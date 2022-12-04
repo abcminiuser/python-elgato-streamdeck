@@ -22,7 +22,6 @@ steps:
   image: abcminiuser/docker-ci-python:latest
   pull: always
   commands:
-  - pip install mypy
   - mypy --ignore-missing-imports src/
 
 - name: Tests
