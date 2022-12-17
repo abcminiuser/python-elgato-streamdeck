@@ -78,6 +78,23 @@ def rotary_turned(values):
     for rotary_no, (value) in enumerate(values):
         if value != 0:
             print("rotary "+ str(rotary_no) +" turned: " + str(value))
+            
+
+# callback when lcd is touched
+def lcd_touched(event_type, x, y, x_out = 0, y_out = 0):
+    
+    if event_type == deck.TOUCH_EVENT_SHORT:
+    
+        print("Short touch @ " + str(x) + "," + str(y))
+    
+    elif event_type == deck.TOUCH_EVENT_LONG:
+        
+        print("Long touch @ " + str(x) + "," + str(y))
+        
+    elif event_type == deck.TOUCH_EVENT_DRAG:
+    
+        print("Drag started @ " + str(x) + "," + str(y) +" ended @ "  + str(x_out) + "," + str(y_out) )
+
 
 if __name__ == "__main__":
     streamdecks = DeviceManager().enumerate()
@@ -99,6 +116,7 @@ if __name__ == "__main__":
         deck.set_key_callback(key_change)
         deck.set_rotarypush_callback(rotary_change)
         deck.set_rotaryturn_callback(rotary_turned)
+        deck.set_lcdtouch_callback(lcd_touched)
 
         print("Opened '{}' device (serial number: '{}')".format(deck.deck_type(), deck.get_serial_number()))
 

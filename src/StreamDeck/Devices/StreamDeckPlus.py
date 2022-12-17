@@ -95,7 +95,7 @@ class StreamDeckPlus(StreamDeck):
         self.set_rotarypush_callback(callback)
 
     def _read_key_states(self):
-        states = self.device.read(12)
+        states = self.device.read(14)
 
         if states is None:
             return None

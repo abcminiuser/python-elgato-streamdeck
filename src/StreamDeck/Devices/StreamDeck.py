@@ -17,6 +17,10 @@ class StreamDeck(ABC):
     Represents a physically attached StreamDeck device.
     """
 
+    TOUCH_EVENT_SHORT = 1
+    TOUCH_EVENT_LONG = 2
+    TOUCH_EVENT_DRAG = 3
+
     KEY_COUNT = 0
     KEY_COLS = 0
     KEY_ROWS = 0
@@ -46,6 +50,7 @@ class StreamDeck(ABC):
         self.key_callback = None
         self.rotaryturn_callback = None
         self.rotarypush_callback = None
+        self.lcdtouch_callback = None
         
         self.read_thread = None
         self.update_lock = threading.RLock()
@@ -154,7 +159,20 @@ class StreamDeck(ABC):
                                         self.rotarypush_callback(self, k, new)
 
                             self.last_rotary_states = new_rotary_states
-
+                    elif hid_states[0] == 0x02:
+                        # lcd touch report
+                        x = (hid_states[6]<<8)+hid_states[5]
+                        y = (hid_states[8]<<8)+hid_states[7]
+                        
+                        if hid_states[3] != self.TOUCH_EVENT_DRAG:
+                            if self.lcdtouch_callback is not None:
+                                self.lcdtouch_callback(hid_states[3],x,y)
+                        else:
+                            # drag event
+                            x_out = (hid_states[10]<<8)+hid_states[9]
+                            y_out = (hid_states[12]<<8)+hid_states[11]
+                            if self.lcdtouch_callback is not None:
+                                self.lcdtouch_callback(hid_states[3],x,y,x_out, y_out)
                 else:
                     # support for button-only decks
                     new_key_states = hid_states
@@ -394,7 +412,7 @@ class StreamDeck(ABC):
     def set_rotarypush_callback(self, callback):
         """
         Sets the callback function called each time a rotary on the StreamDeck
-        is psuhed or released.
+        is pushed or released.
 
         .. note:: This callback will be fired from an internal reader thread.
                   Ensure that the given callback function is thread-safe.
@@ -409,6 +427,24 @@ class StreamDeck(ABC):
                                 state changes.
         """
         self.rotarypush_callback = callback
+    
+    def set_lcdtouch_callback(self, callback):
+        """
+        Sets the callback function called when the lcd is touched on the StreamDeck
+
+        .. note:: This callback will be fired from an internal reader thread.
+                  Ensure that the given callback function is thread-safe.
+
+        .. note:: Only one callback can be registered at one time.
+
+        .. seealso:: See :func:`~StreamDeck.set_rotarypush_callback_async` method 
+                     for a version compatible with Python 3 `asyncio` asynchronous
+                     functions.
+
+        :param function callback: Callback function to fire each time a rotary
+                                state changes.
+        """
+        self.lcdtouch_callback = callback
 
     def set_rotaryturn_callback_async(self, async_callback, loop=None):
         """
@@ -459,6 +495,31 @@ class StreamDeck(ABC):
             asyncio.run_coroutine_threadsafe(async_callback(*args), loop)
 
         self.set_rotarypush_callback(callback)
+    
+    def set_lcdtouch_callback_async(self, async_callback, loop=None):
+        """
+        Sets the asynchronous callback function called each time the lcd
+        on the StreamDeck is touched. The given callback should be compatible 
+        with Python 3's `asyncio` routines.
+
+        .. note:: The asynchronous callback will be fired in a thread-safe
+                  manner.
+
+        .. note:: This will override the callback (if any) set by
+                  :func:`~StreamDeck.set_rotarypush_callback`.
+
+        :param function async_callback: Asynchronous callback function to fire
+                                        each time a rotary state changes.
+        :param asyncio.loop loop: Asyncio loop to dispatch the callback into
+        """
+        import asyncio
+
+        loop = loop or asyncio.get_event_loop()
+
+        def callback(*args):
+            asyncio.run_coroutine_threadsafe(async_callback(*args), loop)
+
+        self.set_lcdtouch_callback(callback)
 
     def key_states(self):
         """
