@@ -102,23 +102,6 @@ class StreamDeckPlus(StreamDeck):
 
         return states[1:]
 
-        #buttons = [bool(s) for s in states[4:]]
-
-        # This is a rotary report
-        #if state[1] == 0x03:
-        #    # this is rotary-turn report
-        #    if states[3] == 0x01:
-
-
-
-        #print(buttons)
-
-
-
-
-        #states = states[1:]
-        #hardwarestatus = [bool(s) for s in states[4:]]
-
     def _reset_key_stream(self):
         payload = bytearray(self.IMAGE_REPORT_LENGTH)
         payload[0] = 0x02

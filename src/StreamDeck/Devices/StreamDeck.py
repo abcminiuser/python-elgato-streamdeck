@@ -38,15 +38,16 @@ class StreamDeck(ABC):
     def __init__(self, device):
         self.device = device
         self.last_key_states = [False] * self.KEY_COUNT
-        if self.ROTARY_COUNT:
-            self.last_rotary_states = [False] * self.ROTARY_COUNT
-        self.read_thread = None
+        self.last_rotary_states = [False] * self.ROTARY_COUNT
+        
         self.run_read_thread = False
         self.read_poll_hz = 20
+        
         self.key_callback = None
         self.rotaryturn_callback = None
         self.rotarypush_callback = None
-
+        
+        self.read_thread = None
         self.update_lock = threading.RLock()
 
     def __del__(self):
@@ -370,6 +371,94 @@ class StreamDeck(ABC):
             asyncio.run_coroutine_threadsafe(async_callback(*args), loop)
 
         self.set_key_callback(callback)
+
+    def set_rotaryturn_callback(self, callback):
+        """
+        Sets the callback function called each time a rotary on the StreamDeck
+        is turned.
+
+        .. note:: This callback will be fired from an internal reader thread.
+                  Ensure that the given callback function is thread-safe.
+
+        .. note:: Only one callback can be registered at one time.
+
+        .. seealso:: See :func:`~StreamDeck.set_rotaryturn_callback_async` method 
+                     for a version compatible with Python 3 `asyncio` asynchronous
+                     functions.
+
+        :param function callback: Callback function to fire each time a rotary
+                                is turned.
+        """
+        self.rotaryturn_callback = callback
+    
+    def set_rotarypush_callback(self, callback):
+        """
+        Sets the callback function called each time a rotary on the StreamDeck
+        is psuhed or released.
+
+        .. note:: This callback will be fired from an internal reader thread.
+                  Ensure that the given callback function is thread-safe.
+
+        .. note:: Only one callback can be registered at one time.
+
+        .. seealso:: See :func:`~StreamDeck.set_rotarypush_callback_async` method 
+                     for a version compatible with Python 3 `asyncio` asynchronous
+                     functions.
+
+        :param function callback: Callback function to fire each time a rotary
+                                state changes.
+        """
+        self.rotarypush_callback = callback
+
+    def set_rotaryturn_callback_async(self, async_callback, loop=None):
+        """
+        Sets the asynchronous callback function called each time a rotary on the
+        StreamDeck was turned. 
+        The given callback should be compatible with Python 3's `asyncio` routines.
+
+        .. note:: The asynchronous callback will be fired in a thread-safe
+                  manner.
+
+        .. note:: This will override the callback (if any) set by
+                  :func:`~StreamDeck.set_rotaryturn_callback`.
+
+        :param function async_callback: Asynchronous callback function to fire
+                                        each time a rotary is turned.
+        :param asyncio.loop loop: Asyncio loop to dispatch the callback into
+        """
+        import asyncio
+
+        loop = loop or asyncio.get_event_loop()
+
+        def callback(*args):
+            asyncio.run_coroutine_threadsafe(async_callback(*args), loop)
+
+        self.set_rotaryturn_callback(callback)
+
+    def set_rotarypush_callback_async(self, async_callback, loop=None):
+        """
+        Sets the asynchronous callback function called each time a rotary on the
+        StreamDeck changes state (either pressed, or released). The given
+        callback should be compatible with Python 3's `asyncio` routines.
+
+        .. note:: The asynchronous callback will be fired in a thread-safe
+                  manner.
+
+        .. note:: This will override the callback (if any) set by
+                  :func:`~StreamDeck.set_rotarypush_callback`.
+
+        :param function async_callback: Asynchronous callback function to fire
+                                        each time a rotary state changes.
+        :param asyncio.loop loop: Asyncio loop to dispatch the callback into
+        """
+        import asyncio
+
+        loop = loop or asyncio.get_event_loop()
+
+        def callback(*args):
+            asyncio.run_coroutine_threadsafe(async_callback(*args), loop)
+
+        self.set_rotarypush_callback(callback)
 
     def key_states(self):
         """
