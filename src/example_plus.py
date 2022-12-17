@@ -5,7 +5,7 @@
 #
 #
 
-# Example script showing some Streamd Deck + specific functions
+# Example script showing some Stream Deck + specific functions
 
 import itertools
 import os
@@ -26,7 +26,7 @@ ASSETS_PATH = os.path.join(os.path.dirname(__file__), "Assets")
 
 # image for idle state
 img = Image.new('RGB', (120, 120), color='black')
-released_icon = Image.open(os.path.join(ASSETS_PATH, 'released.png')).resize((80,80))
+released_icon = Image.open(os.path.join(ASSETS_PATH, 'Released.png')).resize((80,80))
 img.paste(released_icon, (20, 20), released_icon)
 
 img_byte_arr = io.BytesIO()
@@ -35,7 +35,7 @@ img_released_bytes = img_byte_arr.getvalue()
 
 # image for pressed state
 img = Image.new('RGB', (120, 120), color='black')
-pressed_icon = Image.open(os.path.join(ASSETS_PATH, 'pressed.png')).resize((80,80))
+pressed_icon = Image.open(os.path.join(ASSETS_PATH, 'Pressed.png')).resize((80,80))
 img.paste(pressed_icon, (20, 20), pressed_icon)
 
 img_byte_arr = io.BytesIO()
@@ -61,7 +61,7 @@ def rotary_change(deck, rotary, rotary_state):
     else:
         # build an image for the touch lcd
         img = Image.new('RGB', (800, 100), 'black')
-        icon = Image.open(os.path.join(ASSETS_PATH, 'exit.png')).resize((80,80))
+        icon = Image.open(os.path.join(ASSETS_PATH, 'Exit.png')).resize((80,80))
         img.paste(icon, (690, 10), icon)
         
         for rotno in range(0, deck.ROTARY_COUNT-1):
@@ -112,7 +112,7 @@ if __name__ == "__main__":
 
         # build an image for the touch lcd
         img = Image.new('RGB', (800, 100), 'black')
-        icon = Image.open(os.path.join(ASSETS_PATH, 'exit.png')).resize((80,80))
+        icon = Image.open(os.path.join(ASSETS_PATH, 'Exit.png')).resize((80,80))
         img.paste(icon, (690, 10), icon)
         
         for rotary in range(0, deck.ROTARY_COUNT-1):
