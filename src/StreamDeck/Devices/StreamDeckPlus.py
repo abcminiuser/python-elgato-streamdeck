@@ -1,15 +1,17 @@
+#         Python Stream Deck Library
+#      Released under the MIT license
+#
+#   dean [at] fourwalledcubicle [dot] com
+#         www.fourwalledcubicle.com
+#
+
 from .StreamDeck import StreamDeck
-from ..ProductIDs import USBProductIDs
-from PIL import Image
-import io
-import threading
 
 
 class StreamDeckPlus(StreamDeck):
     """
     Represents a physically attached StreamDeck + device.
     """
-
 
     KEY_COUNT = 8
     KEY_COLS = 4
@@ -33,7 +35,7 @@ class StreamDeckPlus(StreamDeck):
     IMAGE_REPORT_LENGTH_TOUCHLCD = 1024
     IMAGE_REPORT_HEADER_LENGTH_TOUCHLCD = 16
     IMAGE_REPORT_PAYLOAD_LENGTH_TOUCHLCD = IMAGE_REPORT_LENGTH_TOUCHLCD - IMAGE_REPORT_HEADER_LENGTH_TOUCHLCD
-    
+
     # 120 x 120 black JPEG
     BLANK_KEY_IMAGE = [
         0xff, 0xd8, 0xff, 0xe0, 0x00, 0x10, 0x4a, 0x46, 0x49, 0x46, 0x00, 0x01, 0x01, 0x00, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0xff, 0xdb, 0x00, 0x43, 0x00, 0x08, 0x06, 0x06, 0x07, 0x06, 0x05,
@@ -69,11 +71,11 @@ class StreamDeckPlus(StreamDeck):
 
     def set_rotaryturn_callback(self, callback):
         self.rotaryturn_callback = callback
+
     def set_rotarypush_callback(self, callback):
         self.rotarypush_callback = callback
 
     def set_rotaryturn_callback_async(self, async_callback, loop=None):
-
         import asyncio
 
         loop = loop or asyncio.get_event_loop()
@@ -84,7 +86,6 @@ class StreamDeckPlus(StreamDeck):
         self.set_rotaryturn_callback(callback)
 
     def set_rotarypush_callback_async(self, async_callback, loop=None):
-
         import asyncio
 
         loop = loop or asyncio.get_event_loop()
@@ -140,7 +141,6 @@ class StreamDeckPlus(StreamDeck):
         page_number = 0
         bytes_remaining = len(image)
         while bytes_remaining > 0:
-
             this_length = min(bytes_remaining, self.IMAGE_REPORT_PAYLOAD_LENGTH)
 
             header = [
@@ -162,7 +162,6 @@ class StreamDeckPlus(StreamDeck):
             page_number = page_number + 1
 
     def set_lcd_image(self, x_pos, y_pos, width, height, image):
-
         # TODO: make sure an image is never too large and does not go out of bounds
 
         page_number = 0
@@ -196,4 +195,3 @@ class StreamDeckPlus(StreamDeck):
 
             bytes_remaining = bytes_remaining - this_length
             page_number = page_number + 1
-

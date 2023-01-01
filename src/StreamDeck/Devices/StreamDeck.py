@@ -43,15 +43,15 @@ class StreamDeck(ABC):
         self.device = device
         self.last_key_states = [False] * self.KEY_COUNT
         self.last_rotary_states = [False] * self.ROTARY_COUNT
-        
+
         self.run_read_thread = False
         self.read_poll_hz = 20
-        
+
         self.key_callback = None
         self.rotaryturn_callback = None
         self.rotarypush_callback = None
         self.lcdtouch_callback = None
-        
+
         self.read_thread = None
         self.update_lock = threading.RLock()
 
@@ -122,7 +122,6 @@ class StreamDeck(ABC):
         """
         while self.run_read_thread:
             try:
-
                 hid_states = self._read_key_states()
 
                 if hid_states is None:
@@ -163,7 +162,7 @@ class StreamDeck(ABC):
                         # lcd touch report
                         x = (hid_states[6]<<8)+hid_states[5]
                         y = (hid_states[8]<<8)+hid_states[7]
-                        
+
                         if hid_states[3] != self.TOUCH_EVENT_DRAG:
                             if self.lcdtouch_callback is not None:
                                 self.lcdtouch_callback(hid_states[3],x,y)
@@ -400,7 +399,7 @@ class StreamDeck(ABC):
 
         .. note:: Only one callback can be registered at one time.
 
-        .. seealso:: See :func:`~StreamDeck.set_rotaryturn_callback_async` method 
+        .. seealso:: See :func:`~StreamDeck.set_rotaryturn_callback_async` method
                      for a version compatible with Python 3 `asyncio` asynchronous
                      functions.
 
@@ -408,48 +407,11 @@ class StreamDeck(ABC):
                                 is turned.
         """
         self.rotaryturn_callback = callback
-    
-    def set_rotarypush_callback(self, callback):
-        """
-        Sets the callback function called each time a rotary on the StreamDeck
-        is pushed or released.
-
-        .. note:: This callback will be fired from an internal reader thread.
-                  Ensure that the given callback function is thread-safe.
-
-        .. note:: Only one callback can be registered at one time.
-
-        .. seealso:: See :func:`~StreamDeck.set_rotarypush_callback_async` method 
-                     for a version compatible with Python 3 `asyncio` asynchronous
-                     functions.
-
-        :param function callback: Callback function to fire each time a rotary
-                                state changes.
-        """
-        self.rotarypush_callback = callback
-    
-    def set_lcdtouch_callback(self, callback):
-        """
-        Sets the callback function called when the lcd is touched on the StreamDeck
-
-        .. note:: This callback will be fired from an internal reader thread.
-                  Ensure that the given callback function is thread-safe.
-
-        .. note:: Only one callback can be registered at one time.
-
-        .. seealso:: See :func:`~StreamDeck.set_rotarypush_callback_async` method 
-                     for a version compatible with Python 3 `asyncio` asynchronous
-                     functions.
-
-        :param function callback: Callback function to fire each time a rotary
-                                state changes.
-        """
-        self.lcdtouch_callback = callback
 
     def set_rotaryturn_callback_async(self, async_callback, loop=None):
         """
         Sets the asynchronous callback function called each time a rotary on the
-        StreamDeck was turned. 
+        StreamDeck was turned.
         The given callback should be compatible with Python 3's `asyncio` routines.
 
         .. note:: The asynchronous callback will be fired in a thread-safe
@@ -470,6 +432,25 @@ class StreamDeck(ABC):
             asyncio.run_coroutine_threadsafe(async_callback(*args), loop)
 
         self.set_rotaryturn_callback(callback)
+
+    def set_rotarypush_callback(self, callback):
+        """
+        Sets the callback function called each time a rotary on the StreamDeck
+        is pushed or released.
+
+        .. note:: This callback will be fired from an internal reader thread.
+                  Ensure that the given callback function is thread-safe.
+
+        .. note:: Only one callback can be registered at one time.
+
+        .. seealso:: See :func:`~StreamDeck.set_rotarypush_callback_async` method
+                     for a version compatible with Python 3 `asyncio` asynchronous
+                     functions.
+
+        :param function callback: Callback function to fire each time a rotary
+                                state changes.
+        """
+        self.rotarypush_callback = callback
 
     def set_rotarypush_callback_async(self, async_callback, loop=None):
         """
@@ -495,11 +476,29 @@ class StreamDeck(ABC):
             asyncio.run_coroutine_threadsafe(async_callback(*args), loop)
 
         self.set_rotarypush_callback(callback)
-    
+
+    def set_lcdtouch_callback(self, callback):
+        """
+        Sets the callback function called when the lcd is touched on the StreamDeck
+
+        .. note:: This callback will be fired from an internal reader thread.
+                  Ensure that the given callback function is thread-safe.
+
+        .. note:: Only one callback can be registered at one time.
+
+        .. seealso:: See :func:`~StreamDeck.set_rotarypush_callback_async` method
+                     for a version compatible with Python 3 `asyncio` asynchronous
+                     functions.
+
+        :param function callback: Callback function to fire each time a rotary
+                                state changes.
+        """
+        self.lcdtouch_callback = callback
+
     def set_lcdtouch_callback_async(self, async_callback, loop=None):
         """
         Sets the asynchronous callback function called each time the lcd
-        on the StreamDeck is touched. The given callback should be compatible 
+        on the StreamDeck is touched. The given callback should be compatible
         with Python 3's `asyncio` routines.
 
         .. note:: The asynchronous callback will be fired in a thread-safe

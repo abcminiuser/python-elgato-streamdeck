@@ -40,7 +40,6 @@ class DeviceManager:
     USB_PID_STREAMDECK_MK2 = 0x0080
     USB_PID_STREAMDECK_PEDAL = 0x0086
     USB_PID_STREAMDECK_PLUS = 0x0084
-    
 
     @staticmethod
     def _get_transport(transport):
@@ -119,5 +118,5 @@ class DeviceManager:
         for vid, pid, class_type in products:
             found_devices = self.transport.enumerate(vid=vid, pid=pid)
             streamdecks.extend([class_type(d) for d in found_devices])
-        print(streamdecks)
+
         return streamdecks
