@@ -20,13 +20,13 @@ class StreamDeckPedal(StreamDeck):
     DECK_TYPE = "Stream Deck Pedal"
     DECK_VISUAL = False
 
-    def _read_key_states(self):
+    def _read_control_states(self):
         states = self.device.read(4 + self.KEY_COUNT)
         if states is None:
             return None
 
         states = states[4:]
-        return [bool(s) for s in states]
+        return {'keys': [bool(s) for s in states]}
 
     def _reset_key_stream(self):
         pass

@@ -87,7 +87,7 @@ class StreamDeck(ABC):
         self.update_lock.release()
 
     @abstractmethod
-    def _read_key_states(self):
+    def _read_control_states(self):
         """
         Reads the raw key states from an attached StreamDeck.
 
@@ -122,65 +122,38 @@ class StreamDeck(ABC):
         """
         while self.run_read_thread:
             try:
-                hid_states = self._read_key_states()
+                hid_states = self._read_control_states()
 
                 if hid_states is None:
                     time.sleep(1.0 / self.read_poll_hz)
                     continue
 
-                # _read_key_states() returns raw reports
-                if self.ROTARY_COUNT or self.LCDTOUCH_PIXEL_WIDTH:
-                    # button report
-                    if hid_states[0] == 0x00:
-                        new_key_states = [bool(s) for s in hid_states[3:]]
-                        if self.key_callback is not None:
-                            for k, (old, new) in enumerate(zip(self.last_key_states, new_key_states)):
-                                if old != new:
-                                    self.key_callback(self, k, new)
-
-                        self.last_key_states = new_key_states
-
-                    elif hid_states[0] == 0x03:
-                        # rotary report
-                        if hid_states[3] == 0x01:
-                            # rotary turned
-                            rotary_status = []
-                            for rotary_no in range(0, self.ROTARY_COUNT):
-                                rotary_status.append( hid_states[4 + rotary_no] if hid_states[4 + rotary_no] < 0x80 else -(0x100 - hid_states[4 + rotary_no]) )
-                            if self.rotaryturn_callback is not None:
-                                self.rotaryturn_callback(rotary_status)
-                        else:
-                            # rotary pushed
-                            new_rotary_states = [bool(s) for s in hid_states[4:4+self.ROTARY_COUNT]]
-                            if self.rotarypush_callback is not None:
-                                for k, (old, new) in enumerate(zip(self.last_rotary_states, new_rotary_states)):
-                                    if old != new:
-                                        self.rotarypush_callback(self, k, new)
-
-                            self.last_rotary_states = new_rotary_states
-                    elif hid_states[0] == 0x02:
-                        # lcd touch report
-                        x = (hid_states[6]<<8)+hid_states[5]
-                        y = (hid_states[8]<<8)+hid_states[7]
-
-                        if hid_states[3] != self.TOUCH_EVENT_DRAG:
-                            if self.lcdtouch_callback is not None:
-                                self.lcdtouch_callback(hid_states[3],x,y)
-                        else:
-                            # drag event
-                            x_out = (hid_states[10]<<8)+hid_states[9]
-                            y_out = (hid_states[12]<<8)+hid_states[11]
-                            if self.lcdtouch_callback is not None:
-                                self.lcdtouch_callback(hid_states[3],x,y,x_out, y_out)
-                else:
-                    # support for button-only decks
-                    new_key_states = hid_states
+                if 'keys' in hid_states:
+                    new_key_states = hid_states['keys']
                     if self.key_callback is not None:
                         for k, (old, new) in enumerate(zip(self.last_key_states, new_key_states)):
                             if old != new:
                                 self.key_callback(self, k, new)
 
                     self.last_key_states = new_key_states
+
+                if 'rotary_push' in hid_states:
+                    new_rotary_states = hid_states['rotary_push']
+                    if self.rotarypush_callback is not None:
+                        for k, (old, new) in enumerate(zip(self.last_rotary_states, new_rotary_states)):
+                            if old != new:
+                                self.rotarypush_callback(self, k, new)
+
+                    self.last_rotary_states = new_rotary_states
+
+                if 'rotary' in hid_states:
+                    if self.rotaryturn_callback is not None:
+                        # This should be per knob and include self
+                        self.rotaryturn_callback(hid_states['rotary'])
+
+                if 'touch' in hid_states:
+                    if self.lcdtouch_callback is not None:
+                        self.lcdtouch_callback(*hid_states['touch'])
 
             except (TransportError):
                 self.run_read_thread = False

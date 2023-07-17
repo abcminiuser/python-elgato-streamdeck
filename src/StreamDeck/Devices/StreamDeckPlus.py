@@ -95,13 +95,43 @@ class StreamDeckPlus(StreamDeck):
 
         self.set_rotarypush_callback(callback)
 
-    def _read_key_states(self):
+    def _read_control_states(self):
         states = self.device.read(14)
 
         if states is None:
             return None
 
-        return states[1:]
+        states = states[1:]
+        if states[0] == 0x00:
+            # Button report
+            return {'keys': [bool(s) for s in states[3:]]}
+        if states[0] == 0x03:
+            # Rotary Report(s)
+            if states[3] == 0x01:
+                rotary_status = []
+                for rotary_no in range(0, self.ROTARY_COUNT):
+                    rotary_status.append( states[4 + rotary_no] if states[4 + rotary_no] < 0x80 else -(0x100 - states[4 + rotary_no]) )
+                return {'rotary': rotary_status}
+            else:
+                return {'rotary_push': [bool(s) for s in states[4:4+self.ROTARY_COUNT]]}
+        if states[0] == 0x02:
+            # lcd touch reports
+            x = (states[6]<<8)+states[5]
+            y = (states[8]<<8)+states[7]
+
+            lcd_states = [states[3], x, y]
+
+            if states[3] == self.TOUCH_EVENT_DRAG:
+                x_out = (states[10]<<8)+states[9]
+                y_out = (states[12]<<8)+states[11]
+                lcd_states.extend([x_out, y_out])
+
+            # Short and long return with (x,y)
+            # Drag returns with (x,y, xout,yout)
+            return {'touch': lcd_states}
+
+        # If we got this far should we should throw an exception?
+        return None
 
     def _reset_key_stream(self):
         payload = bytearray(self.IMAGE_REPORT_LENGTH)
