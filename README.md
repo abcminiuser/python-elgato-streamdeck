@@ -64,6 +64,7 @@ development and maintenance of this library:
 - [jakobbuis](https://github.com/jakobbuis)
 - [jmudge14](https://github.com/jmudge14)
 - [Kalle-Wirsch](https://github.com/Kalle-Wirsch)
+- [Lewiscowles1986](https://github.com/Lewiscowles1986)
 - [m-weigand](https://github.com/m-weigand)
 - [matrixinius](https://github.com/matrixinius)
 - [phillco](https://github.com/phillco)
