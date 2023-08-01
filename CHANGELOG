@@ -1,3 +1,6 @@
+Version 0.9.4:
+	- Updated Windows HIDAPI backend to attempt to load from the local working directory.
+
 Version 0.9.3:
 	- Added support for a new sub-variant of the StreamDeck XL.
 
