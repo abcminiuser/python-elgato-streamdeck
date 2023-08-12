@@ -11,10 +11,10 @@ build:
     python: "3.8"
 
 sphinx:
-   configuration: docs/source/conf.py
+   configuration: doc/source/conf.py
 
 formats: all
 
 python:
    install:
-   - requirements: docs/requirements.txt
+   - requirements: doc/requirements.txt
