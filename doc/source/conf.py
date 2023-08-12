@@ -47,7 +47,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'python-elgato-streamdeck'
-copyright = '2022, Dean Camera'
+copyright = '2023, Dean Camera'
 author = 'Dean Camera'
 
 # The version info for the project you're documenting, acts as replacement for
