@@ -49,7 +49,7 @@ directory.
 ## Credits:
 
 I've used the reverse engineering notes from
-[this GitHub](https://github.com/Lange/node-elgato-stream-deck/blob/master/NOTES.md)
+[this GitHub](https://github.com/alvancamp/node-elgato-stream-deck/blob/master/NOTES.md)
 repository to implement this library. Thanks Alex Van Camp!
 
 Thank you to the following contributors, large and small, for helping with the
