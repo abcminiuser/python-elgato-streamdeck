@@ -57,7 +57,10 @@ class LibUSBHIDAPI(Transport):
                 # its default search paths. It requires the name of the library only (minus all
                 # path prefix and extension suffix).
                 library_name_no_extension = os.path.basename(os.path.splitext(lib_name)[0])
-                found_lib = ctypes.util.find_library(library_name_no_extension)
+                try:
+                    found_lib = ctypes.util.find_library(library_name_no_extension)
+                except:
+                    found_lib = None
 
                 # If we've running with a Homebrew installation, and find_library() didn't find the library in
                 # any of the default search paths, we'll look in Homebrew instead as a fallback.
