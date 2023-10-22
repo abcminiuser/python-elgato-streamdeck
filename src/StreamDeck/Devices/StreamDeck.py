@@ -340,9 +340,10 @@ class StreamDeck(ABC):
                  (size, image format).
         """
         return {
-            'size': (self.TOUCHSCREEN_PIXEL_WIDTH,
-                     self.TOUCHSCREEN_PIXEL_HEIGHT),
+            'size': (self.KEY_PIXEL_WIDTH, self.KEY_PIXEL_HEIGHT),
             'format': self.KEY_IMAGE_FORMAT,
+            'flip': self.KEY_FLIP,
+            'rotation': self.KEY_ROTATION,
         }
 
     def touchscreen_image_format(self):
@@ -359,10 +360,9 @@ class StreamDeck(ABC):
                  (size, image format, image mirroring and rotation).
         """
         return {
-            'size': (self.KEY_PIXEL_WIDTH, self.KEY_PIXEL_HEIGHT),
+            'size': (self.TOUCHSCREEN_PIXEL_WIDTH,
+                     self.TOUCHSCREEN_PIXEL_HEIGHT),
             'format': self.KEY_IMAGE_FORMAT,
-            'flip': self.KEY_FLIP,
-            'rotation': self.KEY_ROTATION,
         }
 
     def set_poll_frequency(self, hz):
