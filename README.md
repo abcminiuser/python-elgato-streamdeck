@@ -24,6 +24,7 @@ variants:
 * StreamDeck Mini
 * StreamDeck XL
 * StreamDeck Pedal
+* StreamDeck Plus
 
 
 ## Package Installation:

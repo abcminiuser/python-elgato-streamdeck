@@ -5,7 +5,7 @@
 #         www.fourwalledcubicle.com
 #
 
-from .StreamDeck import StreamDeck
+from .StreamDeck import StreamDeck, ControlType
 
 
 class StreamDeckOriginalV2(StreamDeck):
@@ -73,13 +73,15 @@ class StreamDeckOriginalV2(StreamDeck):
         0x28, 0xa0, 0x0f, 0xff, 0xd9
     ]
 
-    def _read_key_states(self):
+    def _read_control_states(self):
         states = self.device.read(4 + self.KEY_COUNT)
         if states is None:
             return None
 
         states = states[4:]
-        return [bool(s) for s in states]
+        return {
+            ControlType.KEY: [bool(s) for s in states]
+        }
 
     def _reset_key_stream(self):
         payload = bytearray(self.IMAGE_REPORT_LENGTH)

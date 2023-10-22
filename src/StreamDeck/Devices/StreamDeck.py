@@ -8,8 +8,33 @@
 import threading
 import time
 from abc import ABC, abstractmethod
+from enum import Enum
 
 from ..Transport.Transport import TransportError
+
+
+class TouchscreenEventType(Enum):
+    """
+    Type of event for the embedded touchscreen. Used in callbacks
+    """
+
+    SHORT = 1
+    LONG = 2
+    DRAG = 3
+
+
+class DialEventType(Enum):
+    """
+    Type of event for the rotary hw. Used in callbacks
+    """
+    TURN = 1
+    PUSH = 2
+
+
+class ControlType(Enum):
+    KEY = 1
+    DIAL = 2
+    TOUCHSCREEN = 3
 
 
 class StreamDeck(ABC):
@@ -27,16 +52,26 @@ class StreamDeck(ABC):
     KEY_FLIP = (False, False)
     KEY_ROTATION = 0
 
+    TOUCHSCREEN_PIXEL_WIDTH = 0
+    TOUCHSCREEN_PIXEL_HEIGHT = 0
+    TOUCHSCREEN_IMAGE_FORMAT = ""
+
+    DIAL_COUNT = 0
+
     DECK_TYPE = ""
     DECK_VISUAL = False
 
     def __init__(self, device):
         self.device = device
         self.last_key_states = [False] * self.KEY_COUNT
+        self.last_dial_states = [False] * self.DIAL_COUNT
         self.read_thread = None
         self.run_read_thread = False
         self.read_poll_hz = 20
+
         self.key_callback = None
+        self.dial_callback = None
+        self.touchscreen_callback = None
 
         self.update_lock = threading.RLock()
 
@@ -72,12 +107,11 @@ class StreamDeck(ABC):
         self.update_lock.release()
 
     @abstractmethod
-    def _read_key_states(self):
+    def _read_control_states(self):
         """
         Reads the raw key states from an attached StreamDeck.
 
-        :rtype: list(bool)
-        :return: List containing the raw key states.
+        :return: dictionary containing states for all controls
         """
         pass
 
@@ -107,18 +141,34 @@ class StreamDeck(ABC):
         """
         while self.run_read_thread:
             try:
-                new_key_states = self._read_key_states()
-                if new_key_states is None:
+                control_states = self._read_control_states()
+                if control_states is None:
                     time.sleep(1.0 / self.read_poll_hz)
                     continue
 
-                if self.key_callback is not None:
-                    for k, (old, new) in enumerate(zip(self.last_key_states, new_key_states)):
+                if ControlType.KEY in control_states and self.key_callback is not None:
+                    for k, (old, new) in enumerate(zip(self.last_key_states, control_states[ControlType.KEY])):
                         if old != new:
                             self.key_callback(self, k, new)
+                    self.last_key_states = control_states[ControlType.KEY]
 
-                self.last_key_states = new_key_states
-            except (TransportError):
+                elif ControlType.DIAL in control_states and self.dial_callback is not None:
+                    if DialEventType.PUSH in control_states[ControlType.DIAL]:
+                        for k, (old, new) in enumerate(zip(self.last_dial_states,
+                                                           control_states[ControlType.DIAL][DialEventType.PUSH])):
+                            if old != new:
+                                self.dial_callback(self, k, DialEventType.PUSH, new)
+                        self.last_dial_states = control_states[ControlType.DIAL][DialEventType.PUSH]
+
+                    if DialEventType.TURN in control_states[ControlType.DIAL]:
+                        for k, amount in enumerate(control_states[ControlType.DIAL][DialEventType.TURN]):
+                            if amount != 0:
+                                self.dial_callback(self, k, DialEventType.TURN, amount)
+
+                elif ControlType.TOUCHSCREEN in control_states and self.touchscreen_callback is not None:
+                    self.touchscreen_callback(self, *control_states[ControlType.TOUCHSCREEN])
+
+            except TransportError:
                 self.run_read_thread = False
                 self.close()
 
@@ -223,6 +273,15 @@ class StreamDeck(ABC):
         """
         return self.KEY_COUNT
 
+    def dial_count(self):
+        """
+        Retrieves number of physical dials on the attached StreamDeck device.
+
+        :rtype: int
+        :return: Number of physical dials
+        """
+        return self.DIAL_COUNT
+
     def deck_type(self):
         """
         Retrieves the model of Stream Deck.
@@ -241,6 +300,24 @@ class StreamDeck(ABC):
         """
         return self.DECK_VISUAL
 
+    def is_touch(self):
+        """
+        Returns whether the Stream Deck can receive touch events
+
+        :rtype: bool
+        :return: `True` if the deck can receive touch events, `False` otherwise
+        """
+        return self.TOUCHSCREEN_PIXEL_WIDTH > 0 and self.TOUCHSCREEN_PIXEL_HEIGHT > 0
+
+    def touchscreen_size(self):
+        """
+        Returns touchscreen size (will be with size 0 when unsupported)
+
+        :rtype: (int, int)
+        :return: (width, height) in pixels
+        """
+        return self.TOUCHSCREEN_PIXEL_WIDTH, self.TOUCHSCREEN_PIXEL_HEIGHT
+
     def key_layout(self):
         """
         Retrieves the physical button layout on the attached StreamDeck device.
@@ -257,6 +334,25 @@ class StreamDeck(ABC):
 
         .. seealso:: See :func:`~StreamDeck.set_key_image` method to update the
                      image displayed on a StreamDeck button.
+
+        :rtype: dict()
+        :return: Dictionary describing the various image parameters
+                 (size, image format).
+        """
+        return {
+            'size': (self.TOUCHSCREEN_PIXEL_WIDTH,
+                     self.TOUCHSCREEN_PIXEL_HEIGHT),
+            'format': self.KEY_IMAGE_FORMAT,
+        }
+
+    def touchscreen_image_format(self):
+        """
+        Retrieves the image format accepted by the touchscreen of the Stream
+        Deck. Images should be given in this format when drawing on
+        touchscreen.
+
+        .. seealso:: See :func:`~StreamDeck.touchscreen_draw` method to
+                     draw an image on the StreamDeck touchscreen.
 
         :rtype: dict()
         :return: Dictionary describing the various image parameters
@@ -325,6 +421,94 @@ class StreamDeck(ABC):
 
         self.set_key_callback(callback)
 
+    def set_dial_callback(self, callback):
+        """
+        Sets the callback function called each time there is an interaction
+        with a dial on the StreamDeck.
+
+        .. note:: This callback will be fired from an internal reader thread.
+                  Ensure that the given callback function is thread-safe.
+
+        .. note:: Only one callback can be registered at one time.
+
+        .. seealso:: See :func:`~StreamDeck.set_dial_callback_async` method
+                     for a version compatible with Python 3 `asyncio`
+                     asynchronous functions.
+
+        :param function callback: Callback function to fire each time a button
+                                state changes.
+        """
+        self.dial_callback = callback
+
+    def set_dial_callback_async(self, async_callback, loop=None):
+        """
+        Sets the asynchronous callback function called each time there is an
+        interaction with a dial on the StreamDeck. The given callback should
+        be compatible with Python 3's `asyncio` routines.
+
+        .. note:: The asynchronous callback will be fired in a thread-safe
+                  manner.
+
+        .. note:: This will override the callback (if any) set by
+                  :func:`~StreamDeck.set_dial_callback`.
+
+        :param function async_callback: Asynchronous callback function to fire
+                                        each time a button state changes.
+        :param asyncio.loop loop: Asyncio loop to dispatch the callback into
+        """
+        import asyncio
+
+        loop = loop or asyncio.get_event_loop()
+
+        def callback(*args):
+            asyncio.run_coroutine_threadsafe(async_callback(*args), loop)
+
+        self.set_dial_callback(callback)
+
+    def set_touchscreen_callback(self, callback):
+        """
+        Sets the callback function called each time there is an interaction
+        with a touchscreen on the StreamDeck.
+
+        .. note:: This callback will be fired from an internal reader thread.
+                  Ensure that the given callback function is thread-safe.
+
+        .. note:: Only one callback can be registered at one time.
+
+        .. seealso:: See :func:`~StreamDeck.set_touchscreen_callback_async`
+                     method for a version compatible with Python 3 `asyncio`
+                     asynchronous functions.
+
+        :param function callback: Callback function to fire each time a button
+                                state changes.
+        """
+        self.touchscreen_callback = callback
+
+    def set_touchscreen_callback_async(self, async_callback, loop=None):
+        """
+        Sets the asynchronous callback function called each time there is an
+        interaction with the touchscreen on the StreamDeck. The given callback
+        should be compatible with Python 3's `asyncio` routines.
+
+        .. note:: The asynchronous callback will be fired in a thread-safe
+                  manner.
+
+        .. note:: This will override the callback (if any) set by
+                  :func:`~StreamDeck.set_touchscreen_callback`.
+
+        :param function async_callback: Asynchronous callback function to fire
+                                        each time a button state changes.
+        :param asyncio.loop loop: Asyncio loop to dispatch the callback into
+        """
+        import asyncio
+
+        loop = loop or asyncio.get_event_loop()
+
+        def callback(*args):
+            asyncio.run_coroutine_threadsafe(async_callback(*args), loop)
+
+        self.set_touchscreen_callback(callback)
+
     def key_states(self):
         """
         Retrieves the current states of the buttons on the StreamDeck.
@@ -335,6 +519,18 @@ class StreamDeck(ABC):
                  otherwise).
         """
         return self.last_key_states
+
+    def dial_states(self):
+        """
+        Retrieves the current states of the dials (pressed or not) on the
+        Stream Deck
+
+        :rtype: list(bool)
+        :return: List describing the current states of each of the dials on
+                 the device (`True` if the dial is being pressed, `False`
+                 otherwise).
+        """
+        return self.last_dial_states
 
     @abstractmethod
     def reset(self):
@@ -382,12 +578,31 @@ class StreamDeck(ABC):
         image being set should be in the correct format for the device, as an
         enumerable collection of bytes.
 
-        .. seealso:: See :func:`~StreamDeck.get_key_image_format` method for
+        .. seealso:: See :func:`~StreamDeck.key_image_format` method for
                      information on the image format accepted by the device.
 
         :param int key: Index of the button whose image is to be updated.
         :param enumerable image: Raw data of the image to set on the button.
                                  If `None`, the key will be cleared to a black
                                  color.
+        """
+        pass
+
+    @abstractmethod
+    def touchscreen_draw(self, x_pos, y_pos, width, height, image):
+        """
+        Draws an image on the touchscreen in a certain position. The image
+        should be in the correct format for the devices, as an enumerable
+        collection of bytes
+
+        .. seealso:: See :func:`~StreamDeck.touchscreen_image_format` method for
+                     information on the image format accepted by the device.
+
+        :param int x_pos: Position on x axis of the image to draw
+        :param int y_pos: Position on y axis of the image to draw
+        :param int width: width of the image
+        :param int height: height of the image
+        :param enumerable image: Raw data of the image to set on the button.
+                                 If `None`, the touchscreen will be cleared.
         """
         pass
