@@ -90,6 +90,9 @@ def to_native_format(deck, image):
 
     image_format = deck.key_image_format()
 
+    if image.size != image_format['size']:
+        image.thumbnail(image_format['size'])
+
     if image_format['rotation']:
         image = image.rotate(image_format['rotation'])
 
@@ -98,9 +101,6 @@ def to_native_format(deck, image):
 
     if image_format['flip'][1]:
         image = image.transpose(Image.FLIP_TOP_BOTTOM)
-
-    if image.size != image_format['size']:
-        image.thumbnail(image_format['size'])
 
     # We want a compressed image in a given codec, convert.
     compressed_image = io.BytesIO()
