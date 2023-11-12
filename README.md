@@ -57,6 +57,7 @@ development and maintenance of this library:
 
 - [Aetherdyne](https://github.com/Aetherdyne)
 - [BS-Tek](https://github.com/BS-Tek)
+- [Core447](https://github.com/Core447)
 - [dirkk0](https://github.com/dirkk0)
 - [dodgyrabbit](https://github.com/dodgyrabbit)
 - [dubstech](https://github.com/dubstech)
