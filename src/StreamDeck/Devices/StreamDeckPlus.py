@@ -33,8 +33,8 @@ class StreamDeckPlus(StreamDeck):
     DECK_TYPE = "Stream Deck +"
     DECK_VISUAL = True
 
-    TOUCHSCREEN_PIXEL_HEIGHT = 800
-    TOUCHSCREEN_PIXEL_WIDTH = 100
+    TOUCHSCREEN_PIXEL_HEIGHT = 100
+    TOUCHSCREEN_PIXEL_WIDTH = 800
     TOUCHSCREEN_IMAGE_FORMAT = "JPEG"
 
     _IMG_PACKET_LEN = 1024  # Max size for a data packet when setting images
@@ -234,9 +234,9 @@ class StreamDeckPlus(StreamDeck):
 
     def touchscreen_draw(self, x_pos, y_pos, width, height, image):
         x_pos = min(max(x_pos, 0), self.TOUCHSCREEN_PIXEL_WIDTH)
-        y_pos = min(max(x_pos, 0), self.TOUCHSCREEN_PIXEL_HEIGHT)
+        y_pos = min(max(y_pos, 0), self.TOUCHSCREEN_PIXEL_HEIGHT)
         width = min(self.TOUCHSCREEN_PIXEL_WIDTH - x_pos, width)
-        width = min(self.TOUCHSCREEN_PIXEL_HEIGHT - y_pos, height)
+        height = min(self.TOUCHSCREEN_PIXEL_HEIGHT - y_pos, height)
 
         page_number = 0
         bytes_remaining = len(image)
