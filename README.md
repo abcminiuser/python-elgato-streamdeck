@@ -24,6 +24,7 @@ variants:
 * StreamDeck Mini
 * StreamDeck XL
 * StreamDeck Pedal
+* StreamDeck Plus
 
 
 ## Package Installation:
@@ -58,14 +59,17 @@ development and maintenance of this library:
 - [Aetherdyne](https://github.com/Aetherdyne)
 - [BS-Tek](https://github.com/BS-Tek)
 - [Core447](https://github.com/Core447)
+- [Kalle-Wirsch](https://github.com/Kalle-Wirsch)
+- [Lewiscowles1986](https://github.com/Lewiscowles1986)
+- [Subsentient](https://github.com/Subsentient)
+- [admiral0](https://github.com/admiral0)
 - [dirkk0](https://github.com/dirkk0)
 - [dodgyrabbit](https://github.com/dodgyrabbit)
 - [dubstech](https://github.com/dubstech)
 - [impala454](https://github.com/impala454)
 - [jakobbuis](https://github.com/jakobbuis)
 - [jmudge14](https://github.com/jmudge14)
-- [Kalle-Wirsch](https://github.com/Kalle-Wirsch)
-- [Lewiscowles1986](https://github.com/Lewiscowles1986)
+- [karstlok](https://github.com/karstlok)
 - [m-weigand](https://github.com/m-weigand)
 - [matrixinius](https://github.com/matrixinius)
 - [phillco](https://github.com/phillco)
@@ -73,7 +77,6 @@ development and maintenance of this library:
 - [shanna](https://github.com/shanna)
 - [spidererrol](https://github.com/Spidererrol)
 - [spyoungtech](https://github.com/spyoungtech)
-- [Subsentient](https://github.com/Subsentient)
 - [swedishmike](https://github.com/swedishmike)
 - [theslimshaney](https://github.com/theslimshaney)
 

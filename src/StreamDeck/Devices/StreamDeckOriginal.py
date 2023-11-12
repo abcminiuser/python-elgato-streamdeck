@@ -5,7 +5,7 @@
 #         www.fourwalledcubicle.com
 #
 
-from .StreamDeck import StreamDeck
+from .StreamDeck import StreamDeck, ControlType
 
 
 class StreamDeckOriginal(StreamDeck):
@@ -44,13 +44,15 @@ class StreamDeckOriginal(StreamDeck):
         key_col = key % self.KEY_COLS
         return (key - key_col) + ((self.KEY_COLS - 1) - key_col)
 
-    def _read_key_states(self):
+    def _read_control_states(self):
         states = self.device.read(1 + self.KEY_COUNT)
         if states is None:
             return None
 
         states = states[1:]
-        return [bool(states[s]) for s in map(self._convert_key_id_origin, range(self.KEY_COUNT))]
+        return {
+            ControlType.KEY: [bool(states[s]) for s in map(self._convert_key_id_origin, range(self.KEY_COUNT))]
+        }
 
     def _reset_key_stream(self):
         payload = bytearray(self.IMAGE_REPORT_LENGTH)
@@ -120,3 +122,6 @@ class StreamDeckOriginal(StreamDeck):
 
             bytes_remaining = bytes_remaining - this_length
             page_number = page_number + 1
+
+    def touchscreen_draw(self, x_pos, y_pos, width, height, image):
+        pass

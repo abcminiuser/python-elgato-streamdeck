@@ -5,7 +5,7 @@
 #         www.fourwalledcubicle.com
 #
 
-from .StreamDeck import StreamDeck
+from .StreamDeck import StreamDeck, ControlType
 from ..ProductIDs import USBProductIDs
 
 
@@ -42,13 +42,15 @@ class StreamDeckMini(StreamDeck):
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00
     ] + [0] * (KEY_PIXEL_WIDTH * KEY_PIXEL_HEIGHT * 3)
 
-    def _read_key_states(self):
+    def _read_control_states(self):
         states = self.device.read(1 + self.KEY_COUNT)
         if states is None:
             return None
 
         states = states[1:]
-        return [bool(s) for s in states]
+        return {
+            ControlType.KEY: [bool(s) for s in states],
+        }
 
     def _reset_key_stream(self):
         payload = bytearray(self.IMAGE_REPORT_LENGTH)
@@ -116,3 +118,6 @@ class StreamDeckMini(StreamDeck):
 
             bytes_remaining = bytes_remaining - this_length
             page_number = page_number + 1
+
+    def touchscreen_draw(self, x_pos, y_pos, width, height, image):
+        pass

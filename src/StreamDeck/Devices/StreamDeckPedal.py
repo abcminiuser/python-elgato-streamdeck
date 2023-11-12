@@ -5,7 +5,7 @@
 #         www.fourwalledcubicle.com
 #
 
-from .StreamDeck import StreamDeck
+from .StreamDeck import StreamDeck, ControlType
 
 
 class StreamDeckPedal(StreamDeck):
@@ -20,13 +20,15 @@ class StreamDeckPedal(StreamDeck):
     DECK_TYPE = "Stream Deck Pedal"
     DECK_VISUAL = False
 
-    def _read_key_states(self):
+    def _read_control_states(self):
         states = self.device.read(4 + self.KEY_COUNT)
         if states is None:
             return None
 
         states = states[4:]
-        return [bool(s) for s in states]
+        return {
+            ControlType.KEY: [bool(s) for s in states]
+        }
 
     def _reset_key_stream(self):
         pass
@@ -46,4 +48,7 @@ class StreamDeckPedal(StreamDeck):
         return self._extract_string(version[6:])
 
     def set_key_image(self, key, image):
+        pass
+
+    def touchscreen_draw(self, x_pos, y_pos, width, height, image):
         pass

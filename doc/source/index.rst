@@ -37,6 +37,7 @@ Index
     examples/deckinfo.rst
     examples/basic.rst
     examples/pedal.rst
+    examples/plus.rst
     examples/tiled.rst
     examples/animated.rst
 

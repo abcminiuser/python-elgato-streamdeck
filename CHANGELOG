@@ -1,3 +1,6 @@
+Version 0.9.5:
+	- Added support for the StreamDeck +.
+
 Version 0.9.4:
 	- Updated Windows HIDAPI backend to attempt to load from the local working directory.
 	- Added detection for MacOS Homebrew installations of the libhidapi back-end library.
