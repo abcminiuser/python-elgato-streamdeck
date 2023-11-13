@@ -58,6 +58,7 @@ development and maintenance of this library:
 
 - [admiral0](https://github.com/admiral0)
 - [Aetherdyne](https://github.com/Aetherdyne)
+- [benedikt-bartscher](https://github.com/benedikt-bartscher)
 - [brimston3](https://github.com/brimston3)
 - [BS-Tek](https://github.com/BS-Tek)
 - [Core447](https://github.com/Core447)
