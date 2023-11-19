@@ -404,7 +404,6 @@ class StreamDeckPlus(StreamDeck):
         page_number = 0
         bytes_remaining = len(image)
         while bytes_remaining > 0:
-
             this_length = min(bytes_remaining, self._KEY_PACKET_PAYLOAD_LEN)
 
             header = [
@@ -425,13 +424,27 @@ class StreamDeckPlus(StreamDeck):
             bytes_remaining = bytes_remaining - this_length
             page_number = page_number + 1
 
-    def set_touchscreen_image(self, x_pos, y_pos, width, height, image):
-        x_pos = min(max(x_pos, 0), self.TOUCHSCREEN_PIXEL_WIDTH)
-        y_pos = min(max(y_pos, 0), self.TOUCHSCREEN_PIXEL_HEIGHT)
-        width = min(self.TOUCHSCREEN_PIXEL_WIDTH - x_pos, width)
-        height = min(self.TOUCHSCREEN_PIXEL_HEIGHT - y_pos, height)
+    def set_touchscreen_image(self, image, x_pos=0, y_pos=0, width=0, height=0):
+        if not image:
+            image = self.BLANK_TOUCHSCREEN_IMAGE
+            x_pos = 0
+            y_pos = 0
+            width = self.TOUCHSCREEN_PIXEL_WIDTH
+            height = self.TOUCHSCREEN_PIXEL_HEIGHT
 
-        image = bytes(image or self.BLANK_TOUCHSCREEN_IMAGE)
+        if min(max(x_pos, 0), self.TOUCHSCREEN_PIXEL_WIDTH) != x_pos:
+            raise IndexError("Invalid x position {}.".format(x_pos))
+
+        if min(max(y_pos, 0), self.TOUCHSCREEN_PIXEL_HEIGHT) != y_pos:
+            raise IndexError("Invalid y position {}.".format(y_pos))
+
+        if min(max(width, 1), self.TOUCHSCREEN_PIXEL_WIDTH - x_pos) != width:
+            raise IndexError("Invalid draw width {}.".format(width))
+
+        if min(max(height, 1), self.TOUCHSCREEN_PIXEL_HEIGHT - y_pos) != height:
+            raise IndexError("Invalid draw height {}.".format(height))
+
+        image = bytes(image)
 
         page_number = 0
         bytes_remaining = len(image)

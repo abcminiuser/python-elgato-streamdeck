@@ -37,18 +37,15 @@ img.save(img_byte_arr, format='JPEG')
 img_pressed_bytes = img_byte_arr.getvalue()
 
 
-# image for pressed state
-
-
 # callback when buttons are pressed or released
-def key_change(deck, key, key_state):
+def key_change_callback(deck, key, key_state):
     print("Key: " + str(key) + " state: " + str(key_state))
 
     deck.set_key_image(key, img_pressed_bytes if key_state else img_released_bytes)
 
 
 # callback when dials are pressed or released
-def dial_change(deck, dial, event, value):
+def dial_change_callback(deck, dial, event, value):
     if event == DialEventType.PUSH:
         print(f"dial pushed: {dial} state: {value}")
         if dial == 3 and value:
@@ -68,13 +65,13 @@ def dial_change(deck, dial, event, value):
             img.save(img_byte_arr, format='JPEG')
             img_byte_arr = img_byte_arr.getvalue()
 
-            deck.set_touchscreen_image(0, 0, 800, 100, img_byte_arr)
+            deck.set_touchscreen_image(img_byte_arr, 0, 0, 800, 100)
     elif event == DialEventType.TURN:
         print(f"dial {dial} turned: {value}")
 
 
 # callback when lcd is touched
-def touchscreen_event(deck, evt_type, value):
+def touchscreen_event_callback(deck, evt_type, value):
     if evt_type == TouchscreenEventType.SHORT:
         print("Short touch @ " + str(value['x']) + "," + str(value['y']))
 
@@ -103,9 +100,9 @@ if __name__ == "__main__":
         deck.open()
         deck.reset()
 
-        deck.set_key_callback(key_change)
-        deck.set_dial_callback(dial_change)
-        deck.set_touchscreen_callback(touchscreen_event)
+        deck.set_key_callback(key_change_callback)
+        deck.set_dial_callback(dial_change_callback)
+        deck.set_touchscreen_callback(touchscreen_event_callback)
 
         print("Opened '{}' device (serial number: '{}')".format(deck.deck_type(), deck.get_serial_number()))
 
@@ -127,7 +124,7 @@ if __name__ == "__main__":
         img.save(img_bytes, format='JPEG')
         touchscreen_image_bytes = img_bytes.getvalue()
 
-        deck.set_touchscreen_image(0, 0, 800, 100, touchscreen_image_bytes)
+        deck.set_touchscreen_image(touchscreen_image_bytes, 0, 0, 800, 100)
 
         # Wait until all application threads have terminated (for this example,
         # this is when all deck handles are closed).

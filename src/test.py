@@ -60,8 +60,8 @@ def test_basic_apis(deck):
             if deck.is_touch():
                 test_touchscreen_image_pil = PILHelper.create_touchscreen_image(deck)
                 test_touchscreen_image_native = PILHelper.to_native_touchscreen_format(deck, test_touchscreen_image_pil)
-                deck.set_touchscreen_image(0, None)
-                deck.set_touchscreen_image(0, test_touchscreen_image_native)
+                deck.set_touchscreen_image(None)
+                deck.set_touchscreen_image(test_touchscreen_image_native, 0, 0, test_touchscreen_image_pil.width, test_touchscreen_image_pil.height)
 
         deck.close()
 

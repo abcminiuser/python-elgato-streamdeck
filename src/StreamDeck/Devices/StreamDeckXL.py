@@ -143,5 +143,5 @@ class StreamDeckXL(StreamDeck):
             bytes_remaining = bytes_remaining - this_length
             page_number = page_number + 1
 
-    def set_touchscreen_image(self, x_pos, y_pos, width, height, image):
+    def set_touchscreen_image(self, image, x_pos=0, y_pos=0, width=0, height=0):
         pass

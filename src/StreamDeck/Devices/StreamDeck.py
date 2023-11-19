@@ -584,20 +584,21 @@ class StreamDeck(ABC):
         pass
 
     @abstractmethod
-    def set_touchscreen_image(self, x_pos, y_pos, width, height, image):
+    def set_touchscreen_image(self, image, x_pos=0, y_pos=0, width=0, height=0):
         """
         Draws an image on the touchscreen in a certain position. The image
         should be in the correct format for the devices, as an enumerable
-        collection of bytes
+        collection of bytes.
 
         .. seealso:: See :func:`~StreamDeck.touchscreen_image_format` method for
                      information on the image format accepted by the device.
 
+        :param enumerable image: Raw data of the image to set on the button.
+                                 If `None`, the touchscreen will be cleared.
         :param int x_pos: Position on x axis of the image to draw
         :param int y_pos: Position on y axis of the image to draw
         :param int width: width of the image
         :param int height: height of the image
-        :param enumerable image: Raw data of the image to set on the button.
-                                 If `None`, the touchscreen will be cleared.
+
         """
         pass
