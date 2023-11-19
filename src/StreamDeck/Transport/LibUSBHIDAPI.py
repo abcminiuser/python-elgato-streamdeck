@@ -59,7 +59,7 @@ class LibUSBHIDAPI(Transport):
                 library_name_no_extension = os.path.basename(os.path.splitext(lib_name)[0])
                 try:
                     found_lib = ctypes.util.find_library(library_name_no_extension)
-                except:
+                except OSError:
                     found_lib = None
 
                 # If we've running with a Homebrew installation, and find_library() didn't find the library in
