@@ -169,7 +169,7 @@ def to_native_key_format(deck, image):
 def to_native_touchscreen_format(deck, image):
     """
     Converts a given PIL image to the native touchscreen image format for a StreamDeck,
-    suitable for passing to :func:`~StreamDeck.touchscreen_draw`.
+    suitable for passing to :func:`~StreamDeck.set_touchscreen_image`.
 
     .. seealso:: See :func:`~PILHelper.create_touchscreen_image` method for creating a PIL
                  image instance for a given StreamDeck device.

@@ -50,5 +50,5 @@ class StreamDeckPedal(StreamDeck):
     def set_key_image(self, key, image):
         pass
 
-    def touchscreen_draw(self, x_pos, y_pos, width, height, image):
+    def set_touchscreen_image(self, x_pos, y_pos, width, height, image):
         pass

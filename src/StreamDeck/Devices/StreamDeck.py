@@ -346,7 +346,7 @@ class StreamDeck(ABC):
         Deck. Images should be given in this format when drawing on
         touchscreen.
 
-        .. seealso:: See :func:`~StreamDeck.touchscreen_draw` method to
+        .. seealso:: See :func:`~StreamDeck.set_touchscreen_image` method to
                      draw an image on the StreamDeck touchscreen.
 
         :rtype: dict()
@@ -584,7 +584,7 @@ class StreamDeck(ABC):
         pass
 
     @abstractmethod
-    def touchscreen_draw(self, x_pos, y_pos, width, height, image):
+    def set_touchscreen_image(self, x_pos, y_pos, width, height, image):
         """
         Draws an image on the touchscreen in a certain position. The image
         should be in the correct format for the devices, as an enumerable

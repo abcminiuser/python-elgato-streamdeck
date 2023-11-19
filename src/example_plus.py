@@ -68,7 +68,7 @@ def dial_change(deck, dial, event, value):
             img.save(img_byte_arr, format='JPEG')
             img_byte_arr = img_byte_arr.getvalue()
 
-            deck.touchscreen_draw(0, 0, 800, 100, img_byte_arr)
+            deck.set_touchscreen_image(0, 0, 800, 100, img_byte_arr)
     elif event == DialEventType.TURN:
         print(f"dial {dial} turned: {value}")
 
@@ -127,7 +127,7 @@ if __name__ == "__main__":
         img.save(img_bytes, format='JPEG')
         touchscreen_image_bytes = img_bytes.getvalue()
 
-        deck.touchscreen_draw(0, 0, 800, 100, touchscreen_image_bytes)
+        deck.set_touchscreen_image(0, 0, 800, 100, touchscreen_image_bytes)
 
         # Wait until all application threads have terminated (for this example,
         # this is when all deck handles are closed).
