@@ -8,6 +8,7 @@ Transport (Abstract Base)
 
 .. automodule:: StreamDeck.Transport.Transport
    :members:
+   :show-inheritance:
 
 
 =================================

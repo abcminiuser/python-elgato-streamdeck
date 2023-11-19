@@ -8,6 +8,7 @@ StreamDeck (Abstract Base)
 
 .. automodule:: StreamDeck.Devices.StreamDeck
    :members:
+   :show-inheritance:
 
 
 ===================

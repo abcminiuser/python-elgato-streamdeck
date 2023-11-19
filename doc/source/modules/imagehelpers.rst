@@ -8,3 +8,4 @@ PIL Image Helper
 
 .. automodule:: StreamDeck.ImageHelpers.PILHelper
    :members:
+   :show-inheritance:
