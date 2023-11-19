@@ -75,10 +75,10 @@ def crop_key_image_from_deck_sized_image(deck, image, key_spacing, key):
 
     # Create a new key-sized image, and paste in the cropped section of the
     # larger image.
-    key_image = PILHelper.create_image(deck)
+    key_image = PILHelper.create_key_image(deck)
     key_image.paste(segment)
 
-    return PILHelper.to_native_format(deck, key_image)
+    return PILHelper.to_native_key_format(deck, key_image)
 
 
 # Closes the StreamDeck device on key state change.

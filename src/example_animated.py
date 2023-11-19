@@ -42,11 +42,11 @@ def create_animation_frames(deck, image_filename):
     # Iterate through each animation frame of the source image
     for frame in ImageSequence.Iterator(icon):
         # Create new key image of the correct dimensions, black background.
-        frame_image = PILHelper.create_scaled_image(deck, frame)
+        frame_image = PILHelper.create_scaled_key_image(deck, frame)
 
         # Pre-convert the generated image to the native format of the StreamDeck
         # so we don't need to keep converting it when showing it on the device.
-        native_frame_image = PILHelper.to_native_format(deck, frame_image)
+        native_frame_image = PILHelper.to_native_key_format(deck, frame_image)
 
         # Store the rendered animation frame for later user.
         icon_frames.append(native_frame_image)

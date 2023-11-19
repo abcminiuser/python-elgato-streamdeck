@@ -55,11 +55,14 @@ class StreamDeck(ABC):
     TOUCHSCREEN_PIXEL_WIDTH = 0
     TOUCHSCREEN_PIXEL_HEIGHT = 0
     TOUCHSCREEN_IMAGE_FORMAT = ""
+    TOUCHSCREEN_FLIP = (False, False)
+    TOUCHSCREEN_ROTATION = 0
 
     DIAL_COUNT = 0
 
     DECK_TYPE = ""
     DECK_VISUAL = False
+    DECK_TOUCH = False
 
     def __init__(self, device):
         self.device = device
@@ -307,16 +310,7 @@ class StreamDeck(ABC):
         :rtype: bool
         :return: `True` if the deck can receive touch events, `False` otherwise
         """
-        return self.TOUCHSCREEN_PIXEL_WIDTH > 0 and self.TOUCHSCREEN_PIXEL_HEIGHT > 0
-
-    def touchscreen_size(self):
-        """
-        Returns touchscreen size (will be with size 0 when unsupported)
-
-        :rtype: (int, int)
-        :return: (width, height) in pixels
-        """
-        return self.TOUCHSCREEN_PIXEL_WIDTH, self.TOUCHSCREEN_PIXEL_HEIGHT
+        return self.DECK_TOUCH
 
     def key_layout(self):
         """
@@ -360,9 +354,10 @@ class StreamDeck(ABC):
                  (size, image format).
         """
         return {
-            'size': (self.TOUCHSCREEN_PIXEL_WIDTH,
-                     self.TOUCHSCREEN_PIXEL_HEIGHT),
-            'format': self.KEY_IMAGE_FORMAT,
+            'size': (self.TOUCHSCREEN_PIXEL_WIDTH, self.TOUCHSCREEN_PIXEL_HEIGHT),
+            'format': self.TOUCHSCREEN_IMAGE_FORMAT,
+            'flip': self.TOUCHSCREEN_FLIP,
+            'rotation': self.TOUCHSCREEN_ROTATION,
         }
 
     def set_poll_frequency(self, hz):

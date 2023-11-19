@@ -32,10 +32,13 @@ class StreamDeckPlus(StreamDeck):
 
     DECK_TYPE = "Stream Deck +"
     DECK_VISUAL = True
+    DECK_TOUCH = True
 
     TOUCHSCREEN_PIXEL_HEIGHT = 100
     TOUCHSCREEN_PIXEL_WIDTH = 800
     TOUCHSCREEN_IMAGE_FORMAT = "JPEG"
+    TOUCHSCREEN_FLIP = (False, False)
+    TOUCHSCREEN_ROTATION = 0
 
     _IMG_PACKET_LEN = 1024  # Max size for a data packet when setting images
 
@@ -50,6 +53,7 @@ class StreamDeckPlus(StreamDeck):
         DialEventType.PUSH: bool,
     }
 
+    # 120 x 120 black JPEG
     BLANK_KEY_IMAGE = [
         0xff, 0xd8, 0xff, 0xe0, 0x00, 0x10, 0x4a, 0x46, 0x49, 0x46, 0x00,
         0x01, 0x01, 0x00, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0xff, 0xdb,

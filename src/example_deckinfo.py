@@ -15,7 +15,8 @@ from StreamDeck.DeviceManager import DeviceManager
 
 # Prints diagnostic information about a given StreamDeck.
 def print_deck_info(index, deck):
-    image_format = deck.key_image_format()
+    key_image_format = deck.key_image_format()
+    touchscreen_image_format = deck.touchscreen_image_format()
 
     flip_description = {
         (False, False): "not mirrored",
@@ -34,11 +35,19 @@ def print_deck_info(index, deck):
         deck.key_layout()[1]))
     if deck.is_visual():
         print("\t - Key Images: {}x{} pixels, {} format, rotated {} degrees, {}".format(
-            image_format['size'][0],
-            image_format['size'][1],
-            image_format['format'],
-            image_format['rotation'],
-            flip_description[image_format['flip']]))
+            key_image_format['size'][0],
+            key_image_format['size'][1],
+            key_image_format['format'],
+            key_image_format['rotation'],
+            flip_description[key_image_format['flip']]))
+
+        if deck.is_touch():
+	        print("\t - Touchscreen: {}x{} pixels, {} format, rotated {} degrees, {}".format(
+	            touchscreen_image_format['size'][0],
+	            touchscreen_image_format['size'][1],
+	            touchscreen_image_format['format'],
+	            touchscreen_image_format['rotation'],
+	            flip_description[touchscreen_image_format['flip']]))
     else:
         print("\t - No Visual Output")
 
