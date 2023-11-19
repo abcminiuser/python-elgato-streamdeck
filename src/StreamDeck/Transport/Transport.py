@@ -126,7 +126,7 @@ class Transport(ABC):
             Reads a HID Feature report from the open HID device.
 
             :param int report_id: Report ID of the report being read.
-            :param int length: Maximum length of the Feature report to read..
+            :param int length: Maximum length of the Feature report to read.
 
             :rtype: list(byte)
             :return: List of bytes containing the read Feature report. The

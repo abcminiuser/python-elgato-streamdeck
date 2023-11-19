@@ -8,7 +8,7 @@
 
 class USBVendorIDs:
     """
-    USB Vendor IDs for known StreamDeck devices..
+    USB Vendor IDs for known StreamDeck devices.
     """
 
     USB_VID_ELGATO = 0x0fd9
@@ -16,7 +16,7 @@ class USBVendorIDs:
 
 class USBProductIDs:
     """
-    USB Product IDs for known StreamDeck devices..
+    USB Product IDs for known StreamDeck devices.
     """
 
     USB_PID_STREAMDECK_ORIGINAL = 0x0060

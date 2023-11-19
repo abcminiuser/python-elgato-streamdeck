@@ -15,7 +15,7 @@ from ..Transport.Transport import TransportError
 
 class TouchscreenEventType(Enum):
     """
-    Type of event for the embedded touchscreen. Used in callbacks
+    Type of event that has occurred for a Touchscreen.
     """
 
     SHORT = 1
@@ -25,13 +25,19 @@ class TouchscreenEventType(Enum):
 
 class DialEventType(Enum):
     """
-    Type of event for the rotary hw. Used in callbacks
+    Type of event that has occurred for a Dial.
     """
     TURN = 1
     PUSH = 2
 
 
 class ControlType(Enum):
+    """
+    Type of control. This is used when returning internal events from a
+    StreamDeck subclass.
+
+    :meta private:
+    """
     KEY = 1
     DIAL = 2
     TOUCHSCREEN = 3
@@ -290,7 +296,7 @@ class StreamDeck(ABC):
         Retrieves the model of Stream Deck.
 
         :rtype: str
-        :return: String containing the model name of the StreamDeck device..
+        :return: String containing the model name of the StreamDeck device.
         """
         return self.DECK_TYPE
 
