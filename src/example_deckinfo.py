@@ -42,12 +42,12 @@ def print_deck_info(index, deck):
             flip_description[key_image_format['flip']]))
 
         if deck.is_touch():
-	        print("\t - Touchscreen: {}x{} pixels, {} format, rotated {} degrees, {}".format(
-	            touchscreen_image_format['size'][0],
-	            touchscreen_image_format['size'][1],
-	            touchscreen_image_format['format'],
-	            touchscreen_image_format['rotation'],
-	            flip_description[touchscreen_image_format['flip']]))
+            print("\t - Touchscreen: {}x{} pixels, {} format, rotated {} degrees, {}".format(
+                touchscreen_image_format['size'][0],
+                touchscreen_image_format['size'][1],
+                touchscreen_image_format['format'],
+                touchscreen_image_format['rotation'],
+                flip_description[touchscreen_image_format['flip']]))
     else:
         print("\t - No Visual Output")
 
