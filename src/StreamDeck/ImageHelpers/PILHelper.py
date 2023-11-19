@@ -12,6 +12,7 @@ from PIL import Image
 def _create_image(image_format, background):
     return Image.new("RGB", image_format['size'], background)
 
+
 def _scale_image(image, image_format, margins=[0, 0, 0, 0], background='black'):
     if len(margins) != 4:
         raise ValueError("Margins should be given as an array of four integers.")
@@ -31,6 +32,7 @@ def _scale_image(image, image_format, margins=[0, 0, 0, 0], background='black'):
 
     return final_image
 
+
 def _to_native_format(image, image_format):
     if image.size != image_format['size']:
         image.thumbnail(image_format['size'])
@@ -49,12 +51,14 @@ def _to_native_format(image, image_format):
     image.save(compressed_image, image_format['format'], quality=100)
     return compressed_image.getbuffer()
 
+
 def create_image(deck, background='black'):
     """
     .. deprecated:: 0.9.5
         Use :func:`~PILHelper.create_key_image` method instead.
     """
     return create_key_image(deck, background)
+
 
 def create_key_image(deck, background='black'):
     """
@@ -73,6 +77,7 @@ def create_key_image(deck, background='black'):
     """
     return _create_image(deck.key_image_format(), background)
 
+
 def create_touchscreen_image(deck, background='black'):
     """
     Creates a new PIL Image with the correct image dimensions for the given
@@ -90,12 +95,14 @@ def create_touchscreen_image(deck, background='black'):
     """
     return _create_image(deck.touchscreen_image_format(), background)
 
+
 def create_scaled_image(deck, image, margins=[0, 0, 0, 0], background='black'):
     """
     .. deprecated:: 0.9.5
         Use :func:`~PILHelper.create_scaled_key_image` method instead.
     """
     return create_scaled_key_image(deck, image, margins, background)
+
 
 def create_scaled_key_image(deck, image, margins=[0, 0, 0, 0], background='black'):
     """
@@ -120,6 +127,7 @@ def create_scaled_key_image(deck, image, margins=[0, 0, 0, 0], background='black
     """
     return _scale_image(image, deck.key_image_format(), margins, background)
 
+
 def create_scaled_touchscreen_image(deck, image, margins=[0, 0, 0, 0], background='black'):
     """
     Creates a new touchscreen image that contains a scaled version of a given image,
@@ -143,12 +151,14 @@ def create_scaled_touchscreen_image(deck, image, margins=[0, 0, 0, 0], backgroun
     """
     return _scale_image(image, deck.touchscreen_image_format(), margins, background)
 
+
 def to_native_format(deck, image):
     """
     .. deprecated:: 0.9.5
         Use :func:`~PILHelper.to_native_key_format` method instead.
     """
     return to_native_key_format(deck, image)
+
 
 def to_native_key_format(deck, image):
     """
@@ -165,6 +175,7 @@ def to_native_key_format(deck, image):
     :return: Image converted to the given StreamDeck's native format
     """
     return _to_native_format(image, deck.key_image_format())
+
 
 def to_native_touchscreen_format(deck, image):
     """
