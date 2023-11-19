@@ -13,7 +13,7 @@ import sys
 
 from StreamDeck.DeviceManager import DeviceManager
 from StreamDeck.ImageHelpers import PILHelper
-from PIL import Image, ImageDraw
+from PIL import ImageDraw
 
 
 def test_pil_helpers(deck):
@@ -22,12 +22,12 @@ def test_pil_helpers(deck):
 
     test_key_image_pil = PILHelper.create_key_image(deck)
     test_scaled_key_image_pil = PILHelper.create_scaled_key_image(deck, test_key_image_pil)     # noqa: F841
-    test_key_image_native = PILHelper.to_native_key_format(deck, test_scaled_key_image_pil)
+    test_key_image_native = PILHelper.to_native_key_format(deck, test_scaled_key_image_pil)     # noqa: F841
 
     if deck.is_touch():
         test_touchscreen_image_pil = PILHelper.create_touchscreen_image(deck)
         test_scaled_touchscreen_image_pil = PILHelper.create_scaled_touchscreen_image(deck, test_touchscreen_image_pil)     # noqa: F841
-        test_touchscreen_image_native = PILHelper.to_native_touchscreen_format(deck, test_scaled_touchscreen_image_pil)
+        test_touchscreen_image_native = PILHelper.to_native_touchscreen_format(deck, test_scaled_touchscreen_image_pil)     # noqa: F841
 
 
 def test_basic_apis(deck):
