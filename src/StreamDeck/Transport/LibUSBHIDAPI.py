@@ -25,6 +25,21 @@ class LibUSBHIDAPI(Transport):
         HIDAPI_INSTANCE = None
         HOMEBREW_PREFIX = None
 
+        def _get_homebrew_path(self):
+            if self.platform_name != "Darwin":
+                return None
+
+            homebrew_path = os.environ.get('HOMEBREW_PREFIX')
+            if not homebrew_path:
+                try:
+                    import subprocess # nosec B404
+
+                    homebrew_path = subprocess.run(['brew', '--prefix'], stdout=subprocess.PIPE, text=True, check=True).stdout.strip() # nosec
+                except: # nosec B110
+                    pass
+
+            return homebrew_path
+
         def _load_hidapi_library(self, library_search_list):
             """
             Loads the given LibUSB HIDAPI dynamic library from the host system,
@@ -41,16 +56,8 @@ class LibUSBHIDAPI(Transport):
             # If we're running on MacOS, we very likely need to search for the library in the Homebrew path if it's installed.
             # The ctypes loader won't look in there by default unless the user has a Homebrew installed python, which gets patched
             # on installation.
-            if self.platform_name == "Darwin" and not self.HOMEBREW_PREFIX:
-                self.HOMEBREW_PREFIX = os.environ.get('HOMEBREW_PREFIX')
-
-                if not self.HOMEBREW_PREFIX:
-                    try:
-                        import subprocess # nosec B404
-
-                        self.HOMEBREW_PREFIX = subprocess.run(['brew', '--prefix'], stdout=subprocess.PIPE, text=True, check=True).stdout.strip() # nosec
-                    except Exception: # nosec B110
-                        pass
+            if not self.HOMEBREW_PREFIX:
+                type(self).HOMEBREW_PREFIX = self._get_homebrew_path()
 
             for lib_name in library_search_list:
                 # We'll try to use ctypes' utility function to find the library first, using
