@@ -31,7 +31,7 @@ steps:
   commands:
   - apk add jpeg-dev zlib-dev
   - pip install Pillow
-  - python src/test.py
+  - python test/test.py
 
 - name: Documentation
   image: abcminiuser/docker-ci-python:latest
