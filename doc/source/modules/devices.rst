@@ -45,3 +45,12 @@ StreamDeck Pedal
 .. automodule:: StreamDeck.Devices.StreamDeckPedal
    :members:
    :show-inheritance:
+
+
+================
+StreamDeck Plus
+================
+
+.. automodule:: StreamDeck.Devices.StreamDeckPlus
+   :members:
+   :show-inheritance:

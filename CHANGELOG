@@ -1,5 +1,5 @@
 Version 0.9.5:
-	- Added support for the StreamDeck +.
+	- Added support for the StreamDeck Plus.
 
 Version 0.9.4:
 	- Updated Windows HIDAPI backend to attempt to load from the local working directory.
