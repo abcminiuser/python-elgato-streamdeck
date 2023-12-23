@@ -59,7 +59,7 @@ class LibUSBHIDAPI(Transport):
                 library_name_no_extension = os.path.basename(os.path.splitext(lib_name)[0])
                 try:
                     found_lib = ctypes.util.find_library(library_name_no_extension)
-                except OSError:
+                except: # nosec B110
                     found_lib = None
 
                 # If we've running with a Homebrew installation, and find_library() didn't find the library in
@@ -73,7 +73,7 @@ class LibUSBHIDAPI(Transport):
                 try:
                     type(self).HIDAPI_INSTANCE = ctypes.cdll.LoadLibrary(found_lib if found_lib else lib_name)
                     break
-                except OSError:
+                except: # nosec B110
                     pass
             else:
                 return None
