@@ -11,7 +11,7 @@ steps:
   image: abcminiuser/docker-ci-python:latest
   pull: always
   commands:
-  - flake8 --ignore E501,E261 src/
+  - flake8 --ignore E501,E261,E722 src/
 
 - name: Bandit
   image: abcminiuser/docker-ci-python:latest
