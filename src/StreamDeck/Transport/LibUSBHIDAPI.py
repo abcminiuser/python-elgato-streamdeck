@@ -4,6 +4,7 @@
 #   dean [at] fourwalledcubicle [dot] com
 #         www.fourwalledcubicle.com
 #
+from __future__ import annotations
 
 import atexit
 import ctypes
@@ -13,6 +14,23 @@ import platform
 import threading
 
 from .Transport import Transport, TransportError
+
+
+def _find_lib_alt_location(homebrew_prefix: str | None, lib_name: str) -> str | None:
+    # If we've running with a Homebrew installation, and find_library() didn't find the library in
+    # any of the default search paths, we'll look in Homebrew instead as a fallback.
+
+    if homebrew_prefix:
+        library_path_homebrew = os.path.join(homebrew_prefix, 'lib', lib_name)
+        if os.path.exists(library_path_homebrew):
+            return library_path_homebrew
+
+    # We might also be in a Conda environment and have the library installed there.
+    conda_prefix = os.environ.get("CONDA_PREFIX")
+    if conda_prefix:
+        library_path_conda = os.path.join(conda_prefix, 'lib', lib_name)
+        if os.path.exists(library_path_conda):
+            return library_path_conda
 
 
 class LibUSBHIDAPI(Transport):
@@ -57,7 +75,7 @@ class LibUSBHIDAPI(Transport):
             # The ctypes loader won't look in there by default unless the user has a Homebrew installed python, which gets patched
             # on installation.
             if not self.HOMEBREW_PREFIX:
-                type(self).HOMEBREW_PREFIX = self._get_homebrew_path()
+                self.HOMEBREW_PREFIX = self._get_homebrew_path()
 
             for lib_name in library_search_list:
                 # We'll try to use ctypes' utility function to find the library first, using
@@ -69,16 +87,11 @@ class LibUSBHIDAPI(Transport):
                 except: # nosec B110
                     found_lib = None
 
-                # If we've running with a Homebrew installation, and find_library() didn't find the library in
-                # any of the default search paths, we'll look in Homebrew instead as a fallback.
-                if not found_lib and self.HOMEBREW_PREFIX:
-                    library_path_homebrew = os.path.join(self.HOMEBREW_PREFIX, 'lib', lib_name)
-
-                    if os.path.exists(library_path_homebrew):
-                        found_lib = library_path_homebrew
+                if not found_lib:
+                    found_lib = _find_lib_alt_location(self.HOMEBREW_PREFIX, lib_name)
 
                 try:
-                    type(self).HIDAPI_INSTANCE = ctypes.cdll.LoadLibrary(found_lib if found_lib else lib_name)
+                    self.HIDAPI_INSTANCE = ctypes.cdll.LoadLibrary(found_lib if found_lib else lib_name)
                     break
                 except: # nosec B110
                     pass
@@ -216,7 +229,6 @@ class LibUSBHIDAPI(Transport):
             with self.mutex:
                 if type(path) is not bytes:
                     path = bytes(path, 'utf-8')
-
                 handle = self.hidapi.hid_open_path(path)
 
                 if not handle:
