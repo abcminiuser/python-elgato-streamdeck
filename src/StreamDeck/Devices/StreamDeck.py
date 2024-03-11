@@ -158,16 +158,16 @@ class StreamDeck(ABC):
                 if ControlType.KEY in control_states and self.key_callback is not None:
                     for k, (old, new) in enumerate(zip(self.last_key_states, control_states[ControlType.KEY])):
                         if old != new:
+                            self.last_key_states[k] = new
                             self.key_callback(self, k, new)
-                    self.last_key_states = control_states[ControlType.KEY]
 
                 elif ControlType.DIAL in control_states and self.dial_callback is not None:
                     if DialEventType.PUSH in control_states[ControlType.DIAL]:
                         for k, (old, new) in enumerate(zip(self.last_dial_states,
                                                            control_states[ControlType.DIAL][DialEventType.PUSH])):
                             if old != new:
+                                self.last_dial_states[k] = new
                                 self.dial_callback(self, k, DialEventType.PUSH, new)
-                        self.last_dial_states = control_states[ControlType.DIAL][DialEventType.PUSH]
 
                     if DialEventType.TURN in control_states[ControlType.DIAL]:
                         for k, amount in enumerate(control_states[ControlType.DIAL][DialEventType.TURN]):
