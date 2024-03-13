@@ -378,7 +378,7 @@ class StreamDeckPlus(StreamDeck):
                 event_type = DialEventType.TURN
             elif states[3] == 0x02:
                 event_type = DialEventType.PUSH
-            else
+            else:
                 return None
 
             values = [self._DIAL_EVENT_TRANSFORM[event_type](s) for s in states[4:4 + self.DIAL_COUNT]]
