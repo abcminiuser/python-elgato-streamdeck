@@ -346,7 +346,7 @@ class StreamDeckPlus(StreamDeck):
         states = states[1:]
 
         if states[0] == 0x00: # Key Event
-            new_key_states = [bool(s) for s in states[3:]]
+            new_key_states = [bool(s) for s in states[3:12]]
 
             return {
                 ControlType.KEY: new_key_states
