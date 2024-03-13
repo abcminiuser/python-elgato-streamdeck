@@ -345,15 +345,22 @@ class StreamDeckPlus(StreamDeck):
 
         states = states[1:]
 
-        # Key interaction
-        if states[0] == 0x00:
+        if states[0] == 0x00: # Key Event
             new_key_states = [bool(s) for s in states[3:]]
+
             return {
                 ControlType.KEY: new_key_states
             }
+        elif states[0] == 0x02: # Touchscreen Event
+            if states[3] == 1:
+                event_type = TouchscreenEventType.SHORT
+            elif states[3] == 2:
+                event_type = TouchscreenEventType.LONG
+            elif states[3] == 3:
+                event_type = TouchscreenEventType.DRAG
+            else:
+                return None
 
-        if states[0] == 0x02:
-            event_type = TouchscreenEventType(states[3])
             value = {
                 'x': (states[6] << 8) + states[5],
                 'y': (states[8] << 8) + states[7]
@@ -366,10 +373,16 @@ class StreamDeckPlus(StreamDeck):
             return {
                 ControlType.TOUCHSCREEN: (event_type, value),
             }
+        elif states[0] == 0x03: # Dial Event
+            if states[3] == 0x01:
+                event_type = DialEventType.TURN
+            elif states[3] == 0x02:
+                event_type = DialEventType.PUSH
+            else
+                return None
 
-        if states[0] == 0x03:
-            event_type = DialEventType.TURN if states[3] == 0x01 else DialEventType.PUSH
             values = [self._DIAL_EVENT_TRANSFORM[event_type](s) for s in states[4:4 + self.DIAL_COUNT]]
+
             return {
                 ControlType.DIAL: {
                     event_type: values,
