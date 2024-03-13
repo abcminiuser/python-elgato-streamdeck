@@ -1,3 +1,7 @@
+Version 0.9.6:
+	- Fixed StreamDeck+ returning 10 key states instead of the expected 8.
+	- Fixed old key states and dial states returned if requested from inside a key or dial callback function.
+
 Version 0.9.5:
 	- Added support for the StreamDeck Plus.
 
