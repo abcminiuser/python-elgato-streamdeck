@@ -82,6 +82,7 @@ development and maintenance of this library:
 - [Subsentient](https://github.com/Subsentient)
 - [swedishmike](https://github.com/swedishmike)
 - [theslimshaney](https://github.com/theslimshaney)
+- [tjemg](https://github.com/tjemg)
 
 If you've contributed in some manner, but I've accidentally missed you in the
 list above, please let me know.
