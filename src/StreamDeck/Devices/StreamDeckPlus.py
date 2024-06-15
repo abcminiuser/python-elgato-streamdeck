@@ -376,7 +376,7 @@ class StreamDeckPlus(StreamDeck):
         elif states[0] == 0x03: # Dial Event
             if states[3] == 0x01:
                 event_type = DialEventType.TURN
-            elif states[3] == 0x02:
+            elif states[3] == 0x00:
                 event_type = DialEventType.PUSH
             else:
                 return None
