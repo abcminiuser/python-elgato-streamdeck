@@ -67,6 +67,7 @@ development and maintenance of this library:
 - [dubstech](https://github.com/dubstech)
 - [Giraut](https://github.com/Giraut)
 - [impala454](https://github.com/impala454)
+- [itsusony](https://github.com/itsusony)
 - [jakobbuis](https://github.com/jakobbuis)
 - [jmudge14](https://github.com/jmudge14)
 - [Kalle-Wirsch](https://github.com/Kalle-Wirsch)
