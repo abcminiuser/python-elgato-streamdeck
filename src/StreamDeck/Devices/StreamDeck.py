@@ -144,7 +144,7 @@ class StreamDeck(ABC):
 
     def _read(self):
         """
-        Read handler for the underlying transport, listening for button state
+        Read handler for the underlying transport, listening for control state
         changes on the underlying device, caching the new states and firing off
         any registered callbacks.
         """
@@ -155,27 +155,38 @@ class StreamDeck(ABC):
                     time.sleep(1.0 / self.read_poll_hz)
                     continue
 
-                if ControlType.KEY in control_states and self.key_callback is not None:
+                if ControlType.KEY in control_states:
                     for k, (old, new) in enumerate(zip(self.last_key_states, control_states[ControlType.KEY])):
-                        if old != new:
-                            self.last_key_states[k] = new
+                        if old == new:
+                            continue
+
+                        self.last_key_states[k] = new
+
+                        if self.key_callback is not None:
                             self.key_callback(self, k, new)
 
-                elif ControlType.DIAL in control_states and self.dial_callback is not None:
+                elif ControlType.DIAL in control_states:
                     if DialEventType.PUSH in control_states[ControlType.DIAL]:
-                        for k, (old, new) in enumerate(zip(self.last_dial_states,
-                                                           control_states[ControlType.DIAL][DialEventType.PUSH])):
-                            if old != new:
-                                self.last_dial_states[k] = new
+                        for k, (old, new) in enumerate(zip(self.last_dial_states, control_states[ControlType.DIAL][DialEventType.PUSH])):
+                            if old == new:
+                                continue
+
+                            self.last_dial_states[k] = new
+
+                            if self.dial_callback is not None:
                                 self.dial_callback(self, k, DialEventType.PUSH, new)
 
                     if DialEventType.TURN in control_states[ControlType.DIAL]:
                         for k, amount in enumerate(control_states[ControlType.DIAL][DialEventType.TURN]):
-                            if amount != 0:
+                            if amount == 0:
+                                continue
+
+                            if self.dial_callback is not None:
                                 self.dial_callback(self, k, DialEventType.TURN, amount)
 
-                elif ControlType.TOUCHSCREEN in control_states and self.touchscreen_callback is not None:
-                    self.touchscreen_callback(self, *control_states[ControlType.TOUCHSCREEN])
+                elif ControlType.TOUCHSCREEN in control_states:
+                    if self.touchscreen_callback is not None:
+                        self.touchscreen_callback(self, *control_states[ControlType.TOUCHSCREEN])
 
             except TransportError:
                 self.run_read_thread = False
