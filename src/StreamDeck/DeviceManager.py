@@ -6,6 +6,7 @@
 #
 
 from .Devices.StreamDeckMini import StreamDeckMini
+from .Devices.StreamDeckNeo import StreamDeckNeo
 from .Devices.StreamDeckOriginal import StreamDeckOriginal
 from .Devices.StreamDeckOriginalV2 import StreamDeckOriginalV2
 from .Devices.StreamDeckXL import StreamDeckXL
@@ -36,6 +37,7 @@ class DeviceManager:
     USB_PID_STREAMDECK_ORIGINAL = 0x0060
     USB_PID_STREAMDECK_ORIGINAL_V2 = 0x006d
     USB_PID_STREAMDECK_MINI = 0x0063
+    USB_PID_STREAMDECK_NEO = 0x009a
     USB_PID_STREAMDECK_XL = 0x006c
     USB_PID_STREAMDECK_MK2 = 0x0080
     USB_PID_STREAMDECK_PEDAL = 0x0086
@@ -105,6 +107,7 @@ class DeviceManager:
             (USBVendorIDs.USB_VID_ELGATO, USBProductIDs.USB_PID_STREAMDECK_ORIGINAL, StreamDeckOriginal),
             (USBVendorIDs.USB_VID_ELGATO, USBProductIDs.USB_PID_STREAMDECK_ORIGINAL_V2, StreamDeckOriginalV2),
             (USBVendorIDs.USB_VID_ELGATO, USBProductIDs.USB_PID_STREAMDECK_MINI, StreamDeckMini),
+            (USBVendorIDs.USB_VID_ELGATO, USBProductIDs.USB_PID_STREAMDECK_NEO, StreamDeckNeo),
             (USBVendorIDs.USB_VID_ELGATO, USBProductIDs.USB_PID_STREAMDECK_XL, StreamDeckXL),
             (USBVendorIDs.USB_VID_ELGATO, USBProductIDs.USB_PID_STREAMDECK_MK2, StreamDeckOriginalV2),
             (USBVendorIDs.USB_VID_ELGATO, USBProductIDs.USB_PID_STREAMDECK_PEDAL, StreamDeckPedal),
