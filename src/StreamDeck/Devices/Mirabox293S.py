@@ -4,7 +4,8 @@
 #   dean [at] fourwalledcubicle [dot] com
 #         www.fourwalledcubicle.com
 #
-#   Mirabox Stream Dock 293S support by rescbr
+#   Mirabox Stream Dock 293S non-official support 
+#   by Renato Schmidt (github.com/rescbr)
 
 from .StreamDeck import StreamDeck, ControlType
 
