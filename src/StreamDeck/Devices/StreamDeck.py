@@ -52,6 +52,8 @@ class StreamDeck(ABC):
     KEY_COLS = 0
     KEY_ROWS = 0
 
+    TOUCH_KEY_COUNT = 0
+
     KEY_PIXEL_WIDTH = 0
     KEY_PIXEL_HEIGHT = 0
     KEY_IMAGE_FORMAT = ""
@@ -64,6 +66,12 @@ class StreamDeck(ABC):
     TOUCHSCREEN_FLIP = (False, False)
     TOUCHSCREEN_ROTATION = 0
 
+    SCREEN_PIXEL_WIDTH = 0
+    SCREEN_PIXEL_HEIGHT = 0
+    SCREEN_IMAGE_FORMAT = ""
+    SCREEN_FLIP = (False, False)
+    SCREEN_ROTATION = 0
+
     DIAL_COUNT = 0
 
     DECK_TYPE = ""
@@ -72,7 +80,7 @@ class StreamDeck(ABC):
 
     def __init__(self, device):
         self.device = device
-        self.last_key_states = [False] * self.KEY_COUNT
+        self.last_key_states = [False] * (self.KEY_COUNT + self.TOUCH_KEY_COUNT)
         self.last_dial_states = [False] * self.DIAL_COUNT
         self.read_thread = None
         self.run_read_thread = False
@@ -292,6 +300,15 @@ class StreamDeck(ABC):
         :return: Number of physical buttons.
         """
         return self.KEY_COUNT
+    
+    def touch_key_count(self):
+        """
+        Retrieves number of touch buttons on the attached StreamDeck device.
+
+        :rtype: int
+        :return: Number of touch buttons.
+        """
+        return self.TOUCH_KEY_COUNT
 
     def dial_count(self):
         """
@@ -375,6 +392,26 @@ class StreamDeck(ABC):
             'format': self.TOUCHSCREEN_IMAGE_FORMAT,
             'flip': self.TOUCHSCREEN_FLIP,
             'rotation': self.TOUCHSCREEN_ROTATION,
+        }
+    
+    def screen_image_format(self):
+        """
+        Retrieves the image format accepted by the screen of the Stream
+        Deck. Images should be given in this format when drawing on
+        screen.
+
+        .. seealso:: See :func:`~StreamDeck.set_screen_image` method to
+                     draw an image on the StreamDeck screen.
+
+        :rtype: dict()
+        :return: Dictionary describing the various image parameters
+                 (size, image format).
+        """
+        return {
+            'size': (self.SCREEN_PIXEL_WIDTH, self.SCREEN_PIXEL_HEIGHT),
+            'format': self.SCREEN_IMAGE_FORMAT,
+            'flip': self.SCREEN_FLIP,
+            'rotation': self.SCREEN_ROTATION,
         }
 
     def set_poll_frequency(self, hz):
@@ -617,5 +654,32 @@ class StreamDeck(ABC):
         :param int width: width of the image
         :param int height: height of the image
 
+        """
+        pass
+
+    @abstractmethod
+    def set_key_color(self, key, r, g, b):
+        """
+        Sets the color of the touch buttons. These buttons are indexed
+        in order after the standard keys.
+
+        :param int key: Index of the button
+        :param int r: Red value
+        :param int g: Green value
+        :param int b: Blue value
+
+        """
+        pass
+
+    @abstractmethod
+    def set_screen_image(self, image):
+        """
+        Draws an image on the touchless screen of the StreamDeck.
+
+        .. seealso:: See :func:`~StreamDeck.screen_image_format` method for
+                     information on the image format accepted by the device.
+
+        :param enumerable image: Raw data of the image to set on the button.
+                                 If `None`, the screen will be cleared.
         """
         pass
