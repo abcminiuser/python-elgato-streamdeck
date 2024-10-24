@@ -12,6 +12,7 @@
 
 import os
 import threading
+import random
 
 from PIL import Image, ImageDraw, ImageFont
 from StreamDeck.DeviceManager import DeviceManager
@@ -37,6 +38,17 @@ def render_key_image(deck, icon_filename, font_filename, label_text):
     draw.text((image.width / 2, image.height - 5), text=label_text, font=font, anchor="ms", fill="white")
 
     return PILHelper.to_native_key_format(deck, image)
+
+
+# Generate an image for the screen
+def render_screen_image(deck, font_filename, text):
+    image = PILHelper.create_screen_image(deck)
+    # Load a custom TrueType font and use it to create an image
+    draw = ImageDraw.Draw(image)
+    font = ImageFont.truetype(font_filename, 20)
+    draw.text((image.width / 2, image.height - 25), text=text, font=font, anchor="ms", fill="white")
+
+    return PILHelper.to_native_screen_format(deck, image)
 
 
 # Returns styling information for a key based on its position and state.
@@ -79,14 +91,15 @@ def update_key_image(deck, key, state):
         deck.set_key_image(key, image)
 
 
-# Prints key state change information, updates rhe key image and performs any
+# Prints key state change information, updates the key image and performs any
 # associated actions when a key is pressed.
 def key_change_callback(deck, key, state):
     # Print new key state
     print("Deck {} Key {} = {}".format(deck.id(), key, state), flush=True)
 
-    # Don't try to draw an image on a touch button
+    # Don't try to set an image for touch buttons but set a random color
     if key >= deck.key_count():
+        set_random_touch_color(deck, key)
         return
 
     # Update the key image based on the new key state.
@@ -106,6 +119,15 @@ def key_change_callback(deck, key, state):
 
                 # Close deck handle, terminating internal worker threads.
                 deck.close()
+
+
+# Set a random color for the specified key
+def set_random_touch_color(deck, key):
+    r = random.randint(0, 255)
+    g = random.randint(0, 255)
+    b = random.randint(0, 255)
+
+    deck.set_key_color(key, r, g, b)
 
 
 if __name__ == "__main__":
@@ -134,6 +156,10 @@ if __name__ == "__main__":
 
         # Register callback function for when a key state changes.
         deck.set_key_callback(key_change_callback)
+
+        # Set a screen image
+        image = render_screen_image(deck, os.path.join(ASSETS_PATH, "Roboto-Regular.ttf"), "Python StreamDeck")
+        deck.set_screen_image(image)
 
         # Wait until all application threads have terminated (for this example,
         # this is when all deck handles are closed).
