@@ -300,7 +300,7 @@ class StreamDeck(ABC):
         :return: Number of physical buttons.
         """
         return self.KEY_COUNT
-    
+
     def touch_key_count(self):
         """
         Retrieves number of touch buttons on the attached StreamDeck device.
@@ -393,7 +393,7 @@ class StreamDeck(ABC):
             'flip': self.TOUCHSCREEN_FLIP,
             'rotation': self.TOUCHSCREEN_ROTATION,
         }
-    
+
     def screen_image_format(self):
         """
         Retrieves the image format accepted by the screen of the Stream

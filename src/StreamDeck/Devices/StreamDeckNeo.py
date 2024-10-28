@@ -170,10 +170,10 @@ class StreamDeckNeo(StreamDeck):
     def set_key_color(self, key, r, g, b):
         if min(max(key, 0), self.KEY_COUNT + self.TOUCH_KEY_COUNT - 1) != key:
             raise IndexError("Invalid touch key index {}.".format(key))
-        
+
         if r > 255 or r < 0 or g > 255 or g < 0 or b > 255 or b < 0:
             raise ValueError("Invalid color")
-        
+
         payload = bytearray(32)
         payload[0:6] = [0x03, 0x06, key, r, g, b]
         self.device.write_feature(payload)

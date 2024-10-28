@@ -235,6 +235,7 @@ def to_native_touchscreen_format(deck, image):
     """
     return _to_native_format(image, deck.touchscreen_image_format())
 
+
 def to_native_screen_format(deck, image):
     """
     Converts a given PIL image to the native screen image format for a StreamDeck,
