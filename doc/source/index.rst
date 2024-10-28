@@ -38,6 +38,7 @@ Index
     examples/basic.rst
     examples/pedal.rst
     examples/plus.rst
+    examples/neo.rst
     examples/tiled.rst
     examples/animated.rst
 
