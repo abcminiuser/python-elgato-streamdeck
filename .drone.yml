@@ -17,7 +17,7 @@ steps:
   image: abcminiuser/docker-ci-python:latest
   pull: always
   commands:
-  - bandit -r src/
+  - bandit --ini .bandit -r src/
 
 - name: MyPy
   image: abcminiuser/docker-ci-python:latest
