@@ -3,6 +3,7 @@ Version 0.9.6:
 	- Fixed StreamDeck+ dial push event not being detected correctly.
 	- Fixed old key states and dial states returned if requested from inside a key or dial callback function.
 	- Added support for FreeBSD platforms.
+	- Added support for the StreamDeck Neo.
 
 Version 0.9.5:
 	- Added support for the StreamDeck Plus.
