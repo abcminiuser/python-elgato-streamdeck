@@ -43,7 +43,7 @@ steps:
   image: abcminiuser/docker-ci-python:latest
   pull: always
   commands:
-  - python setup.py sdist bdist_wheel
+  - python -m build
   - twine check dist/*
   depends_on:
   - Flake8
