@@ -11,15 +11,6 @@ StreamDeck (Abstract Base)
    :show-inheritance:
 
 
-===================
-StreamDeck Original
-===================
-
-.. automodule:: StreamDeck.Devices.StreamDeckOriginal
-   :members:
-   :show-inheritance:
-
-
 ===============
 StreamDeck Mini
 ===============
@@ -29,11 +20,20 @@ StreamDeck Mini
    :show-inheritance:
 
 
-=============
-StreamDeck XL
-=============
+===============
+StreamDeck Neo
+===============
 
-.. automodule:: StreamDeck.Devices.StreamDeckXL
+.. automodule:: StreamDeck.Devices.StreamDeckNeo
+   :members:
+   :show-inheritance:
+
+
+===================
+StreamDeck Original
+===================
+
+.. automodule:: StreamDeck.Devices.StreamDeckOriginal
    :members:
    :show-inheritance:
 
@@ -52,5 +52,14 @@ StreamDeck Plus
 ================
 
 .. automodule:: StreamDeck.Devices.StreamDeckPlus
+   :members:
+   :show-inheritance:
+
+
+=============
+StreamDeck XL
+=============
+
+.. automodule:: StreamDeck.Devices.StreamDeckXL
    :members:
    :show-inheritance:
