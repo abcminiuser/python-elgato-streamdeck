@@ -47,9 +47,9 @@ def _to_native_format(image, image_format):
         image = image.transpose(Image.FLIP_TOP_BOTTOM)
 
     # We want a compressed image in a given codec, convert.
-    compressed_image = io.BytesIO()
-    image.save(compressed_image, image_format['format'], quality=100)
-    return compressed_image.getbuffer()
+    with io.BytesIO() as compressed_image:
+        image.save(compressed_image, image_format['format'], quality=100)
+        return compressed_image.getvalue()
 
 
 def create_image(deck, background='black'):
