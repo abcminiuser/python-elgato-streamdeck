@@ -17,6 +17,7 @@ import threading
 from PIL import Image, ImageOps
 from StreamDeck.DeviceManager import DeviceManager
 from StreamDeck.ImageHelpers import PILHelper
+from StreamDeck.Transport.Transport import TransportError
 
 # Folder location of image assets used by this example.
 ASSETS_PATH = os.path.join(os.path.dirname(__file__), "Assets")
@@ -144,5 +145,5 @@ if __name__ == "__main__":
         for t in threading.enumerate():
             try:
                 t.join()
-            except RuntimeError:
+            except (TransportError, RuntimeError):
                 pass
