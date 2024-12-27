@@ -213,7 +213,6 @@ class LibUSBHIDAPI(Transport):
             :rtype: Handle
             :return: Device handle if opened successfully, None if open failed.
             """
-
             with self.mutex:
                 if type(path) is not bytes:
                     path = bytes(path, 'utf-8')
@@ -250,10 +249,10 @@ class LibUSBHIDAPI(Transport):
             :rtype: int
             :return: Number of bytes successfully sent to the device.
             """
-            with self.mutex:
-                if not handle:
-                    raise TransportError("No HID device.")
+            if not handle:
+                raise TransportError("No HID device.")
 
+            with self.mutex:
                 result = self.hidapi.hid_send_feature_report(handle, bytes(data), len(data))
 
             if result < 0:
@@ -274,6 +273,8 @@ class LibUSBHIDAPI(Transport):
                      first byte of the report will be the Report ID of the
                      report that was read.
             """
+            if not handle:
+                raise TransportError("No HID device.")
 
             # We may need to oversize our read due a bug in some versions of
             # HIDAPI. Only applied on Mac systems, as this will cause other
@@ -284,9 +285,6 @@ class LibUSBHIDAPI(Transport):
             data[0] = report_id
 
             with self.mutex:
-                if not handle:
-                    raise TransportError("No HID device.")
-
                 result = self.hidapi.hid_get_feature_report(handle, data, len(data))
 
             if result < 0:
@@ -313,10 +311,10 @@ class LibUSBHIDAPI(Transport):
             :rtype: int
             :return: Number of bytes successfully sent to the device.
             """
-            with self.mutex:
-                if not handle:
-                    raise TransportError("No HID device.")
+            if not handle:
+                raise TransportError("No HID device.")
 
+            with self.mutex:
                 result = self.hidapi.hid_write(handle, bytes(data), len(data))
 
             if result < 0:
@@ -336,13 +334,12 @@ class LibUSBHIDAPI(Transport):
                      first byte of the report will be the Report ID of the
                      report that was read.
             """
+            if not handle:
+                raise TransportError("No HID device.")
 
             data = ctypes.create_string_buffer(length)
 
             with self.mutex:
-                if not handle:
-                    raise TransportError("No HID device.")
-
                 result = self.hidapi.hid_read(handle, data, len(data))
 
             if result < 0:
