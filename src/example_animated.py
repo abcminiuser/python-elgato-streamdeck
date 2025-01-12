@@ -168,5 +168,5 @@ if __name__ == "__main__":
         for t in threading.enumerate():
             try:
                 t.join()
-            except RuntimeError:
+            except (TransportError, RuntimeError):
                 pass

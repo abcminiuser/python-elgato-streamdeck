@@ -490,3 +490,9 @@ class StreamDeckPlus(StreamDeck):
 
             bytes_remaining = bytes_remaining - this_length
             page_number = page_number + 1
+
+    def set_key_color(self, key, r, g, b):
+        pass
+
+    def set_screen_image(self, image):
+        pass

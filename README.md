@@ -20,12 +20,12 @@ the images shown on each button, and read the current button states.
 Currently the following StreamDeck products are supported in multiple hardware
 variants:
 
-* StreamDeck Original
 * StreamDeck Mini
-* StreamDeck XL
+* StreamDeck Neo
+* StreamDeck Original
 * StreamDeck Pedal
 * StreamDeck Plus
-
+* StreamDeck XL
 
 ## Package Installation:
 
@@ -67,6 +67,7 @@ development and maintenance of this library:
 - [dubstech](https://github.com/dubstech)
 - [Giraut](https://github.com/Giraut)
 - [impala454](https://github.com/impala454)
+- [iPhoneAddict](https://github.com/iPhoneAddict)
 - [itsusony](https://github.com/itsusony)
 - [jakobbuis](https://github.com/jakobbuis)
 - [jmudge14](https://github.com/jmudge14)
@@ -82,8 +83,10 @@ development and maintenance of this library:
 - [spyoungtech](https://github.com/spyoungtech)
 - [Subsentient](https://github.com/Subsentient)
 - [swedishmike](https://github.com/swedishmike)
+- [TheSchmidt](https://github.com/TheSchmidt)
 - [theslimshaney](https://github.com/theslimshaney)
 - [tjemg](https://github.com/tjemg)
+- [VladFlorinIlie](https://github.com/VladFlorinIlie)
 
 If you've contributed in some manner, but I've accidentally missed you in the
 list above, please let me know.

@@ -143,3 +143,9 @@ class StreamDeckOriginalV2(StreamDeck):
 
     def set_touchscreen_image(self, image, x_pos=0, y_pos=0, width=0, height=0):
         pass
+
+    def set_key_color(self, key, r, g, b):
+        pass
+
+    def set_screen_image(self, image):
+        pass

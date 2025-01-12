@@ -11,13 +11,13 @@ steps:
   image: abcminiuser/docker-ci-python:latest
   pull: always
   commands:
-  - flake8 --ignore E501,E261,E722 src/
+  - flake8 --config .flake8 src/
 
 - name: Bandit
   image: abcminiuser/docker-ci-python:latest
   pull: always
   commands:
-  - bandit -r src/
+  - bandit --ini .bandit -r src/
 
 - name: MyPy
   image: abcminiuser/docker-ci-python:latest
@@ -43,7 +43,7 @@ steps:
   image: abcminiuser/docker-ci-python:latest
   pull: always
   commands:
-  - python setup.py sdist bdist_wheel
+  - python -m build
   - twine check dist/*
   depends_on:
   - Flake8
