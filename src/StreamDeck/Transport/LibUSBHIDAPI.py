@@ -133,6 +133,9 @@ class LibUSBHIDAPI(Transport):
             self.HIDAPI_INSTANCE.hid_get_feature_report.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_char), ctypes.c_size_t]
             self.HIDAPI_INSTANCE.hid_get_feature_report.restype = ctypes.c_int
 
+            self.HIDAPI_INSTANCE.hid_get_input_report.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_char), ctypes.c_size_t]
+            self.HIDAPI_INSTANCE.hid_get_input_report.restype = ctypes.c_int
+
             self.HIDAPI_INSTANCE.hid_write.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_char), ctypes.c_size_t]
             self.HIDAPI_INSTANCE.hid_write.restype = ctypes.c_int
 
@@ -198,6 +201,7 @@ class LibUSBHIDAPI(Transport):
                             'path': current_device.contents.path.decode('utf-8'),
                             'vendor_id': current_device.contents.vendor_id,
                             'product_id': current_device.contents.product_id,
+                            'serial_number': current_device.contents.serial_number
                         })
 
                         current_device = current_device.contents.next
@@ -298,6 +302,45 @@ class LibUSBHIDAPI(Transport):
             # We read an extra byte (as expected). Just return the first length requested bytes.
             return data.raw[:length]
 
+        def get_input_report(self, handle, report_id, length):
+            """
+            Retrieves a HID Input report from an open HID device.
+
+            :param Handle handle: Device handle to access.
+            :param int report_id: Report ID of the report being read.
+            :param int length: Maximum length of the Input report to read.
+
+            :rtype: bytearray()
+            :return: Array of bytes containing the read Input report. The
+                     first byte of the report will be the Report ID of the
+                     report that was read.
+            """
+
+            # We may need to oversize our read due a bug in some versions of
+            # HIDAPI. Only applied on Mac systems, as this will cause other
+            # issues on other platforms.
+            read_length = (length + 1) if self.platform_name == 'Darwin' else length
+
+            data = ctypes.create_string_buffer(read_length)
+            data[0] = report_id
+
+            with self.mutex:
+                if not handle:
+                    raise TransportError("No HID device.")
+
+                result = self.hidapi.hid_get_input_report(handle, data, len(data))
+
+            if result < 0:
+                raise TransportError("Failed to read input report (%d)" % result)
+
+            if length < read_length and result == read_length:
+                # Mac HIDAPI 0.9.0 bug, we read one less than we expected (not including report ID).
+                # We requested an over-sized report, so we actually got the amount we wanted.
+                return data.raw
+
+            # We read an extra byte (as expected). Just return the first length requested bytes.
+            return data.raw[:length]
+
         def write(self, handle, data):
             """
             Writes a HID Out report to an open HID device.
@@ -388,6 +431,9 @@ class LibUSBHIDAPI(Transport):
 
         def product_id(self):
             return self.device_info['product_id']
+        
+        def serial_number(self):
+            return self.device_info['serial_number']
 
         def path(self):
             return self.device_info['path']
@@ -399,6 +445,10 @@ class LibUSBHIDAPI(Transport):
         def read_feature(self, report_id, length):
             with self.mutex:
                 return self.hidapi.get_feature_report(self.device_handle, report_id, length)
+        
+        def read_input(self, report_id, length):
+            with self.mutex:
+                return self.hidapi.get_input_report(self.device_handle, report_id, length)
 
         def write(self, payload):
             with self.mutex:
