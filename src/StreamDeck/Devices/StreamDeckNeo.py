@@ -8,14 +8,16 @@
 from .StreamDeck import StreamDeck, ControlType
 
 
-class StreamDeckXL(StreamDeck):
+class StreamDeckNeo(StreamDeck):
     """
-    Represents a physically attached StreamDeck XL device.
+    Represents a physically attached StreamDeck Neo device.
     """
 
-    KEY_COUNT = 32
-    KEY_COLS = 8
-    KEY_ROWS = 4
+    KEY_COUNT = 8
+    KEY_COLS = 4
+    KEY_ROWS = 2
+
+    TOUCH_KEY_COUNT = 2
 
     KEY_PIXEL_WIDTH = 96
     KEY_PIXEL_HEIGHT = 96
@@ -23,8 +25,14 @@ class StreamDeckXL(StreamDeck):
     KEY_FLIP = (True, True)
     KEY_ROTATION = 0
 
-    DECK_TYPE = "Stream Deck XL"
+    DECK_TYPE = "Stream Deck Neo"
     DECK_VISUAL = True
+
+    SCREEN_PIXEL_WIDTH = 248
+    SCREEN_PIXEL_HEIGHT = 58
+    SCREEN_IMAGE_FORMAT = "JPEG"
+    SCREEN_FLIP = (True, True)
+    SCREEN_ROTATION = 0
 
     IMAGE_REPORT_LENGTH = 1024
     IMAGE_REPORT_HEADER_LENGTH = 8
@@ -75,8 +83,24 @@ class StreamDeckXL(StreamDeck):
         0x02, 0x8a, 0x28, 0xa0, 0x02, 0x8a, 0x28, 0xa0, 0x0f, 0xff, 0xd9
     ]
 
+    # 248 x 58 black JPEG
+    BLANK_SCREEN_IMAGE = [
+        0xff, 0xd8, 0xff, 0xe0, 0x00, 0x10, 0x4a, 0x46, 0x49, 0x46, 0x00, 0x01, 0x01, 0x00, 0x00, 0x01, 0x00, 0x01, 0x00,
+        0x00, 0xff, 0xdb, 0x00, 0x43, 0x00, 0x08, 0x06, 0x06, 0x07, 0x06, 0x05, 0x08, 0x07, 0x07, 0x07, 0x09, 0x09, 0x08,
+        0x0a, 0x0c, 0x14, 0x0d, 0x0c, 0x0b, 0x0b, 0x0c, 0x19, 0x12, 0x13, 0x0f, 0x14, 0x1d, 0x1a, 0x1f, 0x1e, 0x1d, 0x1a,
+        0x1c, 0x1c, 0x20, 0x24, 0x2e, 0x27, 0x20, 0x22, 0x2c, 0x23, 0x1c, 0x1c, 0x28, 0x37, 0x29, 0x2c, 0x30, 0x31, 0x34,
+        0x34, 0x34, 0x1f, 0x27, 0x39, 0x3d, 0x38, 0x32, 0x3c, 0x2e, 0x33, 0x34, 0x32, 0xff, 0xc0, 0x00, 0x0b, 0x08, 0x00,
+        0x3a, 0x00, 0xf8, 0x01, 0x01, 0x11, 0x00, 0xff, 0xc4, 0x00, 0x15, 0x00, 0x01, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00,
+        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x08, 0xff, 0xc4, 0x00, 0x14, 0x10, 0x01, 0x00, 0x00,
+        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xff, 0xda, 0x00, 0x08, 0x01,
+        0x01, 0x00, 0x00, 0x3f, 0x00, 0x9f, 0xc0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x7f, 0xff, 0xd9
+    ]
+
     def _read_control_states(self):
-        states = self.device.read(4 + self.KEY_COUNT)
+        states = self.device.read(4 + self.KEY_COUNT + self.TOUCH_KEY_COUNT)
         if states is None:
             return None
 
@@ -114,7 +138,7 @@ class StreamDeckXL(StreamDeck):
         return self._extract_string(version[6:])
 
     def set_key_image(self, key, image):
-        if min(max(key, 0), self.KEY_COUNT) != key:
+        if min(max(key, 0), self.KEY_COUNT - 1) != key:
             raise IndexError("Invalid key index {}.".format(key))
 
         image = bytes(image or self.BLANK_KEY_IMAGE)
@@ -143,11 +167,46 @@ class StreamDeckXL(StreamDeck):
             bytes_remaining = bytes_remaining - this_length
             page_number = page_number + 1
 
-    def set_touchscreen_image(self, image, x_pos=0, y_pos=0, width=0, height=0):
-        pass
-
     def set_key_color(self, key, r, g, b):
-        pass
+        if min(max(key, 0), self.KEY_COUNT + self.TOUCH_KEY_COUNT - 1) != key:
+            raise IndexError("Invalid touch key index {}.".format(key))
+
+        if r > 255 or r < 0 or g > 255 or g < 0 or b > 255 or b < 0:
+            raise ValueError("Invalid color")
+
+        payload = bytearray(32)
+        payload[0:6] = [0x03, 0x06, key, r, g, b]
+        self.device.write_feature(payload)
 
     def set_screen_image(self, image):
+        if not image:
+            image = self.BLANK_SCREEN_IMAGE
+
+        image = bytes(image)
+
+        page_number = 0
+        bytes_remaining = len(image)
+        while bytes_remaining > 0:
+            this_length = min(bytes_remaining, self.IMAGE_REPORT_PAYLOAD_LENGTH)
+            bytes_sent = page_number * self.IMAGE_REPORT_PAYLOAD_LENGTH
+
+            header = [
+                0x02,  # 0
+                0x0b,  # 1
+                0x00,  # 2
+                0x01 if this_length == bytes_remaining else 0x00, # 3 is the last report?
+                this_length & 0xff,  # 5 bytecount high byte
+                (this_length >> 8) & 0xff,  # 4 bytecount high byte
+                page_number & 0xff,  # 7 pagenumber low byte
+                (page_number >> 8) & 0xff  # 6 pagenumber high byte
+            ]
+
+            payload = bytes(header) + image[bytes_sent:bytes_sent + this_length]
+            padding = bytearray(self.IMAGE_REPORT_LENGTH - len(payload))
+            self.device.write(payload + padding)
+
+            bytes_remaining = bytes_remaining - this_length
+            page_number = page_number + 1
+
+    def set_touchscreen_image(self, image, x_pos=0, y_pos=0, width=0, height=0):
         pass

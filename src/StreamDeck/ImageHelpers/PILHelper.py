@@ -47,9 +47,9 @@ def _to_native_format(image, image_format):
         image = image.transpose(Image.FLIP_TOP_BOTTOM)
 
     # We want a compressed image in a given codec, convert.
-    compressed_image = io.BytesIO()
-    image.save(compressed_image, image_format['format'], quality=100)
-    return compressed_image.getbuffer()
+    with io.BytesIO() as compressed_image:
+        image.save(compressed_image, image_format['format'], quality=100)
+        return compressed_image.getvalue()
 
 
 def create_image(deck, background='black'):
@@ -94,6 +94,24 @@ def create_touchscreen_image(deck, background='black'):
     :return: Created PIL image
     """
     return _create_image(deck.touchscreen_image_format(), background)
+
+
+def create_screen_image(deck, background='black'):
+    """
+    Creates a new PIL Image with the correct image dimensions for the given
+    StreamDeck device's creen.
+
+    .. seealso:: See :func:`~PILHelper.to_native_screen_format` method for converting a
+                 PIL image instance to the native screen image format of a given
+                 StreamDeck device.
+
+    :param StreamDeck deck: StreamDeck device to generate a compatible image for.
+    :param str background: Background color to use, compatible with `PIL.Image.new()`.
+
+    :rtype: PIL.Image
+    :return: Created PIL image
+    """
+    return _create_image(deck.screen_image_format(), background)
 
 
 def create_scaled_image(deck, image, margins=[0, 0, 0, 0], background='black'):
@@ -152,6 +170,30 @@ def create_scaled_touchscreen_image(deck, image, margins=[0, 0, 0, 0], backgroun
     return _scale_image(image, deck.touchscreen_image_format(), margins, background)
 
 
+def create_scaled_screen_image(deck, image, margins=[0, 0, 0, 0], background='black'):
+    """
+    Creates a new screen image that contains a scaled version of a given image,
+    resized to best fit the given StreamDeck device's screen with the given
+    margins around each side.
+
+    The scaled image is centered within the new screen image, offset by the given
+    margins. The aspect ratio of the image is preserved.
+
+    .. seealso:: See :func:`~PILHelper.to_native_screen_format` method for converting a
+                 PIL image instance to the native key image format of a given
+                 StreamDeck device.
+
+    :param StreamDeck deck: StreamDeck device to generate a compatible image for.
+    :param Image image: PIL Image object to scale
+    :param list(int): Array of margin pixels in (top, right, bottom, left) order.
+    :param str background: Background color to use, compatible with `PIL.Image.new()`.
+
+    :rtrype: PIL.Image
+    :return: Loaded PIL image scaled and centered
+    """
+    return _scale_image(image, deck.screen_image_format(), margins, background)
+
+
 def to_native_format(deck, image):
     """
     .. deprecated:: 0.9.5
@@ -192,3 +234,20 @@ def to_native_touchscreen_format(deck, image):
     :return: Image converted to the given StreamDeck's native touchscreen format
     """
     return _to_native_format(image, deck.touchscreen_image_format())
+
+
+def to_native_screen_format(deck, image):
+    """
+    Converts a given PIL image to the native screen image format for a StreamDeck,
+    suitable for passing to :func:`~StreamDeck.set_screen_image`.
+
+    .. seealso:: See :func:`~PILHelper.create_screen_image` method for creating a PIL
+                 image instance for a given StreamDeck device.
+
+    :param StreamDeck deck: StreamDeck device to generate a compatible native image for.
+    :param PIL.Image image: PIL Image to convert to the native StreamDeck image format
+
+    :rtype: enumerable()
+    :return: Image converted to the given StreamDeck's native screen format
+    """
+    return _to_native_format(image, deck.screen_image_format())

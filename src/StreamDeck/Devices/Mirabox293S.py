@@ -15,8 +15,8 @@ class Mirabox293S(StreamDeck):
     Represents a physically attached Mirabox Stream Dock 293S device.
     """
 
-    KEY_COUNT = 15
-    KEY_COLS = 5
+    KEY_COUNT = 18
+    KEY_COLS = 6
     KEY_ROWS = 3
 
     KEY_PIXEL_WIDTH = 85 # TODO: check if this is the correct value
@@ -32,7 +32,7 @@ class Mirabox293S(StreamDeck):
     PACKET_LENGHT = 512
 
     # the side display uses key ids 0x10, 0x11, 0x12 with 80x80 images.
-    KEY_NUM_TO_DEVICE_KEY_ID = [0x0d, 0x0a, 0x07, 0x04, 0x01, 0xe, 0xb, 0x08, 0x05, 0x02, 0x0f, 0x0c, 0x09, 0x06, 0x03]
+    KEY_NUM_TO_DEVICE_KEY_ID = [0x0d, 0x0a, 0x07, 0x04, 0x01, 0x10, 0xe, 0xb, 0x08, 0x05, 0x02, 0x11, 0x0f, 0x0c, 0x09, 0x06, 0x03, 0x12]
     KEY_DEVICE_KEY_ID_TO_NUM = {value: index for index, value in enumerate(KEY_NUM_TO_DEVICE_KEY_ID)}
 
     # see note in _read_control_states() method.
@@ -191,4 +191,10 @@ class Mirabox293S(StreamDeck):
 
 
     def set_touchscreen_image(self, image, x_pos=0, y_pos=0, width=0, height=0):
+        pass
+
+    def set_key_color(self, key, r, g, b):
+        pass
+
+    def set_screen_image(self, image):
         pass
