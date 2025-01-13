@@ -43,6 +43,8 @@ class DeviceManager:
     USB_PID_STREAMDECK_MK2 = 0x0080
     USB_PID_STREAMDECK_PEDAL = 0x0086
     USB_PID_STREAMDECK_PLUS = 0x0084
+    USB_VID_MIRABOX = 0x5548
+    USB_PID_MIRABOX_STREAMDOCK_293S = 0x6670
 
     @staticmethod
     def _get_transport(transport):
