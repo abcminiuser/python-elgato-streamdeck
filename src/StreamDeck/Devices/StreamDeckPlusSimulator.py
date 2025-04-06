@@ -154,6 +154,8 @@ class StreamDeckPlusSimulator(StreamDeck):
         self.update_thread = None
         self.thread_running = False
 
+        self.touchscreen_blank = True
+
     def scale(self, value):
         """Scale a value according to the current scale factor"""
         return int(value * self._scale_factor)
@@ -207,7 +209,7 @@ class StreamDeckPlusSimulator(StreamDeck):
             pygame.display.set_caption(self.DECK_TYPE)
             self.clock = pygame.time.Clock()
             self.pygame_initialised = True
-            self.set_touchscreen_image(self._default_touchscreen_image())
+            self.set_touchscreen_image(None)
 
     def _reset_key_stream(self):
         # Not needed for simulator
@@ -217,7 +219,7 @@ class StreamDeckPlusSimulator(StreamDeck):
         # Clear all keys and touchscreen
         for i in range(self.KEY_COUNT):
             self.set_key_image(i, None)
-        self.set_touchscreen_image(self._default_touchscreen_image())
+        self.set_touchscreen_image(None)
 
     def set_brightness(self, percent):
         if isinstance(percent, float):
@@ -260,14 +262,16 @@ class StreamDeckPlusSimulator(StreamDeck):
     def set_touchscreen_image(self, image, x_pos=0, y_pos=0, width=0, height=0):
         # Check if partial update is requested
         if x_pos != 0 or y_pos != 0 or width != 0 or height != 0:
-            if self.device.touchscreen_image is None:
+            if self.device.touchscreen_image is None or self.touchscreen_blank:
                 background = Image.new(
                     "RGB",
                     (self.TOUCHSCREEN_PIXEL_WIDTH, self.TOUCHSCREEN_PIXEL_HEIGHT),
                     color="black",
                 )
-                self.device.touchscreen_image = background.tobytes("JPEG")
-
+                buffer = io.BytesIO()
+                background.save(buffer, format="JPEG")
+                self.device.touchscreen_image = buffer.getvalue()
+                self.touchscreen_blank = False
             # Convert existing image to PIL format
             current_image = Image.open(io.BytesIO(self.device.touchscreen_image))
 
@@ -293,8 +297,13 @@ class StreamDeckPlusSimulator(StreamDeck):
             self.device.touchscreen_image = buffer.getvalue()
             return
 
-        # If not a partial update or no existing image, store the whole image
-        self.device.touchscreen_image = image
+        if image is None:
+            self.device.touchscreen_image = self._default_touchscreen_image()
+            self.touchscreen_blank = True
+        else:
+            # If not a partial update or no existing image, store the whole image
+            self.device.touchscreen_image = image
+            self.touchscreen_blank = False
 
     def set_key_color(self, key, r, g, b):
         # Not implemented for StreamDeckPlus
