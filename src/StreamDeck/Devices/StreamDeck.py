@@ -145,10 +145,11 @@ class StreamDeck(ABC):
     def _extract_string(self, data):
         """
         Extracts out a human-readable string from a collection of raw bytes,
-        removing any trailing whitespace or data after the first NUL byte.
+        removing any trailing whitespace or data after and before the first NUL
+        byte.
         """
 
-        return str(bytes(data), 'ascii', 'replace').partition('\0')[0].rstrip()
+        return str(bytes(data), 'ascii', 'replace').partition('\0')[0].strip()
 
     def _read(self):
         """
