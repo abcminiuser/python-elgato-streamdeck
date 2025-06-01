@@ -75,6 +75,7 @@ development and maintenance of this library:
 - [karstlok](https://github.com/karstlok)
 - [Lewiscowles1986](https://github.com/Lewiscowles1986)
 - [m-weigand](https://github.com/m-weigand)
+- [mathben](https://github.com/mathben)
 - [matrixinius](https://github.com/matrixinius)
 - [phillco](https://github.com/phillco)
 - [pointshader](https://github.com/pointshader)
