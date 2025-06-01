@@ -10,7 +10,7 @@ import time
 from abc import ABC, abstractmethod
 from collections.abc import Callable
 from enum import Enum
-from typing import Iterable
+from typing import Any, Iterable, TypeVar
 
 from ..Transport.Transport import Transport, TransportError
 
@@ -80,19 +80,24 @@ class StreamDeck(ABC):
     DECK_VISUAL = False
     DECK_TOUCH = False
 
-    def __init__(self, device: Transport):
-        self.device = device
-        self.last_key_states = [False] * (self.KEY_COUNT + self.TOUCH_KEY_COUNT)
-        self.last_dial_states = [False] * self.DIAL_COUNT
-        self.read_thread = None
-        self.run_read_thread = False
-        self.read_poll_hz = 20
+    _Self = TypeVar('_Self', bound='StreamDeck')
+    KeyCallback = Callable[[_Self, int, bool], None] | None
+    DialCallback = Callable[[_Self, int, DialEventType, bool], None] | None
+    TouchScreenCallback = Callable[[_Self, TouchscreenEventType, Any], None] | None
 
-        self.key_callback = None
-        self.dial_callback = None
-        self.touchscreen_callback = None
+    def __init__(self, device: Transport.Device):
+        self.device: Transport.Device = device
+        self.last_key_states: list[bool] = [False] * (self.KEY_COUNT + self.TOUCH_KEY_COUNT)
+        self.last_dial_states: list[bool] = [False] * self.DIAL_COUNT
+        self.read_thread: threading.Thread | None = None
+        self.run_read_thread: bool = False
+        self.read_poll_hz: int = 20
 
-        self.update_lock = threading.RLock()
+        self.key_callback: StreamDeck.KeyCallback = None
+        self.dial_callback: StreamDeck.DialCallback = None
+        self.touchscreen_callback: StreamDeck.TouchScreenCallback = None
+
+        self.update_lock: threading.RLock = threading.RLock()
 
     def __del__(self):
         """
@@ -144,7 +149,7 @@ class StreamDeck(ABC):
         """
         pass
 
-    def _extract_string(self, data: Iterable[int]) -> None:
+    def _extract_string(self, data: Iterable[int]) -> str:
         """
         Extracts out a human-readable string from a collection of raw bytes,
         removing any trailing whitespace or data after and before the first NUL
@@ -429,7 +434,7 @@ class StreamDeck(ABC):
         """
         self.read_poll_hz = min(max(hz, 1), 1000)
 
-    def set_key_callback(self, callback: Callable[[int, bool], None]) -> None:
+    def set_key_callback(self, callback: KeyCallback) -> None:
         """
         Sets the callback function called each time a button on the StreamDeck
         changes state (either pressed, or released).
@@ -448,7 +453,7 @@ class StreamDeck(ABC):
         """
         self.key_callback = callback
 
-    def set_key_callback_async(self, async_callback: Callable[[int, bool], None], loop=None):
+    def set_key_callback_async(self, async_callback: KeyCallback, loop=None):
         """
         Sets the asynchronous callback function called each time a button on the
         StreamDeck changes state (either pressed, or released). The given
@@ -473,7 +478,7 @@ class StreamDeck(ABC):
 
         self.set_key_callback(callback)
 
-    def set_dial_callback(self, callback: Callable[[int, DialEventType, bool], None]) -> None:
+    def set_dial_callback(self, callback: DialCallback) -> None:
         """
         Sets the callback function called each time there is an interaction
         with a dial on the StreamDeck.
@@ -492,7 +497,7 @@ class StreamDeck(ABC):
         """
         self.dial_callback = callback
 
-    def set_dial_callback_async(self, async_callback: Callable[[int, DialEventType, bool], None], loop=None) -> None:
+    def set_dial_callback_async(self, async_callback: DialCallback, loop=None) -> None:
         """
         Sets the asynchronous callback function called each time there is an
         interaction with a dial on the StreamDeck. The given callback should
@@ -517,7 +522,7 @@ class StreamDeck(ABC):
 
         self.set_dial_callback(callback)
 
-    def set_touchscreen_callback(self, callback: Callable[[int, TouchscreenEventType, dict[str, any]], None]) -> None:
+    def set_touchscreen_callback(self, callback: TouchScreenCallback) -> None:
         """
         Sets the callback function called each time there is an interaction
         with a touchscreen on the StreamDeck.
@@ -536,7 +541,7 @@ class StreamDeck(ABC):
         """
         self.touchscreen_callback = callback
 
-    def set_touchscreen_callback_async(self, async_callback: Callable[[int, TouchscreenEventType, dict[str, any]], None], loop=None) -> None:
+    def set_touchscreen_callback_async(self, async_callback: TouchScreenCallback, loop=None) -> None:
         """
         Sets the asynchronous callback function called each time there is an
         interaction with the touchscreen on the StreamDeck. The given callback
@@ -593,7 +598,7 @@ class StreamDeck(ABC):
         pass
 
     @abstractmethod
-    def set_brightness(self, percent: [int | float]) -> None:
+    def set_brightness(self, percent: int | float) -> None:
         """
         Sets the global screen brightness of the StreamDeck, across all the
         physical buttons.

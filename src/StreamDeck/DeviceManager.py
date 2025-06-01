@@ -13,6 +13,7 @@ from .Devices.StreamDeckOriginalV2 import StreamDeckOriginalV2
 from .Devices.StreamDeckXL import StreamDeckXL
 from .Devices.StreamDeckPedal import StreamDeckPedal
 from .Devices.StreamDeckPlus import StreamDeckPlus
+from .Transport import Transport
 from .Transport.Dummy import Dummy
 from .Transport.LibUSBHIDAPI import LibUSBHIDAPI
 from .ProductIDs import USBVendorIDs, USBProductIDs
@@ -45,7 +46,7 @@ class DeviceManager:
     USB_PID_STREAMDECK_PLUS = 0x0084
 
     @staticmethod
-    def _get_transport(transport: str):
+    def _get_transport(transport: str | None):
         """
         Creates a new HID transport instance from the given transport back-end
         name. If no specific transport is supplied, an attempt to find an
@@ -88,13 +89,13 @@ class DeviceManager:
 
             raise ProbeError("Probe failed to find any functional HID backend.", probe_errors)
 
-    def __init__(self, transport: str = None):
+    def __init__(self, transport: str | None = None):
         """
         Creates a new StreamDeck DeviceManager, used to detect attached StreamDeck devices.
 
         :param str transport: name of the the specific HID transport back-end to use, None to auto-probe.
         """
-        self.transport = self._get_transport(transport)
+        self.transport: Transport.Transport = self._get_transport(transport)
 
     def enumerate(self) -> list[StreamDeck]:
         """
