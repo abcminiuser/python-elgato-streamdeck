@@ -106,7 +106,7 @@ class Transport(ABC):
             pass
 
         @abstractmethod
-        def write_feature(self, payload : bytes) -> int:
+        def write_feature(self, payload: bytes) -> int:
             """
             Sends a HID Feature report to the open HID device.
 
