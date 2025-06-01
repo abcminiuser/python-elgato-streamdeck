@@ -5,6 +5,7 @@
 #         www.fourwalledcubicle.com
 #
 
+from .Devices.StreamDeck import StreamDeck
 from .Devices.StreamDeckMini import StreamDeckMini
 from .Devices.StreamDeckNeo import StreamDeckNeo
 from .Devices.StreamDeckOriginal import StreamDeckOriginal
@@ -44,7 +45,7 @@ class DeviceManager:
     USB_PID_STREAMDECK_PLUS = 0x0084
 
     @staticmethod
-    def _get_transport(transport):
+    def _get_transport(transport: str):
         """
         Creates a new HID transport instance from the given transport back-end
         name. If no specific transport is supplied, an attempt to find an
@@ -87,7 +88,7 @@ class DeviceManager:
 
             raise ProbeError("Probe failed to find any functional HID backend.", probe_errors)
 
-    def __init__(self, transport=None):
+    def __init__(self, transport: str = None):
         """
         Creates a new StreamDeck DeviceManager, used to detect attached StreamDeck devices.
 
@@ -95,7 +96,7 @@ class DeviceManager:
         """
         self.transport = self._get_transport(transport)
 
-    def enumerate(self):
+    def enumerate(self) -> list[StreamDeck]:
         """
         Detect attached StreamDeck devices.
 

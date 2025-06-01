@@ -8,9 +8,11 @@
 import threading
 import time
 from abc import ABC, abstractmethod
+from collections.abc import Callable
 from enum import Enum
+from typing import Iterable
 
-from ..Transport.Transport import TransportError
+from ..Transport.Transport import Transport, TransportError
 
 
 class TouchscreenEventType(Enum):
@@ -78,7 +80,7 @@ class StreamDeck(ABC):
     DECK_VISUAL = False
     DECK_TOUCH = False
 
-    def __init__(self, device):
+    def __init__(self, device: Transport):
         self.device = device
         self.last_key_states = [False] * (self.KEY_COUNT + self.TOUCH_KEY_COUNT)
         self.last_dial_states = [False] * self.DIAL_COUNT
@@ -124,7 +126,7 @@ class StreamDeck(ABC):
         self.update_lock.release()
 
     @abstractmethod
-    def _read_control_states(self):
+    def _read_control_states(self) -> None:
         """
         Reads the raw key states from an attached StreamDeck.
 
@@ -133,7 +135,7 @@ class StreamDeck(ABC):
         pass
 
     @abstractmethod
-    def _reset_key_stream(self):
+    def _reset_key_stream(self) -> None:
         """
         Sends a blank key report to the StreamDeck, resetting the key image
         streamer in the device. This prevents previously started partial key
@@ -142,7 +144,7 @@ class StreamDeck(ABC):
         """
         pass
 
-    def _extract_string(self, data):
+    def _extract_string(self, data: Iterable[int]) -> None:
         """
         Extracts out a human-readable string from a collection of raw bytes,
         removing any trailing whitespace or data after and before the first NUL
@@ -151,7 +153,7 @@ class StreamDeck(ABC):
 
         return str(bytes(data), 'ascii', 'replace').partition('\0')[0].strip()
 
-    def _read(self):
+    def _read(self) -> None:
         """
         Read handler for the underlying transport, listening for control state
         changes on the underlying device, caching the new states and firing off
@@ -201,7 +203,7 @@ class StreamDeck(ABC):
                 self.run_read_thread = False
                 self.close()
 
-    def _setup_reader(self, callback):
+    def _setup_reader(self, callback: Callable) -> None:
         """
         Sets up the internal transport reader thread with the given callback,
         for asynchronous processing of HID events from the device. If the thread
@@ -224,7 +226,7 @@ class StreamDeck(ABC):
             self.read_thread.daemon = True
             self.read_thread.start()
 
-    def open(self):
+    def open(self) -> None:
         """
         Opens the device for input/output. This must be called prior to setting
         or retrieving any device state.
@@ -236,7 +238,7 @@ class StreamDeck(ABC):
         self._reset_key_stream()
         self._setup_reader(self._read)
 
-    def close(self):
+    def close(self) -> None:
         """
         Closes the device for input/output.
 
@@ -244,7 +246,7 @@ class StreamDeck(ABC):
         """
         self.device.close()
 
-    def is_open(self):
+    def is_open(self) -> bool:
         """
         Indicates if the StreamDeck device is currently open and ready for use.
 
@@ -253,7 +255,7 @@ class StreamDeck(ABC):
         """
         return self.device.is_open()
 
-    def connected(self):
+    def connected(self) -> bool:
         """
         Indicates if the physical StreamDeck device this instance is attached to
         is still connected to the host.
@@ -263,7 +265,7 @@ class StreamDeck(ABC):
         """
         return self.device.connected()
 
-    def vendor_id(self):
+    def vendor_id(self) -> int:
         """
         Retrieves the vendor ID attached StreamDeck. This can be used
         to determine the exact type of attached StreamDeck.
@@ -273,7 +275,7 @@ class StreamDeck(ABC):
         """
         return self.device.vendor_id()
 
-    def product_id(self):
+    def product_id(self) -> int:
         """
         Retrieves the product ID attached StreamDeck. This can be used
         to determine the exact type of attached StreamDeck.
@@ -283,7 +285,7 @@ class StreamDeck(ABC):
         """
         return self.device.product_id()
 
-    def id(self):
+    def id(self) -> str:
         """
         Retrieves the physical ID of the attached StreamDeck. This can be used
         to differentiate one StreamDeck from another.
@@ -293,7 +295,7 @@ class StreamDeck(ABC):
         """
         return self.device.path()
 
-    def key_count(self):
+    def key_count(self) -> int:
         """
         Retrieves number of physical buttons on the attached StreamDeck device.
 
@@ -302,7 +304,7 @@ class StreamDeck(ABC):
         """
         return self.KEY_COUNT
 
-    def touch_key_count(self):
+    def touch_key_count(self) -> int:
         """
         Retrieves number of touch buttons on the attached StreamDeck device.
 
@@ -311,7 +313,7 @@ class StreamDeck(ABC):
         """
         return self.TOUCH_KEY_COUNT
 
-    def dial_count(self):
+    def dial_count(self) -> int:
         """
         Retrieves number of physical dials on the attached StreamDeck device.
 
@@ -320,7 +322,7 @@ class StreamDeck(ABC):
         """
         return self.DIAL_COUNT
 
-    def deck_type(self):
+    def deck_type(self) -> str:
         """
         Retrieves the model of Stream Deck.
 
@@ -329,7 +331,7 @@ class StreamDeck(ABC):
         """
         return self.DECK_TYPE
 
-    def is_visual(self):
+    def is_visual(self) -> bool:
         """
         Returns whether the Stream Deck has a visual display output.
 
@@ -338,7 +340,7 @@ class StreamDeck(ABC):
         """
         return self.DECK_VISUAL
 
-    def is_touch(self):
+    def is_touch(self) -> bool:
         """
         Returns whether the Stream Deck can receive touch events
 
@@ -347,7 +349,7 @@ class StreamDeck(ABC):
         """
         return self.DECK_TOUCH
 
-    def key_layout(self):
+    def key_layout(self) -> tuple[int, int]:
         """
         Retrieves the physical button layout on the attached StreamDeck device.
 
@@ -415,7 +417,7 @@ class StreamDeck(ABC):
             'rotation': self.SCREEN_ROTATION,
         }
 
-    def set_poll_frequency(self, hz):
+    def set_poll_frequency(self, hz: int) -> None:
         """
         Sets the frequency of the button polling reader thread, determining how
         often the StreamDeck will be polled for button changes.
@@ -427,7 +429,7 @@ class StreamDeck(ABC):
         """
         self.read_poll_hz = min(max(hz, 1), 1000)
 
-    def set_key_callback(self, callback):
+    def set_key_callback(self, callback: Callable[[int, bool], None]) -> None:
         """
         Sets the callback function called each time a button on the StreamDeck
         changes state (either pressed, or released).
@@ -446,7 +448,7 @@ class StreamDeck(ABC):
         """
         self.key_callback = callback
 
-    def set_key_callback_async(self, async_callback, loop=None):
+    def set_key_callback_async(self, async_callback: Callable[[int, bool], None], loop=None):
         """
         Sets the asynchronous callback function called each time a button on the
         StreamDeck changes state (either pressed, or released). The given
@@ -471,7 +473,7 @@ class StreamDeck(ABC):
 
         self.set_key_callback(callback)
 
-    def set_dial_callback(self, callback):
+    def set_dial_callback(self, callback: Callable[[int, DialEventType, bool], None]) -> None:
         """
         Sets the callback function called each time there is an interaction
         with a dial on the StreamDeck.
@@ -490,7 +492,7 @@ class StreamDeck(ABC):
         """
         self.dial_callback = callback
 
-    def set_dial_callback_async(self, async_callback, loop=None):
+    def set_dial_callback_async(self, async_callback: Callable[[int, DialEventType, bool], None], loop = None) -> None:
         """
         Sets the asynchronous callback function called each time there is an
         interaction with a dial on the StreamDeck. The given callback should
@@ -515,7 +517,7 @@ class StreamDeck(ABC):
 
         self.set_dial_callback(callback)
 
-    def set_touchscreen_callback(self, callback):
+    def set_touchscreen_callback(self, callback: Callable[[int, TouchscreenEventType, dict[str, any]], None]) -> None:
         """
         Sets the callback function called each time there is an interaction
         with a touchscreen on the StreamDeck.
@@ -534,7 +536,7 @@ class StreamDeck(ABC):
         """
         self.touchscreen_callback = callback
 
-    def set_touchscreen_callback_async(self, async_callback, loop=None):
+    def set_touchscreen_callback_async(self, async_callback: Callable[[int, TouchscreenEventType, dict[str, any]], None], loop = None) -> None:
         """
         Sets the asynchronous callback function called each time there is an
         interaction with the touchscreen on the StreamDeck. The given callback
@@ -559,7 +561,7 @@ class StreamDeck(ABC):
 
         self.set_touchscreen_callback(callback)
 
-    def key_states(self):
+    def key_states(self) -> list[bool]:
         """
         Retrieves the current states of the buttons on the StreamDeck.
 
@@ -570,7 +572,7 @@ class StreamDeck(ABC):
         """
         return self.last_key_states
 
-    def dial_states(self):
+    def dial_states(self) -> list[bool]:
         """
         Retrieves the current states of the dials (pressed or not) on the
         Stream Deck
@@ -583,7 +585,7 @@ class StreamDeck(ABC):
         return self.last_dial_states
 
     @abstractmethod
-    def reset(self):
+    def reset(self) -> None:
         """
         Resets the StreamDeck, clearing all button images and showing the
         standby image.
@@ -591,7 +593,7 @@ class StreamDeck(ABC):
         pass
 
     @abstractmethod
-    def set_brightness(self, percent):
+    def set_brightness(self, percent: [int | float]) -> None:
         """
         Sets the global screen brightness of the StreamDeck, across all the
         physical buttons.
@@ -602,7 +604,7 @@ class StreamDeck(ABC):
         pass
 
     @abstractmethod
-    def get_serial_number(self):
+    def get_serial_number(self) -> str:
         """
         Gets the serial number of the attached StreamDeck.
 
@@ -612,7 +614,7 @@ class StreamDeck(ABC):
         pass
 
     @abstractmethod
-    def get_firmware_version(self):
+    def get_firmware_version(self) -> str:
         """
         Gets the firmware version of the attached StreamDeck.
 
@@ -622,7 +624,7 @@ class StreamDeck(ABC):
         pass
 
     @abstractmethod
-    def set_key_image(self, key, image):
+    def set_key_image(self, key: int, image: bytes) -> None:
         """
         Sets the image of a button on the StreamDeck to the given image. The
         image being set should be in the correct format for the device, as an
@@ -639,7 +641,7 @@ class StreamDeck(ABC):
         pass
 
     @abstractmethod
-    def set_touchscreen_image(self, image, x_pos=0, y_pos=0, width=0, height=0):
+    def set_touchscreen_image(self, image: bytes, x_pos: int = 0, y_pos: int = 0, width: int = 0, height: int = 0):
         """
         Draws an image on the touchscreen in a certain position. The image
         should be in the correct format for the devices, as an enumerable
@@ -659,7 +661,7 @@ class StreamDeck(ABC):
         pass
 
     @abstractmethod
-    def set_key_color(self, key, r, g, b):
+    def set_key_color(self, key: int, r: int, g: int, b: int) -> None:
         """
         Sets the color of the touch buttons. These buttons are indexed
         in order after the standard keys.
@@ -673,7 +675,7 @@ class StreamDeck(ABC):
         pass
 
     @abstractmethod
-    def set_screen_image(self, image):
+    def set_screen_image(self, image: bytes) -> None:
         """
         Draws an image on the touchless screen of the StreamDeck.
 
