@@ -20,6 +20,7 @@ the images shown on each button, and read the current button states.
 Currently the following StreamDeck products are supported in multiple hardware
 variants:
 
+* StreamDeck 16 Key, 32 Key and Scissor Modules
 * StreamDeck Mini
 * StreamDeck Neo
 * StreamDeck Original
