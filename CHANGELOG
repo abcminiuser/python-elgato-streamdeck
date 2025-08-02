@@ -1,6 +1,7 @@
 Version 0.9.7:
 	- Added type hints to public APIs.
 	- Fixed leading whitespace in StreamDeck Plus serial number strings.
+	- Added support for new PID variant of the StreamDeck MK2.
 
 Version 0.9.6:
 	- Fixed StreamDeck+ returning 10 key states instead of the expected 8.

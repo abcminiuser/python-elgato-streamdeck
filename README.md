@@ -79,6 +79,7 @@ development and maintenance of this library:
 - [matrixinius](https://github.com/matrixinius)
 - [phillco](https://github.com/phillco)
 - [pointshader](https://github.com/pointshader)
+- [pylogger-html](https://github.com/pylogger-html)
 - [shanna](https://github.com/shanna)
 - [spidererrol](https://github.com/Spidererrol)
 - [spyoungtech](https://github.com/spyoungtech)
