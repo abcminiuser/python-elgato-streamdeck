@@ -8,12 +8,14 @@
 import io
 from PIL import Image
 
+from ..Devices.StreamDeck import StreamDeck
+
 
 def _create_image(image_format, background):
     return Image.new("RGB", image_format['size'], background)
 
 
-def _scale_image(image, image_format, margins=[0, 0, 0, 0], background='black'):
+def _scale_image(image, image_format, margins=(0, 0, 0, 0), background='black'):
     if len(margins) != 4:
         raise ValueError("Margins should be given as an array of four integers.")
 
@@ -52,7 +54,7 @@ def _to_native_format(image, image_format):
         return compressed_image.getvalue()
 
 
-def create_image(deck, background='black'):
+def create_image(deck: StreamDeck, background: str = 'black') -> Image.Image:
     """
     .. deprecated:: 0.9.5
         Use :func:`~PILHelper.create_key_image` method instead.
@@ -60,7 +62,7 @@ def create_image(deck, background='black'):
     return create_key_image(deck, background)
 
 
-def create_key_image(deck, background='black'):
+def create_key_image(deck: StreamDeck, background: str = 'black') -> Image.Image:
     """
     Creates a new PIL Image with the correct image dimensions for the given
     StreamDeck device's keys.
@@ -78,7 +80,7 @@ def create_key_image(deck, background='black'):
     return _create_image(deck.key_image_format(), background)
 
 
-def create_touchscreen_image(deck, background='black'):
+def create_touchscreen_image(deck: StreamDeck, background: str = 'black') -> Image.Image:
     """
     Creates a new PIL Image with the correct image dimensions for the given
     StreamDeck device's touchscreen.
@@ -96,10 +98,10 @@ def create_touchscreen_image(deck, background='black'):
     return _create_image(deck.touchscreen_image_format(), background)
 
 
-def create_screen_image(deck, background='black'):
+def create_screen_image(deck: StreamDeck, background: str = 'black') -> Image.Image:
     """
     Creates a new PIL Image with the correct image dimensions for the given
-    StreamDeck device's creen.
+    StreamDeck device's screen.
 
     .. seealso:: See :func:`~PILHelper.to_native_screen_format` method for converting a
                  PIL image instance to the native screen image format of a given
@@ -114,7 +116,7 @@ def create_screen_image(deck, background='black'):
     return _create_image(deck.screen_image_format(), background)
 
 
-def create_scaled_image(deck, image, margins=[0, 0, 0, 0], background='black'):
+def create_scaled_image(deck: StreamDeck, image: Image.Image, margins: tuple[int, int, int, int] = (0, 0, 0, 0), background: str = 'black') -> Image.Image:
     """
     .. deprecated:: 0.9.5
         Use :func:`~PILHelper.create_scaled_key_image` method instead.
@@ -122,7 +124,7 @@ def create_scaled_image(deck, image, margins=[0, 0, 0, 0], background='black'):
     return create_scaled_key_image(deck, image, margins, background)
 
 
-def create_scaled_key_image(deck, image, margins=[0, 0, 0, 0], background='black'):
+def create_scaled_key_image(deck: StreamDeck, image: Image.Image, margins: tuple[int, int, int, int] = (0, 0, 0, 0), background: str = 'black') -> Image.Image:
     """
     Creates a new key image that contains a scaled version of a given image,
     resized to best fit the given StreamDeck device's keys with the given
@@ -146,7 +148,7 @@ def create_scaled_key_image(deck, image, margins=[0, 0, 0, 0], background='black
     return _scale_image(image, deck.key_image_format(), margins, background)
 
 
-def create_scaled_touchscreen_image(deck, image, margins=[0, 0, 0, 0], background='black'):
+def create_scaled_touchscreen_image(deck: StreamDeck, image: Image.Image, margins: tuple[int, int, int, int] = (0, 0, 0, 0), background: str = 'black') -> Image.Image:
     """
     Creates a new touchscreen image that contains a scaled version of a given image,
     resized to best fit the given StreamDeck device's touchscreen with the given
@@ -170,7 +172,7 @@ def create_scaled_touchscreen_image(deck, image, margins=[0, 0, 0, 0], backgroun
     return _scale_image(image, deck.touchscreen_image_format(), margins, background)
 
 
-def create_scaled_screen_image(deck, image, margins=[0, 0, 0, 0], background='black'):
+def create_scaled_screen_image(deck: StreamDeck, image: Image.Image, margins: tuple[int, int, int, int] = (0, 0, 0, 0), background: str = 'black') -> Image.Image:
     """
     Creates a new screen image that contains a scaled version of a given image,
     resized to best fit the given StreamDeck device's screen with the given
@@ -194,7 +196,7 @@ def create_scaled_screen_image(deck, image, margins=[0, 0, 0, 0], background='bl
     return _scale_image(image, deck.screen_image_format(), margins, background)
 
 
-def to_native_format(deck, image):
+def to_native_format(deck: StreamDeck, image: Image.Image) -> bytes:
     """
     .. deprecated:: 0.9.5
         Use :func:`~PILHelper.to_native_key_format` method instead.
@@ -202,7 +204,7 @@ def to_native_format(deck, image):
     return to_native_key_format(deck, image)
 
 
-def to_native_key_format(deck, image):
+def to_native_key_format(deck: StreamDeck, image: Image.Image) -> bytes:
     """
     Converts a given PIL image to the native key image format for a StreamDeck,
     suitable for passing to :func:`~StreamDeck.set_key_image`.
@@ -219,7 +221,7 @@ def to_native_key_format(deck, image):
     return _to_native_format(image, deck.key_image_format())
 
 
-def to_native_touchscreen_format(deck, image):
+def to_native_touchscreen_format(deck: StreamDeck, image: Image.Image) -> bytes:
     """
     Converts a given PIL image to the native touchscreen image format for a StreamDeck,
     suitable for passing to :func:`~StreamDeck.set_touchscreen_image`.
@@ -236,7 +238,7 @@ def to_native_touchscreen_format(deck, image):
     return _to_native_format(image, deck.touchscreen_image_format())
 
 
-def to_native_screen_format(deck, image):
+def to_native_screen_format(deck: StreamDeck, image: Image.Image) -> bytes:
     """
     Converts a given PIL image to the native screen image format for a StreamDeck,
     suitable for passing to :func:`~StreamDeck.set_screen_image`.

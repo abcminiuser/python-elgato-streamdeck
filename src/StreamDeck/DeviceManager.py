@@ -5,6 +5,7 @@
 #         www.fourwalledcubicle.com
 #
 
+from .Devices.StreamDeck import StreamDeck
 from .Devices.StreamDeckMini import StreamDeckMini
 from .Devices.StreamDeckNeo import StreamDeckNeo
 from .Devices.StreamDeckOriginal import StreamDeckOriginal
@@ -12,6 +13,7 @@ from .Devices.StreamDeckOriginalV2 import StreamDeckOriginalV2
 from .Devices.StreamDeckXL import StreamDeckXL
 from .Devices.StreamDeckPedal import StreamDeckPedal
 from .Devices.StreamDeckPlus import StreamDeckPlus
+from .Transport import Transport
 from .Transport.Dummy import Dummy
 from .Transport.LibUSBHIDAPI import LibUSBHIDAPI
 from .ProductIDs import USBVendorIDs, USBProductIDs
@@ -33,18 +35,8 @@ class DeviceManager:
     StreamDeck devices.
     """
 
-    USB_VID_ELGATO = 0x0fd9
-    USB_PID_STREAMDECK_ORIGINAL = 0x0060
-    USB_PID_STREAMDECK_ORIGINAL_V2 = 0x006d
-    USB_PID_STREAMDECK_MINI = 0x0063
-    USB_PID_STREAMDECK_NEO = 0x009a
-    USB_PID_STREAMDECK_XL = 0x006c
-    USB_PID_STREAMDECK_MK2 = 0x0080
-    USB_PID_STREAMDECK_PEDAL = 0x0086
-    USB_PID_STREAMDECK_PLUS = 0x0084
-
     @staticmethod
-    def _get_transport(transport):
+    def _get_transport(transport: str | None):
         """
         Creates a new HID transport instance from the given transport back-end
         name. If no specific transport is supplied, an attempt to find an
@@ -87,15 +79,15 @@ class DeviceManager:
 
             raise ProbeError("Probe failed to find any functional HID backend.", probe_errors)
 
-    def __init__(self, transport=None):
+    def __init__(self, transport: str | None = None):
         """
         Creates a new StreamDeck DeviceManager, used to detect attached StreamDeck devices.
 
         :param str transport: name of the the specific HID transport back-end to use, None to auto-probe.
         """
-        self.transport = self._get_transport(transport)
+        self.transport: Transport.Transport = self._get_transport(transport)
 
-    def enumerate(self):
+    def enumerate(self) -> list[StreamDeck]:
         """
         Detect attached StreamDeck devices.
 
@@ -112,6 +104,7 @@ class DeviceManager:
             (USBVendorIDs.USB_VID_ELGATO, USBProductIDs.USB_PID_STREAMDECK_NEO, StreamDeckNeo),
             (USBVendorIDs.USB_VID_ELGATO, USBProductIDs.USB_PID_STREAMDECK_XL, StreamDeckXL),
             (USBVendorIDs.USB_VID_ELGATO, USBProductIDs.USB_PID_STREAMDECK_MK2, StreamDeckOriginalV2),
+            (USBVendorIDs.USB_VID_ELGATO, USBProductIDs.USB_PID_STREAMDECK_MK2_V2, StreamDeckOriginalV2),
             (USBVendorIDs.USB_VID_ELGATO, USBProductIDs.USB_PID_STREAMDECK_PEDAL, StreamDeckPedal),
             (USBVendorIDs.USB_VID_ELGATO, USBProductIDs.USB_PID_STREAMDECK_MINI_MK2, StreamDeckMini),
             (USBVendorIDs.USB_VID_ELGATO, USBProductIDs.USB_PID_STREAMDECK_MINI_MK2_MODULE, StreamDeckMini),

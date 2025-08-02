@@ -31,7 +31,7 @@ class Transport(ABC):
         """
 
         @abstractmethod
-        def open(self):
+        def open(self) -> None:
             """
             Opens the device for input/output. This must be called prior to
             sending or receiving any reports.
@@ -42,7 +42,7 @@ class Transport(ABC):
             pass
 
         @abstractmethod
-        def close(self):
+        def close(self) -> None:
             """
             Closes the device for input/output.
 
@@ -52,7 +52,7 @@ class Transport(ABC):
             pass
 
         @abstractmethod
-        def is_open(self):
+        def is_open(self) -> bool:
             """
             Indicates if the physical device object this instance is attached
             to has been opened by the host.
@@ -63,7 +63,7 @@ class Transport(ABC):
             pass
 
         @abstractmethod
-        def connected(self):
+        def connected(self) -> bool:
             """
             Indicates if the physical device object this instance is attached
             to is still connected to the host.
@@ -74,7 +74,7 @@ class Transport(ABC):
             pass
 
         @abstractmethod
-        def path(self):
+        def path(self) -> str:
             """
             Retrieves the logical path of the attached device within the
             current system. This can be used to uniquely differentiate one
@@ -86,7 +86,7 @@ class Transport(ABC):
             pass
 
         @abstractmethod
-        def vendor_id(self):
+        def vendor_id(self) -> int:
             """
             Retrieves the vendor ID value of the attached device.
 
@@ -96,7 +96,7 @@ class Transport(ABC):
             pass
 
         @abstractmethod
-        def product_id(self):
+        def product_id(self) -> int:
             """
             Retrieves the product ID value of the attached device.
 
@@ -106,7 +106,7 @@ class Transport(ABC):
             pass
 
         @abstractmethod
-        def write_feature(self, payload):
+        def write_feature(self, payload: bytes) -> int:
             """
             Sends a HID Feature report to the open HID device.
 
@@ -121,7 +121,7 @@ class Transport(ABC):
             pass
 
         @abstractmethod
-        def read_feature(self, report_id, length):
+        def read_feature(self, report_id: int, length: int) -> bytes:
             """
             Reads a HID Feature report from the open HID device.
 
@@ -136,7 +136,7 @@ class Transport(ABC):
             pass
 
         @abstractmethod
-        def write(self, payload):
+        def write(self, payload: bytes) -> int:
             """
             Sends a HID Out report to the open HID device.
 
@@ -151,7 +151,7 @@ class Transport(ABC):
             pass
 
         @abstractmethod
-        def read(self, length):
+        def read(self, length: int) -> bytes:
             """
             Performs a blocking read of a HID In report from the open HID device.
 
@@ -166,7 +166,7 @@ class Transport(ABC):
 
     @staticmethod
     @abstractmethod
-    def probe():
+    def probe() -> None:
         """
         Attempts to determine if the back-end is installed and usable. It is
         expected that probe failures throw exceptions detailing their exact
@@ -175,7 +175,7 @@ class Transport(ABC):
         pass
 
     @abstractmethod
-    def enumerate(self, vid, pid):
+    def enumerate(self, vid: int, pid: int) -> list[Device]:
         """
         Enumerates all available devices on the system using the current
         transport back-end.
