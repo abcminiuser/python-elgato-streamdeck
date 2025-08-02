@@ -71,6 +71,7 @@ development and maintenance of this library:
 - [itsusony](https://github.com/itsusony)
 - [jakobbuis](https://github.com/jakobbuis)
 - [jmudge14](https://github.com/jmudge14)
+- [jonbloom](https://github.com/jonbloom)
 - [Kalle-Wirsch](https://github.com/Kalle-Wirsch)
 - [karstlok](https://github.com/karstlok)
 - [Lewiscowles1986](https://github.com/Lewiscowles1986)
