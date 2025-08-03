@@ -1,3 +1,6 @@
+Version 0.9.8:
+	- N/A
+
 Version 0.9.7:
 	- Added type hints to public APIs.
 	- Fixed leading whitespace in StreamDeck Plus serial number strings.
