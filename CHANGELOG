@@ -1,5 +1,5 @@
 Version 0.9.8:
-	- N/A
+	- Documentation fixes (StreamDeck 6 key module is also supported since 0.9.7)
 
 Version 0.9.7:
 	- Added type hints to public APIs.
