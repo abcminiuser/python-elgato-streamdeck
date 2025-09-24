@@ -7,6 +7,9 @@ This is an open source Python 3 library to control an
 without the official software. This can allow you to create your own custom
 front-ends, such as a custom control front-end for home automation software.
 
+Protocol documentation for various StreamDeck products are
+[published the Elgato website](https://docs.elgato.com/streamdeck).
+
 _________________
 
 [PyPi Project Entry](https://pypi.org/project/streamdeck/) - [Online Documentation](https://python-elgato-streamdeck.readthedocs.io) - [Source Code](https://github.com/abcminiuser/python-elgato-streamdeck)
@@ -49,10 +52,6 @@ directory.
 
 
 ## Credits:
-
-I've used the reverse engineering notes from
-[this GitHub](https://github.com/alvancamp/node-elgato-stream-deck/blob/master/NOTES.md)
-repository to implement this library. Thanks Alex Van Camp!
 
 Thank you to the following contributors, large and small, for helping with the
 development and maintenance of this library:
