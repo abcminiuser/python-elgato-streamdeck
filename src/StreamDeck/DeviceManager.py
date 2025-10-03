@@ -12,6 +12,7 @@ from .Devices.StreamDeckOriginal import StreamDeckOriginal
 from .Devices.StreamDeckOriginalV2 import StreamDeckOriginalV2
 from .Devices.StreamDeckXL import StreamDeckXL
 from .Devices.StreamDeckPedal import StreamDeckPedal
+from .Devices.StreamDeckStudio import StreamDeckStudio
 from .Devices.StreamDeckPlus import StreamDeckPlus
 from .Transport import Transport
 from .Transport.Dummy import Dummy
@@ -110,6 +111,7 @@ class DeviceManager:
             (USBVendorIDs.USB_VID_ELGATO, USBProductIDs.USB_PID_STREAMDECK_MINI_MK2_MODULE, StreamDeckMini),
             (USBVendorIDs.USB_VID_ELGATO, USBProductIDs.USB_PID_STREAMDECK_XL_V2, StreamDeckXL),
             (USBVendorIDs.USB_VID_ELGATO, USBProductIDs.USB_PID_STREAMDECK_XL_V2_MODULE, StreamDeckXL),
+            (USBVendorIDs.USB_VID_ELGATO, USBProductIDs.USB_PID_STREAMDECK_STUDIO, StreamDeckStudio),
             (USBVendorIDs.USB_VID_ELGATO, USBProductIDs.USB_PID_STREAMDECK_PLUS, StreamDeckPlus),
         ]
 
