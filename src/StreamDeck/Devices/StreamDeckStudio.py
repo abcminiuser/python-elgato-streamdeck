@@ -33,7 +33,6 @@ class StreamDeckStudio(StreamDeck):
 
     DECK_TYPE = "Stream Deck Studio"
     DECK_VISUAL = True
-    DECK_TOUCH = True
 
     _HID_INPUT_REPORT = 0x01
     _HID_OUTPUT_REPORT_ID = 0x02
@@ -100,7 +99,7 @@ class StreamDeckStudio(StreamDeck):
 
         values = [
             self._DIAL_EVENT_TRANSFORM[event_type](s)
-            for s in states[4 : 4 + self.DIAL_COUNT]
+            for s in states[4:4 + self.DIAL_COUNT]
         ]
 
         return {ControlType.DIAL: {event_type: values}}
@@ -109,7 +108,7 @@ class StreamDeckStudio(StreamDeck):
         if isinstance(percent, float):
             percent = int(100.0 * percent)
 
-        percent = min(max(percent, 0), 100)
+        percent = max(0, min(percent, 100))
 
         payload = bytearray(32)
         payload[0:3] = [0x03, 0x08, percent]
@@ -142,14 +141,14 @@ class StreamDeckStudio(StreamDeck):
                 0x07,
                 key & 0xFF,  # key index
                 is_last,
-                this_length & 0xFF,  # byetcount low byte
+                this_length & 0xFF,  # bytecount low byte
                 (this_length >> 8) & 0xFF,  # bytecount high byte
-                page_number & 0xFF,  # page number low byte 
+                page_number & 0xFF,  # page number low byte
                 (page_number >> 8) & 0xFF,  # page number high byte
             ]
 
             bytes_sent = page_number * self._KEY_PACKET_PAYLOAD_LEN
-            payload = bytes(header) + image[bytes_sent : bytes_sent + this_length]
+            payload = bytes(header) + image[bytes_sent:bytes_sent + this_length]
             padding = bytearray(self._IMG_PACKET_LEN - len(payload))
             self.device.write(payload + padding)
 
@@ -182,21 +181,32 @@ class StreamDeckStudio(StreamDeck):
         ] + [rgb[0], rgb[1], rgb[2]] * self._DIAL_RING_SEGMENTS
         self.device.write(bytes(data))
 
-    def set_encoder_ring_value(self, encoder, rgb, value, segment_count=21):
+    def set_encoder_ring_percentage(
+            self, encoder, rgb, value, segment_count=21):
+        """
+        Sets the color of a portion of the encoder ring based on a percentage
+        value.
+        Args:
+            encoder (int): The encoder index (0 or 1).
+            rgb (tuple): A tuple of (R, G, B) values for the color.
+            value (int): The percentage value (0-100) to fill the ring.
+            segment_count (int): The number of segments to light up for 100%
+                (default is 21).
+        """
         if not 0 < segment_count <= self._DIAL_RING_SEGMENTS:
             raise ValueError(
                 f"Invalid segment count {segment_count}, "
                 f"must be between 1 and {self._DIAL_RING_SEGMENTS}."
             )
 
-        segments = int(value / 100.0 * segment_count + 0.5)
+        segments = round(value * segment_count / 100.0)
         led_data = (
             list(rgb) * segments + [0, 0, 0] * (self._DIAL_RING_SEGMENTS - segments)
         )
 
         if encoder == 0:
-            enc_0_buffer_offset = self._DIAL_RING_SEGMENTS * 3 // 2
-            led_data = led_data[enc_0_buffer_offset:] + led_data[:enc_0_buffer_offset]
+            offset = self._DIAL_RING_SEGMENTS * 3 // 2
+            led_data = led_data[offset:] + led_data[:offset]
 
         data = [self._HID_OUTPUT_REPORT_ID, self._DIAL_RING_CMD, encoder] + led_data
         self.device.write(bytes(data))
