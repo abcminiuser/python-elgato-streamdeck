@@ -18,6 +18,7 @@ from .Transport import Transport
 from .Transport.Dummy import Dummy
 from .Transport.LibUSBHIDAPI import LibUSBHIDAPI
 from .ProductIDs import USBVendorIDs, USBProductIDs
+from typing import Union
 
 
 class ProbeError(Exception):
@@ -37,7 +38,7 @@ class DeviceManager:
     """
 
     @staticmethod
-    def _get_transport(transport: str | None):
+    def _get_transport(transport: Union[str, None]):
         """
         Creates a new HID transport instance from the given transport back-end
         name. If no specific transport is supplied, an attempt to find an
@@ -80,7 +81,7 @@ class DeviceManager:
 
             raise ProbeError("Probe failed to find any functional HID backend.", probe_errors)
 
-    def __init__(self, transport: str | None = None):
+    def __init__(self, transport: Union[str, None] = None):
         """
         Creates a new StreamDeck DeviceManager, used to detect attached StreamDeck devices.
 

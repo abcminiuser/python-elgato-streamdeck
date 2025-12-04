@@ -10,7 +10,7 @@ import time
 from abc import ABC, abstractmethod
 from collections.abc import Callable
 from enum import Enum
-from typing import Any, Iterable, TypeVar
+from typing import Any, Iterable, TypeVar, Optional, Union
 
 from ..Transport.Transport import Transport, TransportError
 
@@ -81,9 +81,9 @@ class StreamDeck(ABC):
     DECK_TOUCH = False
 
     _Self = TypeVar('_Self', bound='StreamDeck')
-    KeyCallback = Callable[[_Self, int, bool], None] | None
-    DialCallback = Callable[[_Self, int, DialEventType, bool], None] | None
-    TouchScreenCallback = Callable[[_Self, TouchscreenEventType, Any], None] | None
+    KeyCallback = Optional[Callable[[_Self, int, bool], None]]
+    DialCallback = Optional[Callable[[_Self, int, DialEventType, bool], None]]
+    TouchScreenCallback = Optional[Callable[[_Self, TouchscreenEventType, Any], None]]
 
     def __init__(self, device: Transport.Device):
         self.device: Transport.Device = device
@@ -598,7 +598,7 @@ class StreamDeck(ABC):
         pass
 
     @abstractmethod
-    def set_brightness(self, percent: int | float) -> None:
+    def set_brightness(self, percent: Union[int, float]) -> None:
         """
         Sets the global screen brightness of the StreamDeck, across all the
         physical buttons.
