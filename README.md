@@ -29,6 +29,7 @@ variants:
 * StreamDeck Original
 * StreamDeck Pedal
 * StreamDeck Plus
+* StreamDeck Studio
 * StreamDeck XL
 
 ## Package Installation:
@@ -64,6 +65,7 @@ development and maintenance of this library:
 - [BS-Tek](https://github.com/BS-Tek)
 - [Core447](https://github.com/Core447)
 - [dirkk0](https://github.com/dirkk0)
+- [dnahmanpix](https://github.com/dnahmanpix)
 - [dodgyrabbit](https://github.com/dodgyrabbit)
 - [dubstech](https://github.com/dubstech)
 - [Giraut](https://github.com/Giraut)

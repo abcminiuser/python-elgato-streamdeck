@@ -1,5 +1,6 @@
 Version 0.10.0:
 	- Fix Dummy Streamdeck backend when calling `read_feature()`.
+	- Add support for the StreamDeck Studio.
 
 Version 0.9.8:
 	- Documentation fixes (StreamDeck 6 key module is also supported since 0.9.7).
