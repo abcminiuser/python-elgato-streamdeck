@@ -8,7 +8,7 @@ without the official software. This can allow you to create your own custom
 front-ends, such as a custom control front-end for home automation software.
 
 Protocol documentation for various StreamDeck products are
-[published the Elgato website](https://docs.elgato.com/streamdeck).
+[published the Elgato website](https://docs.elgato.com/streamdeck/hid/).
 
 _________________
 
