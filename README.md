@@ -76,6 +76,7 @@ development and maintenance of this library:
 - [Kalle-Wirsch](https://github.com/Kalle-Wirsch)
 - [karstlok](https://github.com/karstlok)
 - [Lewiscowles1986](https://github.com/Lewiscowles1986)
+- [Luminger](https://github.com/Luminger)
 - [m-weigand](https://github.com/m-weigand)
 - [mathben](https://github.com/mathben)
 - [matrixinius](https://github.com/matrixinius)
