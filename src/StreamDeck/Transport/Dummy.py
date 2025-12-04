@@ -78,7 +78,7 @@ class Dummy(Transport):
                 raise TransportError("Deck read while deck not open.")
 
             logging.info("Deck report read (length %s)", length)
-            return bytearray(length)
+            return None
 
     @staticmethod
     def probe():
