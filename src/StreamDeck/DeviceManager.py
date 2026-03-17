@@ -12,6 +12,7 @@ from .Devices.StreamDeckOriginal import StreamDeckOriginal
 from .Devices.StreamDeckOriginalV2 import StreamDeckOriginalV2
 from .Devices.StreamDeckPedal import StreamDeckPedal
 from .Devices.StreamDeckPlus import StreamDeckPlus
+from .Devices.StreamDeckPlusXL import StreamDeckPlusXL
 from .Devices.StreamDeckStudio import StreamDeckStudio
 from .Devices.StreamDeckXL import StreamDeckXL
 from .ProductIDs import USBProductIDs, USBVendorIDs
@@ -114,6 +115,7 @@ class DeviceManager:
             (USBVendorIDs.USB_VID_ELGATO, USBProductIDs.USB_PID_STREAMDECK_XL_V2_MODULE, StreamDeckXL),
             (USBVendorIDs.USB_VID_ELGATO, USBProductIDs.USB_PID_STREAMDECK_STUDIO, StreamDeckStudio),
             (USBVendorIDs.USB_VID_ELGATO, USBProductIDs.USB_PID_STREAMDECK_PLUS, StreamDeckPlus),
+            (USBVendorIDs.USB_VID_ELGATO, USBProductIDs.USB_PID_STREAMDECK_PLUS_XL, StreamDeckPlusXL),
         ]
 
         streamdecks = list()
