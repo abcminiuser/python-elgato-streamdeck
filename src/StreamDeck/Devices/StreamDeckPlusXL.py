@@ -29,7 +29,7 @@ class StreamDeckPlusXL(StreamDeck):
     KEY_PIXEL_HEIGHT = 112
     KEY_IMAGE_FORMAT = "JPEG"
     KEY_FLIP = (False, False)
-    KEY_ROTATION = 0
+    KEY_ROTATION = 90
 
     DECK_TYPE = "Stream Deck + XL"
     DECK_VISUAL = True
@@ -195,7 +195,23 @@ class StreamDeckPlusXL(StreamDeck):
         if min(max(height, 1), self.TOUCHSCREEN_PIXEL_HEIGHT - y_pos) != height:
             raise IndexError("Invalid draw height {}.".format(height))
 
-        image = bytes(image)
+        # The Plus XL LCD is internally portrait (800x1280). The touchscreen
+        # image must be rotated 90 CCW and coordinates swapped to match the
+        # internal frame. We rotate here (not via TOUCHSCREEN_ROTATION) because
+        # PIL's rotate() without expand=True crops non-square images.
+        from PIL import Image as PILImage
+        import io
+
+        pil_img = PILImage.open(io.BytesIO(image))
+        rotated = pil_img.rotate(90, expand=True)
+        buf = io.BytesIO()
+        rotated.save(buf, format="JPEG", quality=80)
+        image = buf.getvalue()
+
+        int_x = y_pos
+        int_y = x_pos
+        int_w = height
+        int_h = width
 
         page_number = 0
         bytes_remaining = len(image)
@@ -206,14 +222,14 @@ class StreamDeckPlusXL(StreamDeck):
             header = [
                 0x02,  # 0
                 0x0c,  # 1
-                x_pos & 0xff,  # 2 xpos low byte
-                (x_pos >> 8) & 0xff,  # 3 xpos high byte
-                y_pos & 0xff,  # 4 ypos low byte
-                (y_pos >> 8) & 0xff,  # 5 ypos high byte
-                width & 0xff,  # 6 width low byte
-                (width >> 8) & 0xff,  # 7 width high byte
-                height & 0xff,  # 8 height low byte
-                (height >> 8) & 0xff,  # 9 height high byte
+                int_x & 0xff,  # 2 xpos low byte
+                (int_x >> 8) & 0xff,  # 3 xpos high byte
+                int_y & 0xff,  # 4 ypos low byte
+                (int_y >> 8) & 0xff,  # 5 ypos high byte
+                int_w & 0xff,  # 6 width low byte
+                (int_w >> 8) & 0xff,  # 7 width high byte
+                int_h & 0xff,  # 8 height low byte
+                (int_h >> 8) & 0xff,  # 9 height high byte
                 1 if this_length == bytes_remaining else 0,  # 10 is the last report?
                 page_number & 0xff,  # 11 pagenumber low byte
                 (page_number >> 8) & 0xff,  # 12 pagenumber high byte
