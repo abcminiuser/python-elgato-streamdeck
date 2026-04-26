@@ -28,6 +28,7 @@ ASSETS_PATH = os.path.join(os.path.dirname(__file__), "Assets")
 
 # Animation frames per second to attempt to display on the StreamDeck devices.
 FRAMES_PER_SECOND = 30
+closed_event = threading.Event()
 
 
 # Loads in a source image, extracts out the individual animation frames (if
@@ -60,12 +61,14 @@ def create_animation_frames(deck, image_filename):
 def key_change_callback(deck, key, state):
     # Use a scoped-with on the deck to ensure we're the only thread using it
     # right now.
-    with deck:
-        # Reset deck, clearing all button images.
-        deck.reset()
+    if state:
+        closed_event.set()
+        with deck:
+            # Reset deck, clearing all button images.
+            deck.reset()
 
-        # Close deck handle, terminating internal worker threads.
-        deck.close()
+            # Close deck handle, terminating internal worker threads.
+            deck.close()
 
 
 if __name__ == "__main__":
@@ -124,7 +127,7 @@ if __name__ == "__main__":
 
             # Periodic loop that will render every frame at the set FPS until
             # the StreamDeck device we're using is closed.
-            while deck.is_open():
+            while not closed_event.is_set() and deck.is_open():
                 try:
                     # Use a scoped-with on the deck to ensure we're the only
                     # thread using it right now.
