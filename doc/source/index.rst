@@ -36,6 +36,7 @@ Index
 
     examples/deckinfo.rst
     examples/basic.rst
+    examples/basic_asyncio.rst
     examples/pedal.rst
     examples/plus.rst
     examples/neo.rst

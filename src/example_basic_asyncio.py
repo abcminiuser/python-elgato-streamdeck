@@ -7,11 +7,14 @@
 #         www.fourwalledcubicle.com
 #
 
-# Example script showing basic library usage - updating key images with new
-# tiles generated at runtime, and responding to button state change events.
+# Example script showing basic library usage, using Python's asyncio coroutines
+# library - updating key images with new tiles generated at runtime, and
+# responding to button state change events.
 
+import asyncio
 import os
 import threading
+
 
 from PIL import Image, ImageDraw, ImageFont
 from StreamDeck.DeviceManager import DeviceManager
@@ -82,7 +85,7 @@ def update_key_image(deck, key, state):
 
 # Prints key state change information, updates the key image and performs any
 # associated actions when a key is pressed.
-def key_change_callback(deck, key, state):
+async def key_change_callback(deck, key, state):
     # Print new key state
     print("Deck {} Key {} = {}".format(deck.id(), key, state), flush=True)
 
@@ -109,9 +112,7 @@ def key_change_callback(deck, key, state):
                 deck.close()
 
 
-if __name__ == "__main__":
-    streamdecks = DeviceManager().enumerate()
-
+async def main(loop):
     print("Found {} Stream Deck(s).\n".format(len(streamdecks)))
 
     for index, deck in enumerate(streamdecks):
@@ -134,12 +135,20 @@ if __name__ == "__main__":
             update_key_image(deck, key, False)
 
         # Register callback function for when a key state changes.
-        deck.set_key_callback(key_change_callback)
+        deck.set_key_callback_async(key_change_callback)
 
-        # Wait until all application threads have terminated (for this example,
-        # this is when all deck handles are closed).
-        for t in threading.enumerate():
-            try:
-                t.join()
-            except (TransportError, RuntimeError):
-                pass
+
+if __name__ == "__main__":
+    streamdecks = DeviceManager().enumerate()
+
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(main(loop))
+    loop.run_forever()
+
+    # Wait until all application threads have terminated (for this example,
+    # this is when all deck handles are closed).
+    for t in threading.enumerate():
+        try:
+            t.join()
+        except (TransportError, RuntimeError):
+            pass
