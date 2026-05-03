@@ -8,7 +8,7 @@
 import threading
 import time
 from abc import ABC, abstractmethod
-from collections.abc import Callable
+from collections.abc import Callable, Awaitable
 from enum import Enum
 from typing import Any, Iterable, TypeVar
 
@@ -82,8 +82,11 @@ class StreamDeck(ABC):
 
     _Self = TypeVar('_Self', bound='StreamDeck')
     KeyCallback = Callable[[_Self, int, bool], None] | None
+    AsyncKeyCallback = Callable[[_Self, int, bool], Awaitable[None]] | None
     DialCallback = Callable[[_Self, int, DialEventType, bool], None] | None
+    AsyncDialCallback = Callable[[_Self, int, DialEventType, bool], Awaitable[None]] | None
     TouchScreenCallback = Callable[[_Self, TouchscreenEventType, Any], None] | None
+    AsyncTouchScreenCallback = Callable[[_Self, TouchscreenEventType, Any], Awaitable[None]] | None
 
     def __init__(self, device: Transport.Device):
         self.device: Transport.Device = device
@@ -453,7 +456,7 @@ class StreamDeck(ABC):
         """
         self.key_callback = callback
 
-    def set_key_callback_async(self, async_callback: KeyCallback, loop=None):
+    def set_key_callback_async(self, async_callback: AsyncKeyCallback, loop=None):
         """
         Sets the asynchronous callback function called each time a button on the
         StreamDeck changes state (either pressed, or released). The given
@@ -497,7 +500,7 @@ class StreamDeck(ABC):
         """
         self.dial_callback = callback
 
-    def set_dial_callback_async(self, async_callback: DialCallback, loop=None) -> None:
+    def set_dial_callback_async(self, async_callback: AsyncDialCallback, loop=None) -> None:
         """
         Sets the asynchronous callback function called each time there is an
         interaction with a dial on the StreamDeck. The given callback should
@@ -541,7 +544,7 @@ class StreamDeck(ABC):
         """
         self.touchscreen_callback = callback
 
-    def set_touchscreen_callback_async(self, async_callback: TouchScreenCallback, loop=None) -> None:
+    def set_touchscreen_callback_async(self, async_callback: AsyncTouchScreenCallback, loop=None) -> None:
         """
         Sets the asynchronous callback function called each time there is an
         interaction with the touchscreen on the StreamDeck. The given callback
