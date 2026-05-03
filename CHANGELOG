@@ -3,6 +3,7 @@ Version 0.10.0:
 	- Add support for the StreamDeck Studio.
 	- Minimum Python version bumped to 3.10, as 3.9 is now EOL.
 	- Fix error in animated deck example, wheh the example is closed.
+	- Added support for the StreamDeck Mini (Discord edition).
 
 Version 0.9.8:
 	- Documentation fixes (StreamDeck 6 key module is also supported since 0.9.7).

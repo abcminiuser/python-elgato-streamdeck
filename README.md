@@ -69,6 +69,7 @@ development and maintenance of this library:
 - [dodgyrabbit](https://github.com/dodgyrabbit)
 - [dubstech](https://github.com/dubstech)
 - [Giraut](https://github.com/Giraut)
+- [guitsaru](https://github.com/guitsaru)
 - [impala454](https://github.com/impala454)
 - [iPhoneAddict](https://github.com/iPhoneAddict)
 - [itsusony](https://github.com/itsusony)
