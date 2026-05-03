@@ -68,6 +68,7 @@ development and maintenance of this library:
 - [dnahmanpix](https://github.com/dnahmanpix)
 - [dodgyrabbit](https://github.com/dodgyrabbit)
 - [dubstech](https://github.com/dubstech)
+- [egnor](https://github.com/egnor)
 - [Giraut](https://github.com/Giraut)
 - [guitsaru](https://github.com/guitsaru)
 - [impala454](https://github.com/impala454)
