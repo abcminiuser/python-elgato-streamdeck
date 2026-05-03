@@ -477,7 +477,12 @@ class StreamDeck(ABC):
         loop = loop or asyncio.get_event_loop()
 
         def callback(*args):
-            asyncio.run_coroutine_threadsafe(async_callback(*args), loop)
+            def done(fut):
+                # Get the async result, this will re-raise any exceptions.
+                fut.result()
+
+            result = asyncio.run_coroutine_threadsafe(async_callback(*args), loop)
+            result.add_done_callback(done)
 
         self.set_key_callback(callback)
 
@@ -521,7 +526,12 @@ class StreamDeck(ABC):
         loop = loop or asyncio.get_event_loop()
 
         def callback(*args):
-            asyncio.run_coroutine_threadsafe(async_callback(*args), loop)
+            def done(fut):
+                # Get the async result, this will re-raise any exceptions.
+                fut.result()
+
+            result = asyncio.run_coroutine_threadsafe(async_callback(*args), loop)
+            result.add_done_callback(done)
 
         self.set_dial_callback(callback)
 
@@ -565,7 +575,12 @@ class StreamDeck(ABC):
         loop = loop or asyncio.get_event_loop()
 
         def callback(*args):
-            asyncio.run_coroutine_threadsafe(async_callback(*args), loop)
+            def done(fut):
+                # Get the async result, this will re-raise any exceptions.
+                fut.result()
+
+            result = asyncio.run_coroutine_threadsafe(async_callback(*args), loop)
+            result.add_done_callback(done)
 
         self.set_touchscreen_callback(callback)
 
