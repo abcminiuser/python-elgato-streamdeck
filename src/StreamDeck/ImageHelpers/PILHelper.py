@@ -40,7 +40,13 @@ def _to_native_format(image, image_format):
         image.thumbnail(image_format['size'])
 
     if image_format['rotation']:
-        image = image.rotate(image_format['rotation'])
+        # expand=True grows the canvas to fit the rotated content. This is a
+        # no-op for square images or 0/180 degree rotations (all pre-existing
+        # devices), but is required for devices with non-square touchscreen/
+        # screen images that need a 90/270 degree rotation (e.g. Stream Deck
+        # + XL), otherwise the rotated content would be clipped to the
+        # original canvas bounds.
+        image = image.rotate(image_format['rotation'], expand=True)
 
     if image_format['flip'][0]:
         image = image.transpose(Image.FLIP_LEFT_RIGHT)
