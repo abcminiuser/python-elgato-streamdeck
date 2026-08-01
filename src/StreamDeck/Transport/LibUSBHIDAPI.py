@@ -359,7 +359,7 @@ class LibUSBHIDAPI(Transport):
         def __del__(self):
             self.close()
 
-        def __exit__(self):
+        def __exit__(self, type, value, traceback):
             self.close()
 
         def open(self):
@@ -381,7 +381,7 @@ class LibUSBHIDAPI(Transport):
 
         def connected(self):
             with self.mutex:
-                return any([d['path'] == self.device_info['path'] for d in self.hidapi.enumerate()])
+                return any(d['path'] == self.device_info['path'] for d in self.hidapi.enumerate())
 
         def vendor_id(self):
             return self.device_info['vendor_id']
