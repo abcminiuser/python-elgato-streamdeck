@@ -110,7 +110,7 @@ if __name__ == "__main__":
 
         # Helper function that will run a periodic loop which updates the
         # images on each key.
-        def animate(fps):
+        def animate(deck, key_images, fps):
             # Convert frames per second to frame time in seconds.
             #
             # Frame time often cannot be fully expressed by a float type,
@@ -162,7 +162,7 @@ if __name__ == "__main__":
                     time.sleep(sleep_interval)
 
         # Kick off the key image animating thread.
-        threading.Thread(target=animate, args=[FRAMES_PER_SECOND]).start()
+        threading.Thread(target=animate, args=[deck, key_images, FRAMES_PER_SECOND]).start()
 
         # Register callback function for when a key state changes.
         deck.set_key_callback(key_change_callback)
