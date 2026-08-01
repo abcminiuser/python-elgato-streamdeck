@@ -85,7 +85,7 @@ class StreamDeckMini(StreamDeck):
 
     def set_key_image(self, key, image):
         if min(max(key, 0), self.KEY_COUNT) != key:
-            raise IndexError("Invalid key index {}.".format(key))
+            raise IndexError(f"Invalid key index {key}.")
 
         image = bytes(image or self.BLANK_KEY_IMAGE)
 

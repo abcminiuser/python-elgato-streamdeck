@@ -20,7 +20,7 @@ class Dummy(Transport):
         def __init__(self, vid, pid):
             self.vid = vid
             self.pid = pid
-            self.id = "{}:{}".format(vid, pid)
+            self.id = f"{vid}:{pid}"
             self.is_open = False
 
         def open(self):

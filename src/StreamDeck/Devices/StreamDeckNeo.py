@@ -141,7 +141,7 @@ class StreamDeckNeo(StreamDeck):
 
     def set_key_image(self, key, image):
         if min(max(key, 0), self.KEY_COUNT - 1) != key:
-            raise IndexError("Invalid key index {}.".format(key))
+            raise IndexError(f"Invalid key index {key}.")
 
         image = bytes(image or self.BLANK_KEY_IMAGE)
 
@@ -171,7 +171,7 @@ class StreamDeckNeo(StreamDeck):
 
     def set_key_color(self, key, r, g, b):
         if min(max(key, 0), self.KEY_COUNT + self.TOUCH_KEY_COUNT - 1) != key:
-            raise IndexError("Invalid touch key index {}.".format(key))
+            raise IndexError(f"Invalid touch key index {key}.")
 
         if r > 255 or r < 0 or g > 255 or g < 0 or b > 255 or b < 0:
             raise ValueError("Invalid color")

@@ -67,7 +67,7 @@ def get_key_style(deck, key, state):
         name = "emoji"
         icon = "{}.png".format("Pressed" if state else "Released")
         font = "Roboto-Regular.ttf"
-        label = "Pressed!" if state else "Key {}".format(key)
+        label = "Pressed!" if state else f"Key {key}"
 
     return {
         "name": name,
@@ -97,7 +97,7 @@ def update_key_image(deck, key, state):
 # associated actions when a key is pressed.
 def key_change_callback(deck, key, state):
     # Print new key state
-    print("Deck {} Key {} = {}".format(deck.id(), key, state), flush=True)
+    print(f"Deck {deck.id()} Key {key} = {state}", flush=True)
 
     # Don't try to set an image for touch buttons but set a random color
     if key >= deck.key_count():
@@ -135,7 +135,7 @@ def set_random_touch_color(deck, key):
 if __name__ == "__main__":
     streamdecks = DeviceManager().enumerate()
 
-    print("Found {} Stream Deck(s).\n".format(len(streamdecks)))
+    print(f"Found {len(streamdecks)} Stream Deck(s).\n")
 
     for index, deck in enumerate(streamdecks):
         # This example only works with devices that have screens.
@@ -145,9 +145,7 @@ if __name__ == "__main__":
         deck.open()
         deck.reset()
 
-        print("Opened '{}' device (serial number: '{}', fw: '{}')".format(
-            deck.deck_type(), deck.get_serial_number(), deck.get_firmware_version()
-        ))
+        print(f"Opened '{deck.deck_type()}' device (serial number: '{deck.get_serial_number()}', fw: '{deck.get_firmware_version()}')")
 
         # Set initial screen brightness to 30%.
         deck.set_brightness(30)

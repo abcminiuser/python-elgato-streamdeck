@@ -412,7 +412,7 @@ class StreamDeckPlus(StreamDeck):
 
     def set_key_image(self, key, image):
         if min(max(key, 0), self.KEY_COUNT) != key:
-            raise IndexError("Invalid key index {}.".format(key))
+            raise IndexError(f"Invalid key index {key}.")
 
         image = bytes(image or self.BLANK_KEY_IMAGE)
 
@@ -448,16 +448,16 @@ class StreamDeckPlus(StreamDeck):
             height = self.TOUCHSCREEN_PIXEL_HEIGHT
 
         if min(max(x_pos, 0), self.TOUCHSCREEN_PIXEL_WIDTH) != x_pos:
-            raise IndexError("Invalid x position {}.".format(x_pos))
+            raise IndexError(f"Invalid x position {x_pos}.")
 
         if min(max(y_pos, 0), self.TOUCHSCREEN_PIXEL_HEIGHT) != y_pos:
-            raise IndexError("Invalid y position {}.".format(y_pos))
+            raise IndexError(f"Invalid y position {y_pos}.")
 
         if min(max(width, 1), self.TOUCHSCREEN_PIXEL_WIDTH - x_pos) != width:
-            raise IndexError("Invalid draw width {}.".format(width))
+            raise IndexError(f"Invalid draw width {width}.")
 
         if min(max(height, 1), self.TOUCHSCREEN_PIXEL_HEIGHT - y_pos) != height:
-            raise IndexError("Invalid draw height {}.".format(height))
+            raise IndexError(f"Invalid draw height {height}.")
 
         image = bytes(image)
 

@@ -58,13 +58,13 @@ class DeviceManager:
             transport_class = transports.get(transport)
 
             if transport_class is None:
-                raise ProbeError("Unknown HID transport backend \"{}\".".format(transport))
+                raise ProbeError(f"Unknown HID transport backend \"{transport}\".")
 
             try:
                 transport_class.probe()
                 return transport_class()
             except Exception as transport_error:
-                raise ProbeError("Probe failed on HID backend \"{}\".".format(transport), transport_error)
+                raise ProbeError(f"Probe failed on HID backend \"{transport}\".", transport_error)
         else:
             probe_errors = {}
 

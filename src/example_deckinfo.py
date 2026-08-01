@@ -25,14 +25,11 @@ def print_deck_info(index, deck):
         (True, True): "mirrored horizontally/vertically",
     }
 
-    print("Deck {} - {}.".format(index, deck.deck_type()))
-    print("\t - ID: {}".format(deck.id()))
-    print("\t - Serial: '{}'".format(deck.get_serial_number()))
-    print("\t - Firmware Version: '{}'".format(deck.get_firmware_version()))
-    print("\t - Key Count: {} (in a {}x{} grid)".format(
-        deck.key_count(),
-        deck.key_layout()[0],
-        deck.key_layout()[1]))
+    print(f"Deck {index} - {deck.deck_type()}.")
+    print(f"\t - ID: {deck.id()}")
+    print(f"\t - Serial: '{deck.get_serial_number()}'")
+    print(f"\t - Firmware Version: '{deck.get_firmware_version()}'")
+    print(f"\t - Key Count: {deck.key_count()} (in a {deck.key_layout()[0]}x{deck.key_layout()[1]} grid)")
     if deck.is_visual():
         print("\t - Key Images: {}x{} pixels, {} format, rotated {} degrees, {}".format(
             key_image_format['size'][0],
@@ -55,7 +52,7 @@ def print_deck_info(index, deck):
 if __name__ == "__main__":
     streamdecks = DeviceManager().enumerate()
 
-    print("Found {} Stream Deck(s).\n".format(len(streamdecks)))
+    print(f"Found {len(streamdecks)} Stream Deck(s).\n")
 
     for index, deck in enumerate(streamdecks):
         deck.open()

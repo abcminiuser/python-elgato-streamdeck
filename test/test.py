@@ -102,7 +102,7 @@ if __name__ == "__main__":
         test_streamdecks = [deck for deck in test_streamdecks if deck.deck_type() == args.model]
 
     if len(test_streamdecks) == 0:
-        logging.error("Error: No Stream Decks to test. Known models: {}".format([d.deck_type() for d in streamdecks]))
+        logger.error(f"Error: No Stream Decks to test. Known models: {[d.deck_type() for d in streamdecks]}")
         sys.exit(1)
 
     tests = {

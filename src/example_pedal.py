@@ -24,14 +24,12 @@ def key_change_callback(deck, key, state):
 if __name__ == "__main__":
     streamdecks = DeviceManager().enumerate()
 
-    print("Found {} Stream Deck(s).\n".format(len(streamdecks)))
+    print(f"Found {len(streamdecks)} Stream Deck(s).\n")
 
     for index, deck in enumerate(streamdecks):
         deck.open()
 
-        print("Opened '{}' device (serial number: '{}', fw: '{}')".format(
-            deck.deck_type(), deck.get_serial_number(), deck.get_firmware_version()
-        ))
+        print(f"Opened '{deck.deck_type()}' device (serial number: '{deck.get_serial_number()}', fw: '{deck.get_firmware_version()}')")
 
         # Register callback function for when a key state changes.
         deck.set_key_callback(key_change_callback)

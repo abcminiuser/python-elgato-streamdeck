@@ -98,7 +98,7 @@ def key_change_callback(deck, key, state):
 if __name__ == "__main__":
     streamdecks = DeviceManager().enumerate()
 
-    print("Found {} Stream Deck(s).\n".format(len(streamdecks)))
+    print(f"Found {len(streamdecks)} Stream Deck(s).\n")
 
     for index, deck in enumerate(streamdecks):
         # This example only works with devices that have screens.
@@ -108,7 +108,7 @@ if __name__ == "__main__":
         deck.open()
         deck.reset()
 
-        print("Opened '{}' device (serial number: '{}')".format(deck.deck_type(), deck.get_serial_number()))
+        print(f"Opened '{deck.deck_type()}' device (serial number: '{deck.get_serial_number()}')")
 
         # Set initial screen brightness to 30%.
         deck.set_brightness(30)
@@ -121,7 +121,7 @@ if __name__ == "__main__":
         # StreamDeck.
         image = create_full_deck_sized_image(deck, key_spacing, "Harold.jpg")
 
-        print("Created full deck image size of {}x{} pixels.".format(image.width, image.height))
+        print(f"Created full deck image size of {image.width}x{image.height} pixels.")
 
         # Extract out the section of the image that is occupied by each key.
         key_images = dict()

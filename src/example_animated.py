@@ -75,7 +75,7 @@ def key_change_callback(deck, key, state):
 if __name__ == "__main__":
     streamdecks = DeviceManager().enumerate()
 
-    print("Found {} Stream Deck(s).\n".format(len(streamdecks)))
+    print(f"Found {len(streamdecks)} Stream Deck(s).\n")
 
     for index, deck in enumerate(streamdecks):
         # This example only works with devices that have screens.
@@ -85,7 +85,7 @@ if __name__ == "__main__":
         deck.open()
         deck.reset()
 
-        print("Opened '{}' device (serial number: '{}')".format(deck.deck_type(), deck.get_serial_number()))
+        print(f"Opened '{deck.deck_type()}' device (serial number: '{deck.get_serial_number()}')")
 
         # Set initial screen brightness to 30%.
         deck.set_brightness(30)
@@ -137,7 +137,7 @@ if __name__ == "__main__":
                         for key, frames in key_images.items():
                             deck.set_key_image(key, next(frames))
                 except TransportError as err:
-                    print("TransportError: {0}".format(err))
+                    print(f"TransportError: {err}")
                     # Something went wrong while communicating with the device
                     # (closed?) - don't re-schedule the next animation frame.
                     break
