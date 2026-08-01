@@ -5,7 +5,9 @@
 #         www.fourwalledcubicle.com
 #
 
-from .StreamDeck import StreamDeck, ControlType
+from typing import ClassVar
+
+from .StreamDeck import ControlType, StreamDeck
 
 
 class StreamDeckOriginal(StreamDeck):
@@ -30,7 +32,7 @@ class StreamDeckOriginal(StreamDeck):
     IMAGE_REPORT_HEADER_LENGTH = 16
 
     # 72 x 72 black BMP
-    BLANK_KEY_IMAGE = [
+    BLANK_KEY_IMAGE : ClassVar[list[int]] = [
         0x42, 0x4d, 0xf6, 0x3c, 0x00, 0x00, 0x00, 0x00,
         0x00, 0x00, 0x36, 0x00, 0x00, 0x00, 0x28, 0x00,
         0x00, 0x00, 0x48, 0x00, 0x00, 0x00, 0x48, 0x00,

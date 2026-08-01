@@ -11,10 +11,11 @@
 # tiles generated at runtime, and responding to button state change events.
 
 import os
-import threading
 import random
+import threading
 
 from PIL import Image, ImageDraw, ImageFont
+
 from StreamDeck.DeviceManager import DeviceManager
 from StreamDeck.ImageHelpers import PILHelper
 from StreamDeck.Transport.Transport import TransportError

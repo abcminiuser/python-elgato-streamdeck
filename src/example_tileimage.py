@@ -15,6 +15,7 @@ import os
 import threading
 
 from PIL import Image, ImageOps
+
 from StreamDeck.DeviceManager import DeviceManager
 from StreamDeck.ImageHelpers import PILHelper
 from StreamDeck.Transport.Transport import TransportError

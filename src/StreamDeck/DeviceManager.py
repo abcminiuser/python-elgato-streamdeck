@@ -10,14 +10,14 @@ from .Devices.StreamDeckMini import StreamDeckMini
 from .Devices.StreamDeckNeo import StreamDeckNeo
 from .Devices.StreamDeckOriginal import StreamDeckOriginal
 from .Devices.StreamDeckOriginalV2 import StreamDeckOriginalV2
-from .Devices.StreamDeckXL import StreamDeckXL
 from .Devices.StreamDeckPedal import StreamDeckPedal
-from .Devices.StreamDeckStudio import StreamDeckStudio
 from .Devices.StreamDeckPlus import StreamDeckPlus
+from .Devices.StreamDeckStudio import StreamDeckStudio
+from .Devices.StreamDeckXL import StreamDeckXL
+from .ProductIDs import USBProductIDs, USBVendorIDs
 from .Transport import Transport
 from .Transport.Dummy import Dummy
 from .Transport.LibUSBHIDAPI import LibUSBHIDAPI
-from .ProductIDs import USBVendorIDs, USBProductIDs
 
 
 class ProbeError(Exception):

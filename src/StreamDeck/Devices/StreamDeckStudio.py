@@ -5,8 +5,10 @@
 #         www.fourwalledcubicle.com
 #
 
-from .StreamDeck import ControlType, DialEventType, StreamDeck
+from typing import Callable, ClassVar
+
 from ..ImageHelpers import PILHelper
+from .StreamDeck import ControlType, DialEventType, StreamDeck
 
 
 def _dials_rotation_transform(value):
@@ -49,13 +51,14 @@ class StreamDeckStudio(StreamDeck):
     _KEY_PACKET_PAYLOAD_LEN = _IMG_PACKET_LEN - _KEY_PACKET_HEADER
     _LCD_PACKET_PAYLOAD_LEN = _IMG_PACKET_LEN - _LCD_PACKET_HEADER
 
-    _DIAL_EVENT_TRANSFORM = {
+    _DIAL_EVENT_TRANSFORM : ClassVar[dict[DialEventType, Callable[[int], int]]] = {
         DialEventType.TURN: _dials_rotation_transform,
         DialEventType.PUSH: bool,
     }
 
     def __init__(self, device):
         super().__init__(device)
+
         self.BLANK_KEY_IMAGE = PILHelper.to_native_key_format(
             self, PILHelper.create_key_image(self, "black")
         )

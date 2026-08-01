@@ -7,11 +7,12 @@
 
 # Example script showing some Stream Deck + specific functions
 
+import io
 import os
 import threading
-import io
 
 from PIL import Image
+
 from StreamDeck.DeviceManager import DeviceManager
 from StreamDeck.Devices.StreamDeck import DialEventType, TouchscreenEventType
 from StreamDeck.Transport.Transport import TransportError

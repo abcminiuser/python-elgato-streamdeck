@@ -16,9 +16,10 @@ import itertools
 import os
 import threading
 import time
-
 from fractions import Fraction
+
 from PIL import Image, ImageSequence
+
 from StreamDeck.DeviceManager import DeviceManager
 from StreamDeck.ImageHelpers import PILHelper
 from StreamDeck.Transport.Transport import TransportError

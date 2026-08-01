@@ -8,9 +8,9 @@
 import threading
 import time
 from abc import ABC, abstractmethod
-from collections.abc import Callable, Awaitable
+from collections.abc import Awaitable, Callable, Iterable
 from enum import Enum
-from typing import Any, Iterable, TypeVar
+from typing import Any, TypeVar
 
 from ..Transport.Transport import Transport, TransportError
 

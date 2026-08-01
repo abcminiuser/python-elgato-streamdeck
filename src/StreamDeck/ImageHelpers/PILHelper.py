@@ -6,6 +6,7 @@
 #
 
 import io
+
 from PIL import Image
 
 from ..Devices.StreamDeck import StreamDeck

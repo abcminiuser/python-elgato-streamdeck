@@ -15,8 +15,8 @@ import asyncio
 import os
 import threading
 
-
 from PIL import Image, ImageDraw, ImageFont
+
 from StreamDeck.DeviceManager import DeviceManager
 from StreamDeck.ImageHelpers import PILHelper
 from StreamDeck.Transport.Transport import TransportError

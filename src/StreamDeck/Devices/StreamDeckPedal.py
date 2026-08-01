@@ -5,7 +5,7 @@
 #         www.fourwalledcubicle.com
 #
 
-from .StreamDeck import StreamDeck, ControlType
+from .StreamDeck import ControlType, StreamDeck
 
 
 class StreamDeckPedal(StreamDeck):

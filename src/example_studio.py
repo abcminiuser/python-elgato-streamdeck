@@ -14,10 +14,11 @@ import os
 import threading
 
 from PIL import Image, ImageDraw, ImageFont
+
 from StreamDeck.DeviceManager import DeviceManager
+from StreamDeck.Devices.StreamDeck import DialEventType
 from StreamDeck.ImageHelpers import PILHelper
 from StreamDeck.Transport.Transport import TransportError
-from StreamDeck.Devices.StreamDeck import DialEventType
 
 # Folder location of image assets used by this example.
 ASSETS_PATH = os.path.join(os.path.dirname(__file__), "Assets")
