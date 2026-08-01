@@ -12,11 +12,13 @@ import logging
 import os
 import sys
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../src'))
+from PIL import ImageDraw
 
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../src'))
 from StreamDeck.DeviceManager import DeviceManager
 from StreamDeck.ImageHelpers import PILHelper
-from PIL import ImageDraw
+
+logger = logging.getLogger(__name__)
 
 
 def test_pil_helpers(deck):
@@ -116,13 +118,13 @@ if __name__ == "__main__":
         test_runners = {name: test for (name, test) in test_runners.items() if name == args.test}
 
     if len(test_runners) == 0:
-        logging.error("Error: No Stream Decks tests to run. Known tests: {}".format([name for name, test in tests.items()]))
+        logger.error(f"Error: No Stream Decks tests to run. Known tests: {[name for name, test in tests.items()]}")
         sys.exit(1)
 
     for deck_index, deck in enumerate(test_streamdecks):
-        logging.info("Using Deck Type: {}".format(deck.deck_type()))
+        logger.info(f"Using Deck Type: {deck.deck_type()}")
 
         for name, test in test_runners.items():
-            logging.info("Running Test: {}".format(name))
+            logger.info(f"Running Test: {name}")
             test(deck)
-            logging.info("Finished Test: {}".format(name))
+            logger.info(f"Finished Test: {name}")
