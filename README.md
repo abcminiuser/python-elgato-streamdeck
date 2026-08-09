@@ -84,6 +84,7 @@ development and maintenance of this library:
 - [m-weigand](https://github.com/m-weigand)
 - [mathben](https://github.com/mathben)
 - [matrixinius](https://github.com/matrixinius)
+- [mdlopezme](https://github.com/mdlopezme)
 - [phillco](https://github.com/phillco)
 - [pointshader](https://github.com/pointshader)
 - [pylogger-html](https://github.com/pylogger-html)
