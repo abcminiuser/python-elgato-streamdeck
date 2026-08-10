@@ -29,6 +29,7 @@ variants:
 * StreamDeck Original
 * StreamDeck Pedal
 * StreamDeck Plus
+* StreamDeck Plus XL
 * StreamDeck Studio
 * StreamDeck XL
 
