@@ -16,6 +16,9 @@ setuptools.setup(
    package_dir={'': 'src'},
    packages=setuptools.find_packages(where='src'),
    install_requires=[],
+   extras_require={
+       'simulator': ['pygame'],
+   },
    license="MIT",
    long_description=long_description,
    long_description_content_type="text/markdown",
