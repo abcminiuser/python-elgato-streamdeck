@@ -15,7 +15,6 @@ class TransportError(Exception):
     be accessed).
     """
 
-    pass
 
 
 class Transport(ABC):
@@ -39,7 +38,6 @@ class Transport(ABC):
             .. seealso:: See :func:`~Transport.Device.close` for the
                          corresponding close method.
             """
-            pass
 
         @abstractmethod
         def close(self) -> None:
@@ -49,7 +47,6 @@ class Transport(ABC):
             .. seealso:: See :func:`~~Transport.Device.open` for the
                          corresponding open method.
             """
-            pass
 
         @abstractmethod
         def is_open(self) -> bool:
@@ -60,7 +57,6 @@ class Transport(ABC):
             :rtype: bool
             :return: `True` if the device is open, `False` otherwise.
             """
-            pass
 
         @abstractmethod
         def connected(self) -> bool:
@@ -71,7 +67,6 @@ class Transport(ABC):
             :rtype: bool
             :return: `True` if the device is still connected, `False` otherwise.
             """
-            pass
 
         @abstractmethod
         def path(self) -> str:
@@ -83,7 +78,6 @@ class Transport(ABC):
             :rtype: str
             :return: Logical device path for the attached device.
             """
-            pass
 
         @abstractmethod
         def vendor_id(self) -> int:
@@ -93,7 +87,6 @@ class Transport(ABC):
             :rtype: int
             :return: Vendor ID of the attached device.
             """
-            pass
 
         @abstractmethod
         def product_id(self) -> int:
@@ -103,7 +96,6 @@ class Transport(ABC):
             :rtype: int
             :return: Product ID of the attached device.
             """
-            pass
 
         @abstractmethod
         def write_feature(self, payload: bytes) -> int:
@@ -118,7 +110,6 @@ class Transport(ABC):
             :rtype: int
             :return: Number of bytes successfully sent to the device.
             """
-            pass
 
         @abstractmethod
         def read_feature(self, report_id: int, length: int) -> bytes:
@@ -133,7 +124,6 @@ class Transport(ABC):
                      first byte of the report will be the Report ID of the
                      report that was read.
             """
-            pass
 
         @abstractmethod
         def write(self, payload: bytes) -> int:
@@ -148,7 +138,6 @@ class Transport(ABC):
             :rtype: int
             :return: Number of bytes successfully sent to the device.
             """
-            pass
 
         @abstractmethod
         def read(self, length: int) -> bytes:
@@ -162,7 +151,6 @@ class Transport(ABC):
                      of the report will be the Report ID of the report that was
                      read.
             """
-            pass
 
     @staticmethod
     @abstractmethod
@@ -172,7 +160,6 @@ class Transport(ABC):
         expected that probe failures throw exceptions detailing their exact
         cause of failure.
         """
-        pass
 
     @abstractmethod
     def enumerate(self, vid: int, pid: int) -> list[Device]:
@@ -189,4 +176,3 @@ class Transport(ABC):
         :return: List of discovered devices that are available through this
                  transport back-end.
         """
-        pass

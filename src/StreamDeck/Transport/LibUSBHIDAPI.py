@@ -21,7 +21,7 @@ class LibUSBHIDAPI(Transport):
     directly via ctypes.
     """
 
-    class Library():
+    class Library:
         HIDAPI_INSTANCE = None
         HOMEBREW_PREFIX = None
 
@@ -32,10 +32,10 @@ class LibUSBHIDAPI(Transport):
             homebrew_path = os.environ.get('HOMEBREW_PREFIX')
             if not homebrew_path:
                 try:
-                    import subprocess # nosec B404
+                    import subprocess
 
-                    homebrew_path = subprocess.run(['brew', '--prefix'], stdout=subprocess.PIPE, text=True, check=True).stdout.strip() # nosec
-                except: # nosec B110
+                    homebrew_path = subprocess.run(['brew', '--prefix'], stdout=subprocess.PIPE, text=True, check=True).stdout.strip()
+                except:
                     pass
 
             return homebrew_path
@@ -80,7 +80,7 @@ class LibUSBHIDAPI(Transport):
                 try:
                     type(self).HIDAPI_INSTANCE = ctypes.cdll.LoadLibrary(found_lib if found_lib else lib_name)
                     break
-                except: # nosec B110
+                except:
                     pass
             else:
                 return None
@@ -90,7 +90,6 @@ class LibUSBHIDAPI(Transport):
                 Structure definition for the hid_device_info structure defined
                 in the LibUSB HIDAPI library API.
                 """
-                pass
 
             hid_device_info._fields_ = [
                 ('path', ctypes.c_char_p),

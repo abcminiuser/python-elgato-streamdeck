@@ -5,7 +5,8 @@
 #         www.fourwalledcubicle.com
 #
 
-from typing import Callable, ClassVar
+from collections.abc import Callable
+from typing import ClassVar
 
 from .StreamDeck import ControlType, DialEventType, StreamDeck
 

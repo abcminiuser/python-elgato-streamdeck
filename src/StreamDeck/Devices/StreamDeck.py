@@ -140,7 +140,6 @@ class StreamDeck(ABC):
 
         :return: dictionary containing states for all controls
         """
-        pass
 
     @abstractmethod
     def _reset_key_stream(self) -> None:
@@ -150,7 +149,6 @@ class StreamDeck(ABC):
         writes that were not completed from corrupting images sent from this
         application.
         """
-        pass
 
     def _extract_string(self, data: Iterable[int]) -> str:
         """
@@ -613,10 +611,9 @@ class StreamDeck(ABC):
         Resets the StreamDeck, clearing all button images and showing the
         standby image.
         """
-        pass
 
     @abstractmethod
-    def set_brightness(self, percent: int | float) -> None:
+    def set_brightness(self, percent: float) -> None:
         """
         Sets the global screen brightness of the StreamDeck, across all the
         physical buttons.
@@ -624,7 +621,6 @@ class StreamDeck(ABC):
         :param int/float percent: brightness percent, from [0-100] as an `int`,
                                   or normalized to [0.0-1.0] as a `float`.
         """
-        pass
 
     @abstractmethod
     def get_serial_number(self) -> str:
@@ -634,7 +630,6 @@ class StreamDeck(ABC):
         :rtype: str
         :return: String containing the serial number of the attached device.
         """
-        pass
 
     @abstractmethod
     def get_firmware_version(self) -> str:
@@ -644,7 +639,6 @@ class StreamDeck(ABC):
         :rtype: str
         :return: String containing the firmware version of the attached device.
         """
-        pass
 
     @abstractmethod
     def set_key_image(self, key: int, image: bytes) -> None:
@@ -661,7 +655,6 @@ class StreamDeck(ABC):
                                  If `None`, the key will be cleared to a black
                                  color.
         """
-        pass
 
     @abstractmethod
     def set_touchscreen_image(self, image: bytes, x_pos: int = 0, y_pos: int = 0, width: int = 0, height: int = 0):
@@ -681,7 +674,6 @@ class StreamDeck(ABC):
         :param int height: height of the image
 
         """
-        pass
 
     @abstractmethod
     def set_key_color(self, key: int, r: int, g: int, b: int) -> None:
@@ -695,7 +687,6 @@ class StreamDeck(ABC):
         :param int b: Blue value
 
         """
-        pass
 
     @abstractmethod
     def set_screen_image(self, image: bytes) -> None:
@@ -708,4 +699,3 @@ class StreamDeck(ABC):
         :param enumerable image: Raw data of the image to set on the button.
                                  If `None`, the screen will be cleared.
         """
-        pass

@@ -59,7 +59,7 @@ def dial_change_callback(deck, dial, event, value):
             icon = Image.open(os.path.join(ASSETS_PATH, 'Exit.png')).resize((80, 80))
             img.paste(icon, (690, 10), icon)
 
-            for k in range(0, deck.DIAL_COUNT - 1):
+            for k in range(deck.DIAL_COUNT - 1):
                 img.paste(pressed_icon if (dial == k and value) else released_icon, (30 + (k * 220), 10),
                           pressed_icon if (dial == k and value) else released_icon)
 
@@ -111,7 +111,7 @@ if __name__ == "__main__":
         # Set initial screen brightness to 30%.
         deck.set_brightness(100)
 
-        for key in range(0, deck.KEY_COUNT):
+        for key in range(deck.KEY_COUNT):
             deck.set_key_image(key, img_released_bytes)
 
         # build an image for the touch lcd
@@ -119,7 +119,7 @@ if __name__ == "__main__":
         icon = Image.open(os.path.join(ASSETS_PATH, 'Exit.png')).resize((80, 80))
         img.paste(icon, (690, 10), icon)
 
-        for dial in range(0, deck.DIAL_COUNT - 1):
+        for dial in range(deck.DIAL_COUNT - 1):
             img.paste(released_icon, (30 + (dial * 220), 10), released_icon)
 
         img_bytes = io.BytesIO()

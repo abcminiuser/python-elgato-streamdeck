@@ -27,7 +27,6 @@ class ProbeError(Exception):
     but no suitable valid transport was found.
     """
 
-    pass
 
 
 class DeviceManager:
