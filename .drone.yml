@@ -7,23 +7,19 @@ platform:
   arch: amd64
 
 steps:
-- name: Flake8
+- name: "Ruff Check"
   image: abcminiuser/docker-ci-python:latest
   pull: always
   commands:
-  - flake8 --config .flake8 src/
+  - pip install ruff
+  - ruff check
 
-- name: Bandit
+- name: "Ruff Format"
   image: abcminiuser/docker-ci-python:latest
   pull: always
   commands:
-  - bandit --ini .bandit -r src/
-
-- name: MyPy
-  image: abcminiuser/docker-ci-python:latest
-  pull: always
-  commands:
-  - mypy --ignore-missing-imports src/
+  - pip install ruff
+  - ruff format --exit-non-zero-on-format
 
 - name: Tests
   image: abcminiuser/docker-ci-python:latest
@@ -46,8 +42,7 @@ steps:
   - python -m build
   - twine check dist/*
   depends_on:
-  - Flake8
-  - Bandit
-  - MyPy
+  - "Ruff Check"
+  - "Ruff Format"
   - Tests
   - Documentation
