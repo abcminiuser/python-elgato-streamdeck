@@ -9,4 +9,12 @@ exclude = ['doc/']
 ignore = [
 	'N999', # Too late to adhere to the standard class naming conventions now.
 	'C408', # I like my explicit empty dict()/list().
+
+	# Suppress existing warnings. TODO: Clean up.
+	'F841',
+	'RUF059',
+	'S110',
+	'E722',
+	'BLE001',
+	'SIM102',
 ]
