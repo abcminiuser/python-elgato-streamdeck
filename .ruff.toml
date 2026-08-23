@@ -1,0 +1,12 @@
+target-version = "py310"
+
+line-length = 88
+indent-width = 4
+
+exclude = ['doc/']
+
+[lint]
+ignore = [
+	'N999', # Too late to adhere to the standard class naming conventions now.
+	'C408', # I like my explicit empty dict()/list().
+]

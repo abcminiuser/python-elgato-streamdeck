@@ -26,30 +26,30 @@ def test_pil_helpers(deck):
         return
 
     test_key_image_pil = PILHelper.create_key_image(deck)
-    test_scaled_key_image_pil = PILHelper.create_scaled_key_image(deck, test_key_image_pil)     # noqa: F841
-    test_key_image_native = PILHelper.to_native_key_format(deck, test_scaled_key_image_pil)     # noqa: F841
+    test_scaled_key_image_pil = PILHelper.create_scaled_key_image(deck, test_key_image_pil)
+    test_key_image_native = PILHelper.to_native_key_format(deck, test_scaled_key_image_pil)
 
     if deck.is_touch():
         test_touchscreen_image_pil = PILHelper.create_touchscreen_image(deck)
-        test_scaled_touchscreen_image_pil = PILHelper.create_scaled_touchscreen_image(deck, test_touchscreen_image_pil)     # noqa: F841
-        test_touchscreen_image_native = PILHelper.to_native_touchscreen_format(deck, test_scaled_touchscreen_image_pil)     # noqa: F841
+        test_scaled_touchscreen_image_pil = PILHelper.create_scaled_touchscreen_image(deck, test_touchscreen_image_pil)
+        test_touchscreen_image_native = PILHelper.to_native_touchscreen_format(deck, test_scaled_touchscreen_image_pil)
 
 
 def test_basic_apis(deck):
     with deck:
         deck.open()
 
-        connected = deck.connected()     # noqa: F841
-        deck_id = deck.id()     # noqa: F841
-        key_count = deck.key_count()     # noqa: F841
-        vendor_id = deck.vendor_id()     # noqa: F841
-        product_id = deck.product_id()     # noqa: F841
-        deck_type = deck.deck_type()     # noqa: F841
-        key_layout = deck.key_layout()     # noqa: F841
-        key_image_format = deck.key_image_format() if deck.is_visual() else None     # noqa: F841
-        key_states = deck.key_states()     # noqa: F841
-        dial_states = deck.dial_states()     # noqa: F841
-        touchscreen_image_format = deck.touchscreen_image_format() if deck.is_touch() else None     # noqa: F841
+        connected = deck.connected()
+        deck_id = deck.id()
+        key_count = deck.key_count()
+        vendor_id = deck.vendor_id()
+        product_id = deck.product_id()
+        deck_type = deck.deck_type()
+        key_layout = deck.key_layout()
+        key_image_format = deck.key_image_format() if deck.is_visual() else None
+        key_states = deck.key_states()
+        dial_states = deck.dial_states()
+        touchscreen_image_format = deck.touchscreen_image_format() if deck.is_touch() else None
 
         deck.set_key_callback(None)
         deck.reset()
