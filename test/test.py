@@ -14,7 +14,7 @@ import sys
 
 from PIL import ImageDraw
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../src'))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../src"))
 from StreamDeck.DeviceManager import DeviceManager
 from StreamDeck.ImageHelpers import PILHelper
 
@@ -26,13 +26,21 @@ def test_pil_helpers(deck):
         return
 
     test_key_image_pil = PILHelper.create_key_image(deck)
-    test_scaled_key_image_pil = PILHelper.create_scaled_key_image(deck, test_key_image_pil)
-    test_key_image_native = PILHelper.to_native_key_format(deck, test_scaled_key_image_pil)
+    test_scaled_key_image_pil = PILHelper.create_scaled_key_image(
+        deck, test_key_image_pil
+    )
+    test_key_image_native = PILHelper.to_native_key_format(
+        deck, test_scaled_key_image_pil
+    )
 
     if deck.is_touch():
         test_touchscreen_image_pil = PILHelper.create_touchscreen_image(deck)
-        test_scaled_touchscreen_image_pil = PILHelper.create_scaled_touchscreen_image(deck, test_touchscreen_image_pil)
-        test_touchscreen_image_native = PILHelper.to_native_touchscreen_format(deck, test_scaled_touchscreen_image_pil)
+        test_scaled_touchscreen_image_pil = PILHelper.create_scaled_touchscreen_image(
+            deck, test_touchscreen_image_pil
+        )
+        test_touchscreen_image_native = PILHelper.to_native_touchscreen_format(
+            deck, test_scaled_touchscreen_image_pil
+        )
 
 
 def test_basic_apis(deck):
@@ -49,7 +57,9 @@ def test_basic_apis(deck):
         key_image_format = deck.key_image_format() if deck.is_visual() else None
         key_states = deck.key_states()
         dial_states = deck.dial_states()
-        touchscreen_image_format = deck.touchscreen_image_format() if deck.is_touch() else None
+        touchscreen_image_format = (
+            deck.touchscreen_image_format() if deck.is_touch() else None
+        )
 
         deck.set_key_callback(None)
         deck.reset()
@@ -58,15 +68,25 @@ def test_basic_apis(deck):
             deck.set_brightness(30)
 
             test_key_image_pil = PILHelper.create_key_image(deck)
-            test_key_image_native = PILHelper.to_native_key_format(deck, test_key_image_pil)
+            test_key_image_native = PILHelper.to_native_key_format(
+                deck, test_key_image_pil
+            )
             deck.set_key_image(0, None)
             deck.set_key_image(0, test_key_image_native)
 
             if deck.is_touch():
                 test_touchscreen_image_pil = PILHelper.create_touchscreen_image(deck)
-                test_touchscreen_image_native = PILHelper.to_native_touchscreen_format(deck, test_touchscreen_image_pil)
+                test_touchscreen_image_native = PILHelper.to_native_touchscreen_format(
+                    deck, test_touchscreen_image_pil
+                )
                 deck.set_touchscreen_image(None)
-                deck.set_touchscreen_image(test_touchscreen_image_native, 0, 0, test_touchscreen_image_pil.width, test_touchscreen_image_pil.height)
+                deck.set_touchscreen_image(
+                    test_touchscreen_image_native,
+                    0,
+                    0,
+                    test_touchscreen_image_pil.width,
+                    test_touchscreen_image_pil.height,
+                )
 
         deck.close()
 
@@ -78,7 +98,11 @@ def test_key_pattern(deck):
     test_key_image = PILHelper.create_key_image(deck)
 
     draw = ImageDraw.Draw(test_key_image)
-    draw.rectangle((0, 0) + test_key_image.size, fill=(0x11, 0x22, 0x33), outline=(0x44, 0x55, 0x66))
+    draw.rectangle(
+        (0, 0) + test_key_image.size,
+        fill=(0x11, 0x22, 0x33),
+        outline=(0x44, 0x55, 0x66),
+    )
 
     test_key_image = PILHelper.to_native_key_format(deck, test_key_image)
 
@@ -101,10 +125,14 @@ if __name__ == "__main__":
 
     test_streamdecks = streamdecks
     if args.model:
-        test_streamdecks = [deck for deck in test_streamdecks if deck.deck_type() == args.model]
+        test_streamdecks = [
+            deck for deck in test_streamdecks if deck.deck_type() == args.model
+        ]
 
     if len(test_streamdecks) == 0:
-        logger.error(f"Error: No Stream Decks to test. Known models: {[d.deck_type() for d in streamdecks]}")
+        logger.error(
+            f"Error: No Stream Decks to test. Known models: {[d.deck_type() for d in streamdecks]}"
+        )
         sys.exit(1)
 
     tests = {
@@ -115,10 +143,14 @@ if __name__ == "__main__":
 
     test_runners = tests
     if args.test:
-        test_runners = {name: test for (name, test) in test_runners.items() if name == args.test}
+        test_runners = {
+            name: test for (name, test) in test_runners.items() if name == args.test
+        }
 
     if len(test_runners) == 0:
-        logger.error(f"Error: No Stream Decks tests to run. Known tests: {[name for name, test in tests.items()]}")
+        logger.error(
+            f"Error: No Stream Decks tests to run. Known tests: {[name for name, test in tests.items()]}"
+        )
         sys.exit(1)
 
     for deck_index, deck in enumerate(test_streamdecks):

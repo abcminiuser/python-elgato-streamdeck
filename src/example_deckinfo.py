@@ -29,22 +29,30 @@ def print_deck_info(index, deck):
     print(f"\t - ID: {deck.id()}")
     print(f"\t - Serial: '{deck.get_serial_number()}'")
     print(f"\t - Firmware Version: '{deck.get_firmware_version()}'")
-    print(f"\t - Key Count: {deck.key_count()} (in a {deck.key_layout()[0]}x{deck.key_layout()[1]} grid)")
+    print(
+        f"\t - Key Count: {deck.key_count()} (in a {deck.key_layout()[0]}x{deck.key_layout()[1]} grid)"
+    )
     if deck.is_visual():
-        print("\t - Key Images: {}x{} pixels, {} format, rotated {} degrees, {}".format(
-            key_image_format['size'][0],
-            key_image_format['size'][1],
-            key_image_format['format'],
-            key_image_format['rotation'],
-            flip_description[key_image_format['flip']]))
+        print(
+            "\t - Key Images: {}x{} pixels, {} format, rotated {} degrees, {}".format(
+                key_image_format["size"][0],
+                key_image_format["size"][1],
+                key_image_format["format"],
+                key_image_format["rotation"],
+                flip_description[key_image_format["flip"]],
+            )
+        )
 
         if deck.is_touch():
-            print("\t - Touchscreen: {}x{} pixels, {} format, rotated {} degrees, {}".format(
-                touchscreen_image_format['size'][0],
-                touchscreen_image_format['size'][1],
-                touchscreen_image_format['format'],
-                touchscreen_image_format['rotation'],
-                flip_description[touchscreen_image_format['flip']]))
+            print(
+                "\t - Touchscreen: {}x{} pixels, {} format, rotated {} degrees, {}".format(
+                    touchscreen_image_format["size"][0],
+                    touchscreen_image_format["size"][1],
+                    touchscreen_image_format["format"],
+                    touchscreen_image_format["rotation"],
+                    flip_description[touchscreen_image_format["flip"]],
+                )
+            )
     else:
         print("\t - No Visual Output")
 

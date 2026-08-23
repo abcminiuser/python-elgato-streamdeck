@@ -29,12 +29,17 @@ class LibUSBHIDAPI(Transport):
             if self.platform_name != "Darwin":
                 return None
 
-            homebrew_path = os.environ.get('HOMEBREW_PREFIX')
+            homebrew_path = os.environ.get("HOMEBREW_PREFIX")
             if not homebrew_path:
                 try:
                     import subprocess
 
-                    homebrew_path = subprocess.run(['brew', '--prefix'], stdout=subprocess.PIPE, text=True, check=True).stdout.strip()
+                    homebrew_path = subprocess.run(
+                        ["brew", "--prefix"],
+                        stdout=subprocess.PIPE,
+                        text=True,
+                        check=True,
+                    ).stdout.strip()
                 except:
                     pass
 
@@ -63,7 +68,9 @@ class LibUSBHIDAPI(Transport):
                 # We'll try to use ctypes' utility function to find the library first, using
                 # its default search paths. It requires the name of the library only (minus all
                 # path prefix and extension suffix).
-                library_name_no_extension = os.path.basename(os.path.splitext(lib_name)[0])
+                library_name_no_extension = os.path.basename(
+                    os.path.splitext(lib_name)[0]
+                )
                 try:
                     found_lib = ctypes.util.find_library(library_name_no_extension)
                 except:
@@ -72,13 +79,17 @@ class LibUSBHIDAPI(Transport):
                 # If we've running with a Homebrew installation, and find_library() didn't find the library in
                 # any of the default search paths, we'll look in Homebrew instead as a fallback.
                 if not found_lib and self.HOMEBREW_PREFIX:
-                    library_path_homebrew = os.path.join(self.HOMEBREW_PREFIX, 'lib', lib_name)
+                    library_path_homebrew = os.path.join(
+                        self.HOMEBREW_PREFIX, "lib", lib_name
+                    )
 
                     if os.path.exists(library_path_homebrew):
                         found_lib = library_path_homebrew
 
                 try:
-                    type(self).HIDAPI_INSTANCE = ctypes.cdll.LoadLibrary(found_lib if found_lib else lib_name)
+                    type(self).HIDAPI_INSTANCE = ctypes.cdll.LoadLibrary(
+                        found_lib if found_lib else lib_name
+                    )
                     break
                 except:
                     pass
@@ -92,17 +103,17 @@ class LibUSBHIDAPI(Transport):
                 """
 
             hid_device_info._fields_ = [
-                ('path', ctypes.c_char_p),
-                ('vendor_id', ctypes.c_ushort),
-                ('product_id', ctypes.c_ushort),
-                ('serial_number', ctypes.c_wchar_p),
-                ('release_number', ctypes.c_ushort),
-                ('manufacturer_string', ctypes.c_wchar_p),
-                ('product_string', ctypes.c_wchar_p),
-                ('usage_page', ctypes.c_ushort),
-                ('usage', ctypes.c_ushort),
-                ('interface_number', ctypes.c_int),
-                ('next', ctypes.POINTER(hid_device_info))
+                ("path", ctypes.c_char_p),
+                ("vendor_id", ctypes.c_ushort),
+                ("product_id", ctypes.c_ushort),
+                ("serial_number", ctypes.c_wchar_p),
+                ("release_number", ctypes.c_ushort),
+                ("manufacturer_string", ctypes.c_wchar_p),
+                ("product_string", ctypes.c_wchar_p),
+                ("usage_page", ctypes.c_ushort),
+                ("usage", ctypes.c_ushort),
+                ("interface_number", ctypes.c_int),
+                ("next", ctypes.POINTER(hid_device_info)),
             ]
 
             self.HIDAPI_INSTANCE.hid_init.argtypes = []
@@ -111,10 +122,15 @@ class LibUSBHIDAPI(Transport):
             self.HIDAPI_INSTANCE.hid_exit.argtypes = []
             self.HIDAPI_INSTANCE.hid_exit.restype = ctypes.c_int
 
-            self.HIDAPI_INSTANCE.hid_enumerate.argtypes = [ctypes.c_ushort, ctypes.c_ushort]
+            self.HIDAPI_INSTANCE.hid_enumerate.argtypes = [
+                ctypes.c_ushort,
+                ctypes.c_ushort,
+            ]
             self.HIDAPI_INSTANCE.hid_enumerate.restype = ctypes.POINTER(hid_device_info)
 
-            self.HIDAPI_INSTANCE.hid_free_enumeration.argtypes = [ctypes.POINTER(hid_device_info)]
+            self.HIDAPI_INSTANCE.hid_free_enumeration.argtypes = [
+                ctypes.POINTER(hid_device_info)
+            ]
             self.HIDAPI_INSTANCE.hid_free_enumeration.restype = None
 
             self.HIDAPI_INSTANCE.hid_open_path.argtypes = [ctypes.c_char_p]
@@ -123,19 +139,38 @@ class LibUSBHIDAPI(Transport):
             self.HIDAPI_INSTANCE.hid_close.argtypes = [ctypes.c_void_p]
             self.HIDAPI_INSTANCE.hid_close.restype = None
 
-            self.HIDAPI_INSTANCE.hid_set_nonblocking.argtypes = [ctypes.c_void_p, ctypes.c_int]
+            self.HIDAPI_INSTANCE.hid_set_nonblocking.argtypes = [
+                ctypes.c_void_p,
+                ctypes.c_int,
+            ]
             self.HIDAPI_INSTANCE.hid_set_nonblocking.restype = ctypes.c_int
 
-            self.HIDAPI_INSTANCE.hid_send_feature_report.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_char), ctypes.c_size_t]
+            self.HIDAPI_INSTANCE.hid_send_feature_report.argtypes = [
+                ctypes.c_void_p,
+                ctypes.POINTER(ctypes.c_char),
+                ctypes.c_size_t,
+            ]
             self.HIDAPI_INSTANCE.hid_send_feature_report.restype = ctypes.c_int
 
-            self.HIDAPI_INSTANCE.hid_get_feature_report.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_char), ctypes.c_size_t]
+            self.HIDAPI_INSTANCE.hid_get_feature_report.argtypes = [
+                ctypes.c_void_p,
+                ctypes.POINTER(ctypes.c_char),
+                ctypes.c_size_t,
+            ]
             self.HIDAPI_INSTANCE.hid_get_feature_report.restype = ctypes.c_int
 
-            self.HIDAPI_INSTANCE.hid_write.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_char), ctypes.c_size_t]
+            self.HIDAPI_INSTANCE.hid_write.argtypes = [
+                ctypes.c_void_p,
+                ctypes.POINTER(ctypes.c_char),
+                ctypes.c_size_t,
+            ]
             self.HIDAPI_INSTANCE.hid_write.restype = ctypes.c_int
 
-            self.HIDAPI_INSTANCE.hid_read.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_char), ctypes.c_size_t]
+            self.HIDAPI_INSTANCE.hid_read.argtypes = [
+                ctypes.c_void_p,
+                ctypes.POINTER(ctypes.c_char),
+                ctypes.c_size_t,
+            ]
             self.HIDAPI_INSTANCE.hid_read.restype = ctypes.c_int
 
             self.HIDAPI_INSTANCE.hid_init()
@@ -160,11 +195,15 @@ class LibUSBHIDAPI(Transport):
             platform_search_library_names = search_library_names.get(self.platform_name)
 
             if not platform_search_library_names:
-                raise TransportError("No suitable LibUSB HIDAPI library search names were found for this system.")
+                raise TransportError(
+                    "No suitable LibUSB HIDAPI library search names were found for this system."
+                )
 
             self.hidapi = self._load_hidapi_library(platform_search_library_names)
             if not self.hidapi:
-                raise TransportError(f"No suitable LibUSB HIDAPI library found on this system. Is the '{platform_search_library_names[0]}' library installed?")
+                raise TransportError(
+                    f"No suitable LibUSB HIDAPI library found on this system. Is the '{platform_search_library_names[0]}' library installed?"
+                )
 
             self.mutex = threading.Lock()
 
@@ -193,11 +232,13 @@ class LibUSBHIDAPI(Transport):
                     current_device = device_enumeration
 
                     while current_device:
-                        device_list.append({
-                            'path': current_device.contents.path.decode('utf-8'),
-                            'vendor_id': current_device.contents.vendor_id,
-                            'product_id': current_device.contents.product_id,
-                        })
+                        device_list.append(
+                            {
+                                "path": current_device.contents.path.decode("utf-8"),
+                                "vendor_id": current_device.contents.vendor_id,
+                                "product_id": current_device.contents.product_id,
+                            }
+                        )
 
                         current_device = current_device.contents.next
 
@@ -214,7 +255,7 @@ class LibUSBHIDAPI(Transport):
             """
             with self.mutex:
                 if type(path) is not bytes:
-                    path = bytes(path, 'utf-8')
+                    path = bytes(path, "utf-8")
 
                 handle = self.hidapi.hid_open_path(path)
 
@@ -252,7 +293,9 @@ class LibUSBHIDAPI(Transport):
                 raise TransportError("No HID device.")
 
             with self.mutex:
-                result = self.hidapi.hid_send_feature_report(handle, bytes(data), len(data))
+                result = self.hidapi.hid_send_feature_report(
+                    handle, bytes(data), len(data)
+                )
 
             if result < 0:
                 raise TransportError(f"Failed to write feature report ({result}")
@@ -278,7 +321,7 @@ class LibUSBHIDAPI(Transport):
             # We may need to oversize our read due a bug in some versions of
             # HIDAPI. Only applied on Mac systems, as this will cause other
             # issues on other platforms.
-            read_length = (length + 1) if self.platform_name == 'Darwin' else length
+            read_length = (length + 1) if self.platform_name == "Darwin" else length
 
             data = ctypes.create_string_buffer(read_length)
             data[0] = report_id
@@ -366,7 +409,7 @@ class LibUSBHIDAPI(Transport):
                 if self.device_handle:
                     return
 
-                self.device_handle = self.hidapi.open_device(self.device_info['path'])
+                self.device_handle = self.hidapi.open_device(self.device_info["path"])
 
         def close(self):
             with self.mutex:
@@ -380,16 +423,19 @@ class LibUSBHIDAPI(Transport):
 
         def connected(self):
             with self.mutex:
-                return any(d['path'] == self.device_info['path'] for d in self.hidapi.enumerate())
+                return any(
+                    d["path"] == self.device_info["path"]
+                    for d in self.hidapi.enumerate()
+                )
 
         def vendor_id(self):
-            return self.device_info['vendor_id']
+            return self.device_info["vendor_id"]
 
         def product_id(self):
-            return self.device_info['product_id']
+            return self.device_info["product_id"]
 
         def path(self):
-            return self.device_info['path']
+            return self.device_info["path"]
 
         def write_feature(self, payload):
             with self.mutex:
@@ -397,7 +443,9 @@ class LibUSBHIDAPI(Transport):
 
         def read_feature(self, report_id, length):
             with self.mutex:
-                return self.hidapi.get_feature_report(self.device_handle, report_id, length)
+                return self.hidapi.get_feature_report(
+                    self.device_handle, report_id, length
+                )
 
         def write(self, payload):
             with self.mutex:
@@ -414,4 +462,7 @@ class LibUSBHIDAPI(Transport):
     def enumerate(self, vid, pid):
         hidapi = LibUSBHIDAPI.Library()
 
-        return [LibUSBHIDAPI.Device(hidapi, d) for d in hidapi.enumerate(vendor_id=vid, product_id=pid)]
+        return [
+            LibUSBHIDAPI.Device(hidapi, d)
+            for d in hidapi.enumerate(vendor_id=vid, product_id=pid)
+        ]

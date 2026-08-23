@@ -18,7 +18,10 @@ from StreamDeck.Transport.Transport import TransportError
 
 
 def key_change_callback(deck, key, state):
-    print("Deck {} Key {} = {}".format(deck.id(), key, "down" if state else "up"), flush=True)
+    print(
+        "Deck {} Key {} = {}".format(deck.id(), key, "down" if state else "up"),
+        flush=True,
+    )
 
 
 if __name__ == "__main__":
@@ -29,7 +32,9 @@ if __name__ == "__main__":
     for index, deck in enumerate(streamdecks):
         deck.open()
 
-        print(f"Opened '{deck.deck_type()}' device (serial number: '{deck.get_serial_number()}', fw: '{deck.get_firmware_version()}')")
+        print(
+            f"Opened '{deck.deck_type()}' device (serial number: '{deck.get_serial_number()}', fw: '{deck.get_firmware_version()}')"
+        )
 
         # Register callback function for when a key state changes.
         deck.set_key_callback(key_change_callback)

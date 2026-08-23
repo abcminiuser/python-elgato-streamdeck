@@ -85,7 +85,9 @@ if __name__ == "__main__":
         deck.open()
         deck.reset()
 
-        print(f"Opened '{deck.deck_type()}' device (serial number: '{deck.get_serial_number()}')")
+        print(
+            f"Opened '{deck.deck_type()}' device (serial number: '{deck.get_serial_number()}')"
+        )
 
         # Set initial screen brightness to 30%.
         deck.set_brightness(30)
@@ -162,7 +164,9 @@ if __name__ == "__main__":
                     time.sleep(sleep_interval)
 
         # Kick off the key image animating thread.
-        threading.Thread(target=animate, args=[deck, key_images, FRAMES_PER_SECOND]).start()
+        threading.Thread(
+            target=animate, args=[deck, key_images, FRAMES_PER_SECOND]
+        ).start()
 
         # Register callback function for when a key state changes.
         deck.set_key_callback(key_change_callback)

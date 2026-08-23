@@ -39,7 +39,13 @@ def render_key_image(deck, icon_filename, font_filename, label_text):
     # label onto the image a few pixels from the bottom of the key.
     draw = ImageDraw.Draw(image)
     font = ImageFont.truetype(font_filename, 14)
-    draw.text((image.width / 2, image.height - 5), text=label_text, font=font, anchor="ms", fill="white")
+    draw.text(
+        (image.width / 2, image.height - 5),
+        text=label_text,
+        font=font,
+        anchor="ms",
+        fill="white",
+    )
 
     return PILHelper.to_native_key_format(deck, image)
 
@@ -64,7 +70,7 @@ def get_key_style(deck, key, state):
         "name": name,
         "icon": os.path.join(ASSETS_PATH, icon),
         "font": os.path.join(ASSETS_PATH, font),
-        "label": label
+        "label": label,
     }
 
 
@@ -75,7 +81,9 @@ def update_key_image(deck, key, state):
     key_style = get_key_style(deck, key, state)
 
     # Generate the custom key with the requested image and label.
-    image = render_key_image(deck, key_style["icon"], key_style["font"], key_style["label"])
+    image = render_key_image(
+        deck, key_style["icon"], key_style["font"], key_style["label"]
+    )
 
     # Use a scoped-with on the deck to ensure we're the only thread using it
     # right now.
@@ -145,7 +153,9 @@ if __name__ == "__main__":
         deck.open()
         deck.reset()
 
-        print(f"Opened '{deck.deck_type()}' device (serial number: '{deck.get_serial_number()}', fw: '{deck.get_firmware_version()}')")
+        print(
+            f"Opened '{deck.deck_type()}' device (serial number: '{deck.get_serial_number()}', fw: '{deck.get_firmware_version()}')"
+        )
 
         # Set initial screen brightness to 30%.
         deck.set_brightness(30)

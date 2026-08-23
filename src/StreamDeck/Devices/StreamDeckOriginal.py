@@ -40,7 +40,7 @@ class StreamDeckOriginal(StreamDeck):
         0x00, 0x00, 0xc0, 0x3c, 0x00, 0x00, 0xc4, 0x0e,
         0x00, 0x00, 0xc4, 0x0e, 0x00, 0x00, 0x00, 0x00,
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00
-    ] + [0] * (KEY_PIXEL_WIDTH * KEY_PIXEL_HEIGHT * 3) # fmt: skip
+    ] + [0] * (KEY_PIXEL_WIDTH * KEY_PIXEL_HEIGHT * 3)  # fmt: skip
 
     def _convert_key_id_origin(self, key):
         key_col = key % self.KEY_COLS
@@ -53,7 +53,10 @@ class StreamDeckOriginal(StreamDeck):
 
         states = states[1:]
         return {
-            ControlType.KEY: [bool(states[s]) for s in map(self._convert_key_id_origin, range(self.KEY_COUNT))]
+            ControlType.KEY: [
+                bool(states[s])
+                for s in map(self._convert_key_id_origin, range(self.KEY_COUNT))
+            ]
         }
 
     def _reset_key_stream(self):
@@ -73,7 +76,7 @@ class StreamDeckOriginal(StreamDeck):
         percent = min(max(percent, 0), 100)
 
         payload = bytearray(17)
-        payload[0:6] = [0x05, 0x55, 0xaa, 0xd1, 0x01, percent]
+        payload[0:6] = [0x05, 0x55, 0xAA, 0xD1, 0x01, percent]
         self.device.write_feature(payload)
 
     def get_serial_number(self):
@@ -118,7 +121,7 @@ class StreamDeckOriginal(StreamDeck):
                 0,
             ]
 
-            payload = bytes(header) + image[bytes_sent:bytes_sent + this_length]
+            payload = bytes(header) + image[bytes_sent : bytes_sent + this_length]
             padding = bytearray(self.IMAGE_REPORT_LENGTH - len(payload))
             self.device.write(payload + padding)
 

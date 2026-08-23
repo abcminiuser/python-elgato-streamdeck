@@ -124,7 +124,7 @@ class StreamDeckStudio(StreamDeck):
         0xa2, 0x80, 0x0a, 0x28, 0xa2, 0x80, 0x0a, 0x28, 0xa2, 0x80, 0x0a, 0x28,
         0xa2, 0x80, 0x0a, 0x28, 0xa2, 0x80, 0x0a, 0x28, 0xa2, 0x80, 0x0a, 0x28,
         0xa2, 0x80, 0x0a, 0x28, 0xa2, 0x80, 0x3f, 0xff, 0xd9,
-    ] # fmt: skip
+    ]  # fmt: skip
 
     def _reset_key_stream(self):
         payload = bytearray(self._IMG_PACKET_LEN)
@@ -165,7 +165,7 @@ class StreamDeckStudio(StreamDeck):
 
         values = [
             self._DIAL_EVENT_TRANSFORM[event_type](s)
-            for s in states[4:4 + self.DIAL_COUNT]
+            for s in states[4 : 4 + self.DIAL_COUNT]
         ]
 
         return {ControlType.DIAL: {event_type: values}}
@@ -214,7 +214,7 @@ class StreamDeckStudio(StreamDeck):
             ]
 
             bytes_sent = page_number * self._KEY_PACKET_PAYLOAD_LEN
-            payload = bytes(header) + image[bytes_sent:bytes_sent + this_length]
+            payload = bytes(header) + image[bytes_sent : bytes_sent + this_length]
             padding = bytearray(self._IMG_PACKET_LEN - len(payload))
             self.device.write(payload + padding)
 
@@ -235,7 +235,9 @@ class StreamDeckStudio(StreamDeck):
             self._HID_OUTPUT_REPORT_ID,
             self._DIAL_KNOB_CMD,
             encoder,
-            rgb[0], rgb[1], rgb[2],
+            rgb[0],
+            rgb[1],
+            rgb[2],
         ]
         self.device.write(bytes(data))
 
@@ -247,8 +249,7 @@ class StreamDeckStudio(StreamDeck):
         ] + [rgb[0], rgb[1], rgb[2]] * self._DIAL_RING_SEGMENTS
         self.device.write(bytes(data))
 
-    def set_encoder_ring_percentage(
-            self, encoder, rgb, value, segment_count=21):
+    def set_encoder_ring_percentage(self, encoder, rgb, value, segment_count=21):
         """
         Sets the color of a portion of the encoder ring based on a percentage
         value.
@@ -266,8 +267,8 @@ class StreamDeckStudio(StreamDeck):
             )
 
         segments = round(value * segment_count / 100.0)
-        led_data = (
-            list(rgb) * segments + [0, 0, 0] * (self._DIAL_RING_SEGMENTS - segments)
+        led_data = list(rgb) * segments + [0, 0, 0] * (
+            self._DIAL_RING_SEGMENTS - segments
         )
 
         if encoder == 0:

@@ -83,7 +83,7 @@ class StreamDeckNeo(StreamDeck):
         0x28, 0xa0, 0x02, 0x8a, 0x28, 0xa0, 0x02, 0x8a, 0x28, 0xa0, 0x02, 0x8a, 0x28, 0xa0, 0x02, 0x8a, 0x28, 0xa0, 0x02,
         0x8a, 0x28, 0xa0, 0x02, 0x8a, 0x28, 0xa0, 0x02, 0x8a, 0x28, 0xa0, 0x02, 0x8a, 0x28, 0xa0, 0x02, 0x8a, 0x28, 0xa0,
         0x02, 0x8a, 0x28, 0xa0, 0x02, 0x8a, 0x28, 0xa0, 0x0f, 0xff, 0xd9
-    ] # fmt: skip
+    ]  # fmt: skip
 
     # 248 x 58 black JPEG
     BLANK_SCREEN_IMAGE: ClassVar[list[int]] = [
@@ -99,7 +99,7 @@ class StreamDeckNeo(StreamDeck):
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x7f, 0xff, 0xd9
-    ] # fmt: skip
+    ]  # fmt: skip
 
     def _read_control_states(self):
         states = self.device.read(4 + self.KEY_COUNT + self.TOUCH_KEY_COUNT)
@@ -107,9 +107,7 @@ class StreamDeckNeo(StreamDeck):
             return None
 
         states = states[4:]
-        return {
-            ControlType.KEY: [bool(s) for s in states]
-        }
+        return {ControlType.KEY: [bool(s) for s in states]}
 
     def _reset_key_stream(self):
         payload = bytearray(self.IMAGE_REPORT_LENGTH)
@@ -159,10 +157,10 @@ class StreamDeckNeo(StreamDeck):
                 this_length & 0xFF,
                 this_length >> 8,
                 page_number & 0xFF,
-                page_number >> 8
+                page_number >> 8,
             ]
 
-            payload = bytes(header) + image[bytes_sent:bytes_sent + this_length]
+            payload = bytes(header) + image[bytes_sent : bytes_sent + this_length]
             padding = bytearray(self.IMAGE_REPORT_LENGTH - len(payload))
             self.device.write(payload + padding)
 
@@ -194,16 +192,18 @@ class StreamDeckNeo(StreamDeck):
 
             header = [
                 0x02,  # 0
-                0x0b,  # 1
+                0x0B,  # 1
                 0x00,  # 2
-                0x01 if this_length == bytes_remaining else 0x00, # 3 is the last report?
-                this_length & 0xff,  # 5 bytecount high byte
-                (this_length >> 8) & 0xff,  # 4 bytecount high byte
-                page_number & 0xff,  # 7 pagenumber low byte
-                (page_number >> 8) & 0xff  # 6 pagenumber high byte
+                0x01
+                if this_length == bytes_remaining
+                else 0x00,  # 3 is the last report?
+                this_length & 0xFF,  # 5 bytecount high byte
+                (this_length >> 8) & 0xFF,  # 4 bytecount high byte
+                page_number & 0xFF,  # 7 pagenumber low byte
+                (page_number >> 8) & 0xFF,  # 6 pagenumber high byte
             ]
 
-            payload = bytes(header) + image[bytes_sent:bytes_sent + this_length]
+            payload = bytes(header) + image[bytes_sent : bytes_sent + this_length]
             padding = bytearray(self.IMAGE_REPORT_LENGTH - len(payload))
             self.device.write(payload + padding)
 

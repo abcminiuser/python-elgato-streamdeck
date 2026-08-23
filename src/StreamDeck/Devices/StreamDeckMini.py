@@ -42,7 +42,7 @@ class StreamDeckMini(StreamDeck):
         0x00, 0x00, 0xc0, 0x3c, 0x00, 0x00, 0xc4, 0x0e,
         0x00, 0x00, 0xc4, 0x0e, 0x00, 0x00, 0x00, 0x00,
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00
-    ] + [0] * (KEY_PIXEL_WIDTH * KEY_PIXEL_HEIGHT * 3) # fmt: skip
+    ] + [0] * (KEY_PIXEL_WIDTH * KEY_PIXEL_HEIGHT * 3)  # fmt: skip
 
     def _read_control_states(self):
         states = self.device.read(1 + self.KEY_COUNT)
@@ -71,11 +71,15 @@ class StreamDeckMini(StreamDeck):
         percent = min(max(percent, 0), 100)
 
         payload = bytearray(17)
-        payload[0:6] = [0x05, 0x55, 0xaa, 0xd1, 0x01, percent]
+        payload[0:6] = [0x05, 0x55, 0xAA, 0xD1, 0x01, percent]
         self.device.write_feature(payload)
 
     def get_serial_number(self):
-        report_read_length = 17 if self.device.product_id() == USBProductIDs.USB_PID_STREAMDECK_MINI else 32
+        report_read_length = (
+            17
+            if self.device.product_id() == USBProductIDs.USB_PID_STREAMDECK_MINI
+            else 32
+        )
         serial = self.device.read_feature(0x03, report_read_length)
         return self._extract_string(serial[5:])
 
@@ -114,7 +118,7 @@ class StreamDeckMini(StreamDeck):
                 0,
             ]
 
-            payload = bytes(header) + image[bytes_sent:bytes_sent + this_length]
+            payload = bytes(header) + image[bytes_sent : bytes_sent + this_length]
             padding = bytearray(self.IMAGE_REPORT_LENGTH - len(payload))
             self.device.write(payload + padding)
 

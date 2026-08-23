@@ -29,6 +29,7 @@ class DialEventType(Enum):
     """
     Type of event that has occurred for a Dial.
     """
+
     TURN = 1
     PUSH = 2
 
@@ -40,6 +41,7 @@ class ControlType(Enum):
 
     :meta private:
     """
+
     KEY = 1
     DIAL = 2
     TOUCHSCREEN = 3
@@ -80,17 +82,23 @@ class StreamDeck(ABC):
     DECK_VISUAL = False
     DECK_TOUCH = False
 
-    _Self = TypeVar('_Self', bound='StreamDeck')
+    _Self = TypeVar("_Self", bound="StreamDeck")
     KeyCallback = Callable[[_Self, int, bool], None] | None
     AsyncKeyCallback = Callable[[_Self, int, bool], Awaitable[None]] | None
     DialCallback = Callable[[_Self, int, DialEventType, bool], None] | None
-    AsyncDialCallback = Callable[[_Self, int, DialEventType, bool], Awaitable[None]] | None
+    AsyncDialCallback = (
+        Callable[[_Self, int, DialEventType, bool], Awaitable[None]] | None
+    )
     TouchScreenCallback = Callable[[_Self, TouchscreenEventType, Any], None] | None
-    AsyncTouchScreenCallback = Callable[[_Self, TouchscreenEventType, Any], Awaitable[None]] | None
+    AsyncTouchScreenCallback = (
+        Callable[[_Self, TouchscreenEventType, Any], Awaitable[None]] | None
+    )
 
     def __init__(self, device: Transport.Device):
         self.device: Transport.Device = device
-        self.last_key_states: list[bool] = [False] * (self.KEY_COUNT + self.TOUCH_KEY_COUNT)
+        self.last_key_states: list[bool] = [False] * (
+            self.KEY_COUNT + self.TOUCH_KEY_COUNT
+        )
         self.last_dial_states: list[bool] = [False] * self.DIAL_COUNT
         self.read_thread: threading.Thread | None = None
         self.run_read_thread: bool = False
@@ -114,7 +122,7 @@ class StreamDeck(ABC):
 
         try:
             self.device.close()
-        except (TransportError):
+        except TransportError:
             pass
 
     def __enter__(self):
@@ -157,7 +165,7 @@ class StreamDeck(ABC):
         byte.
         """
 
-        return str(bytes(data), 'ascii', 'replace').partition('\0')[0].strip()
+        return str(bytes(data), "ascii", "replace").partition("\0")[0].strip()
 
     def _read(self) -> None:
         """
@@ -173,7 +181,9 @@ class StreamDeck(ABC):
                     continue
 
                 if ControlType.KEY in control_states:
-                    for k, (old, new) in enumerate(zip(self.last_key_states, control_states[ControlType.KEY])):
+                    for k, (old, new) in enumerate(
+                        zip(self.last_key_states, control_states[ControlType.KEY])
+                    ):
                         if old == new:
                             continue
 
@@ -184,7 +194,12 @@ class StreamDeck(ABC):
 
                 elif ControlType.DIAL in control_states:
                     if DialEventType.PUSH in control_states[ControlType.DIAL]:
-                        for k, (old, new) in enumerate(zip(self.last_dial_states, control_states[ControlType.DIAL][DialEventType.PUSH])):
+                        for k, (old, new) in enumerate(
+                            zip(
+                                self.last_dial_states,
+                                control_states[ControlType.DIAL][DialEventType.PUSH],
+                            )
+                        ):
                             if old == new:
                                 continue
 
@@ -194,7 +209,9 @@ class StreamDeck(ABC):
                                 self.dial_callback(self, k, DialEventType.PUSH, new)
 
                     if DialEventType.TURN in control_states[ControlType.DIAL]:
-                        for k, amount in enumerate(control_states[ControlType.DIAL][DialEventType.TURN]):
+                        for k, amount in enumerate(
+                            control_states[ControlType.DIAL][DialEventType.TURN]
+                        ):
                             if amount == 0:
                                 continue
 
@@ -203,7 +220,9 @@ class StreamDeck(ABC):
 
                 elif ControlType.TOUCHSCREEN in control_states:
                     if self.touchscreen_callback is not None:
-                        self.touchscreen_callback(self, *control_states[ControlType.TOUCHSCREEN])
+                        self.touchscreen_callback(
+                            self, *control_states[ControlType.TOUCHSCREEN]
+                        )
 
             except TransportError:
                 self.run_read_thread = False
@@ -377,10 +396,10 @@ class StreamDeck(ABC):
                  (size, image format, image mirroring and rotation).
         """
         return {
-            'size': (self.KEY_PIXEL_WIDTH, self.KEY_PIXEL_HEIGHT),
-            'format': self.KEY_IMAGE_FORMAT,
-            'flip': self.KEY_FLIP,
-            'rotation': self.KEY_ROTATION,
+            "size": (self.KEY_PIXEL_WIDTH, self.KEY_PIXEL_HEIGHT),
+            "format": self.KEY_IMAGE_FORMAT,
+            "flip": self.KEY_FLIP,
+            "rotation": self.KEY_ROTATION,
         }
 
     def touchscreen_image_format(self):
@@ -397,10 +416,10 @@ class StreamDeck(ABC):
                  (size, image format).
         """
         return {
-            'size': (self.TOUCHSCREEN_PIXEL_WIDTH, self.TOUCHSCREEN_PIXEL_HEIGHT),
-            'format': self.TOUCHSCREEN_IMAGE_FORMAT,
-            'flip': self.TOUCHSCREEN_FLIP,
-            'rotation': self.TOUCHSCREEN_ROTATION,
+            "size": (self.TOUCHSCREEN_PIXEL_WIDTH, self.TOUCHSCREEN_PIXEL_HEIGHT),
+            "format": self.TOUCHSCREEN_IMAGE_FORMAT,
+            "flip": self.TOUCHSCREEN_FLIP,
+            "rotation": self.TOUCHSCREEN_ROTATION,
         }
 
     def screen_image_format(self):
@@ -417,10 +436,10 @@ class StreamDeck(ABC):
                  (size, image format).
         """
         return {
-            'size': (self.SCREEN_PIXEL_WIDTH, self.SCREEN_PIXEL_HEIGHT),
-            'format': self.SCREEN_IMAGE_FORMAT,
-            'flip': self.SCREEN_FLIP,
-            'rotation': self.SCREEN_ROTATION,
+            "size": (self.SCREEN_PIXEL_WIDTH, self.SCREEN_PIXEL_HEIGHT),
+            "format": self.SCREEN_IMAGE_FORMAT,
+            "flip": self.SCREEN_FLIP,
+            "rotation": self.SCREEN_ROTATION,
         }
 
     def set_poll_frequency(self, hz: int) -> None:
@@ -503,7 +522,9 @@ class StreamDeck(ABC):
         """
         self.dial_callback = callback
 
-    def set_dial_callback_async(self, async_callback: AsyncDialCallback, loop=None) -> None:
+    def set_dial_callback_async(
+        self, async_callback: AsyncDialCallback, loop=None
+    ) -> None:
         """
         Sets the asynchronous callback function called each time there is an
         interaction with a dial on the StreamDeck. The given callback should
@@ -552,7 +573,9 @@ class StreamDeck(ABC):
         """
         self.touchscreen_callback = callback
 
-    def set_touchscreen_callback_async(self, async_callback: AsyncTouchScreenCallback, loop=None) -> None:
+    def set_touchscreen_callback_async(
+        self, async_callback: AsyncTouchScreenCallback, loop=None
+    ) -> None:
         """
         Sets the asynchronous callback function called each time there is an
         interaction with the touchscreen on the StreamDeck. The given callback
@@ -657,7 +680,14 @@ class StreamDeck(ABC):
         """
 
     @abstractmethod
-    def set_touchscreen_image(self, image: bytes, x_pos: int = 0, y_pos: int = 0, width: int = 0, height: int = 0):
+    def set_touchscreen_image(
+        self,
+        image: bytes,
+        x_pos: int = 0,
+        y_pos: int = 0,
+        width: int = 0,
+        height: int = 0,
+    ):
         """
         Draws an image on the touchscreen in a certain position. The image
         should be in the correct format for the devices, as an enumerable

@@ -21,21 +21,21 @@ from StreamDeck.Transport.Transport import TransportError
 ASSETS_PATH = os.path.join(os.path.dirname(__file__), "Assets")
 
 # image for idle state
-img = Image.new('RGB', (120, 120), color='black')
-released_icon = Image.open(os.path.join(ASSETS_PATH, 'Released.png')).resize((80, 80))
+img = Image.new("RGB", (120, 120), color="black")
+released_icon = Image.open(os.path.join(ASSETS_PATH, "Released.png")).resize((80, 80))
 img.paste(released_icon, (20, 20), released_icon)
 
 img_byte_arr = io.BytesIO()
-img.save(img_byte_arr, format='JPEG')
+img.save(img_byte_arr, format="JPEG")
 img_released_bytes = img_byte_arr.getvalue()
 
 # image for pressed state
-img = Image.new('RGB', (120, 120), color='black')
-pressed_icon = Image.open(os.path.join(ASSETS_PATH, 'Pressed.png')).resize((80, 80))
+img = Image.new("RGB", (120, 120), color="black")
+pressed_icon = Image.open(os.path.join(ASSETS_PATH, "Pressed.png")).resize((80, 80))
 img.paste(pressed_icon, (20, 20), pressed_icon)
 
 img_byte_arr = io.BytesIO()
-img.save(img_byte_arr, format='JPEG')
+img.save(img_byte_arr, format="JPEG")
 img_pressed_bytes = img_byte_arr.getvalue()
 
 
@@ -55,16 +55,19 @@ def dial_change_callback(deck, dial, event, value):
             deck.close()
         else:
             # build an image for the touch lcd
-            img = Image.new('RGB', (800, 100), 'black')
-            icon = Image.open(os.path.join(ASSETS_PATH, 'Exit.png')).resize((80, 80))
+            img = Image.new("RGB", (800, 100), "black")
+            icon = Image.open(os.path.join(ASSETS_PATH, "Exit.png")).resize((80, 80))
             img.paste(icon, (690, 10), icon)
 
             for k in range(deck.DIAL_COUNT - 1):
-                img.paste(pressed_icon if (dial == k and value) else released_icon, (30 + (k * 220), 10),
-                          pressed_icon if (dial == k and value) else released_icon)
+                img.paste(
+                    pressed_icon if (dial == k and value) else released_icon,
+                    (30 + (k * 220), 10),
+                    pressed_icon if (dial == k and value) else released_icon,
+                )
 
             img_byte_arr = io.BytesIO()
-            img.save(img_byte_arr, format='JPEG')
+            img.save(img_byte_arr, format="JPEG")
             img_byte_arr = img_byte_arr.getvalue()
 
             deck.set_touchscreen_image(img_byte_arr, 0, 0, 800, 100)
@@ -75,15 +78,22 @@ def dial_change_callback(deck, dial, event, value):
 # callback when lcd is touched
 def touchscreen_event_callback(deck, evt_type, value):
     if evt_type == TouchscreenEventType.SHORT:
-        print("Short touch @ " + str(value['x']) + "," + str(value['y']))
+        print("Short touch @ " + str(value["x"]) + "," + str(value["y"]))
 
     elif evt_type == TouchscreenEventType.LONG:
-
-        print("Long touch @ " + str(value['x']) + "," + str(value['y']))
+        print("Long touch @ " + str(value["x"]) + "," + str(value["y"]))
 
     elif evt_type == TouchscreenEventType.DRAG:
-
-        print("Drag started @ " + str(value['x']) + "," + str(value['y']) + " ended @ " + str(value['x_out']) + "," + str(value['y_out']))
+        print(
+            "Drag started @ "
+            + str(value["x"])
+            + ","
+            + str(value["y"])
+            + " ended @ "
+            + str(value["x_out"])
+            + ","
+            + str(value["y_out"])
+        )
 
 
 if __name__ == "__main__":
@@ -94,7 +104,7 @@ if __name__ == "__main__":
     for index, deck in enumerate(streamdecks):
         # This example only works with devices that have screens.
 
-        if deck.DECK_TYPE != 'Stream Deck +':
+        if deck.DECK_TYPE != "Stream Deck +":
             print(deck.DECK_TYPE)
             print("Sorry, this example only works with Stream Deck +")
             continue
@@ -106,7 +116,9 @@ if __name__ == "__main__":
         deck.set_dial_callback(dial_change_callback)
         deck.set_touchscreen_callback(touchscreen_event_callback)
 
-        print(f"Opened '{deck.deck_type()}' device (serial number: '{deck.get_serial_number()}')")
+        print(
+            f"Opened '{deck.deck_type()}' device (serial number: '{deck.get_serial_number()}')"
+        )
 
         # Set initial screen brightness to 30%.
         deck.set_brightness(100)
@@ -115,15 +127,15 @@ if __name__ == "__main__":
             deck.set_key_image(key, img_released_bytes)
 
         # build an image for the touch lcd
-        img = Image.new('RGB', (800, 100), 'black')
-        icon = Image.open(os.path.join(ASSETS_PATH, 'Exit.png')).resize((80, 80))
+        img = Image.new("RGB", (800, 100), "black")
+        icon = Image.open(os.path.join(ASSETS_PATH, "Exit.png")).resize((80, 80))
         img.paste(icon, (690, 10), icon)
 
         for dial in range(deck.DIAL_COUNT - 1):
             img.paste(released_icon, (30 + (dial * 220), 10), released_icon)
 
         img_bytes = io.BytesIO()
-        img.save(img_bytes, format='JPEG')
+        img.save(img_bytes, format="JPEG")
         touchscreen_image_bytes = img_bytes.getvalue()
 
         deck.set_touchscreen_image(touchscreen_image_bytes, 0, 0, 800, 100)

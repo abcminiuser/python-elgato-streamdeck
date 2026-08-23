@@ -58,7 +58,11 @@ class Dummy(Transport):
             if not self.is_open:
                 raise TransportError("Deck feature write while deck not open.")
 
-            logger.info("Deck feature write (length %s):\n%s", len(payload), binascii.hexlify(payload, ' ').decode('utf-8'))
+            logger.info(
+                "Deck feature write (length %s):\n%s",
+                len(payload),
+                binascii.hexlify(payload, " ").decode("utf-8"),
+            )
             return True
 
         def read_feature(self, report_id, length):
@@ -72,7 +76,11 @@ class Dummy(Transport):
             if not self.is_open:
                 raise TransportError("Deck write while deck not open.")
 
-            logger.info("Deck report write (length %s):\n%s", len(payload), binascii.hexlify(payload, ' ').decode('utf-8'))
+            logger.info(
+                "Deck report write (length %s):\n%s",
+                len(payload),
+                binascii.hexlify(payload, " ").decode("utf-8"),
+            )
             return True
 
         def read(self, length):

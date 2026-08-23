@@ -28,7 +28,7 @@ ASSETS_PATH = os.path.join(os.path.dirname(__file__), "Assets")
 # StreamDeck.
 def create_full_deck_sized_image(deck, key_spacing, image_filename):
     key_rows, key_cols = deck.key_layout()
-    key_width, key_height = deck.key_image_format()['size']
+    key_width, key_height = deck.key_image_format()["size"]
     spacing_x, spacing_y = key_spacing
 
     # Compute total size of the full StreamDeck image, based on the number of
@@ -58,7 +58,7 @@ def create_full_deck_sized_image(deck, key_spacing, image_filename):
 # occupied by the given key index.
 def crop_key_image_from_deck_sized_image(deck, image, key_spacing, key):
     key_rows, key_cols = deck.key_layout()
-    key_width, key_height = deck.key_image_format()['size']
+    key_width, key_height = deck.key_image_format()["size"]
     spacing_x, spacing_y = key_spacing
 
     # Determine which row and column the requested key is located on.
@@ -108,7 +108,9 @@ if __name__ == "__main__":
         deck.open()
         deck.reset()
 
-        print(f"Opened '{deck.deck_type()}' device (serial number: '{deck.get_serial_number()}')")
+        print(
+            f"Opened '{deck.deck_type()}' device (serial number: '{deck.get_serial_number()}')"
+        )
 
         # Set initial screen brightness to 30%.
         deck.set_brightness(30)
@@ -126,7 +128,9 @@ if __name__ == "__main__":
         # Extract out the section of the image that is occupied by each key.
         key_images = dict()
         for k in range(deck.key_count()):
-            key_images[k] = crop_key_image_from_deck_sized_image(deck, image, key_spacing, k)
+            key_images[k] = crop_key_image_from_deck_sized_image(
+                deck, image, key_spacing, k
+            )
 
         # Use a scoped-with on the deck to ensure we're the only thread
         # using it right now.

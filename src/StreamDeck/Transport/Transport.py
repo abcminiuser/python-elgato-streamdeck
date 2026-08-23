@@ -16,7 +16,6 @@ class TransportError(Exception):
     """
 
 
-
 class Transport(ABC):
     """
     Base transport layer, representing an abstract communication back-end which

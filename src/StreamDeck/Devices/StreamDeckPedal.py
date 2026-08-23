@@ -26,9 +26,7 @@ class StreamDeckPedal(StreamDeck):
             return None
 
         states = states[4:]
-        return {
-            ControlType.KEY: [bool(s) for s in states]
-        }
+        return {ControlType.KEY: [bool(s) for s in states]}
 
     def _reset_key_stream(self):
         pass

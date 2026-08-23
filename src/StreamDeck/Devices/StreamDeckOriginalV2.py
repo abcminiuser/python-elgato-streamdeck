@@ -73,7 +73,7 @@ class StreamDeckOriginalV2(StreamDeck):
         0x02, 0x8a, 0x28, 0xa0, 0x02, 0x8a, 0x28, 0xa0, 0x02, 0x8a, 0x28, 0xa0, 0x02, 0x8a, 0x28, 0xa0, 0x02, 0x8a, 0x28,
         0xa0, 0x02, 0x8a, 0x28, 0xa0, 0x02, 0x8a, 0x28, 0xa0, 0x02, 0x8a, 0x28, 0xa0, 0x02, 0x8a, 0x28, 0xa0, 0x02, 0x8a,
         0x28, 0xa0, 0x0f, 0xff, 0xd9
-    ] # fmt: skip
+    ]  # fmt: skip
 
     def _read_control_states(self):
         states = self.device.read(4 + self.KEY_COUNT)
@@ -81,9 +81,7 @@ class StreamDeckOriginalV2(StreamDeck):
             return None
 
         states = states[4:]
-        return {
-            ControlType.KEY: [bool(s) for s in states]
-        }
+        return {ControlType.KEY: [bool(s) for s in states]}
 
     def _reset_key_stream(self):
         payload = bytearray(self.IMAGE_REPORT_LENGTH)
@@ -133,10 +131,10 @@ class StreamDeckOriginalV2(StreamDeck):
                 this_length & 0xFF,
                 this_length >> 8,
                 page_number & 0xFF,
-                page_number >> 8
+                page_number >> 8,
             ]
 
-            payload = bytes(header) + image[bytes_sent:bytes_sent + this_length]
+            payload = bytes(header) + image[bytes_sent : bytes_sent + this_length]
             padding = bytearray(self.IMAGE_REPORT_LENGTH - len(payload))
             self.device.write(payload + padding)
 

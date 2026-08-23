@@ -129,7 +129,7 @@ class StreamDeckPlusXL(StreamDeck):
         0xa2, 0x80, 0x0a, 0x28, 0xa2, 0x80, 0x0a, 0x28, 0xa2, 0x80, 0x0a, 0x28,
         0xa2, 0x80, 0x0a, 0x28, 0xa2, 0x80, 0x0a, 0x28, 0xa2, 0x80, 0x0a, 0x28,
         0xa2, 0x80, 0x0a, 0x28, 0xa2, 0x80, 0x3f, 0xff, 0xd9,
-    ] # fmt: skip
+    ]  # fmt: skip
 
     # 100 x 1200 black JPEG
     BLANK_TOUCHSCREEN_IMAGE: ClassVar[list[int]] = [
@@ -361,7 +361,7 @@ class StreamDeckPlusXL(StreamDeck):
         0xa2, 0x80, 0x0a, 0x28, 0xa2, 0x80, 0x0a, 0x28, 0xa2, 0x80, 0x0a, 0x28,
         0xa2, 0x80, 0x0a, 0x28, 0xa2, 0x80, 0x0a, 0x28, 0xa2, 0x80, 0x0a, 0x28,
         0xa2, 0x80, 0x3f, 0xff, 0xd9,
-    ] # fmt: skip
+    ]  # fmt: skip
 
     def _reset_key_stream(self):
         payload = bytearray(self._IMG_PACKET_LEN)
@@ -382,11 +382,9 @@ class StreamDeckPlusXL(StreamDeck):
         states = states[1:]
 
         if states[0] == 0x00:  # Key Event
-            new_key_states = [bool(s) for s in states[3:3 + self.KEY_COUNT]]
+            new_key_states = [bool(s) for s in states[3 : 3 + self.KEY_COUNT]]
 
-            return {
-                ControlType.KEY: new_key_states
-            }
+            return {ControlType.KEY: new_key_states}
         elif states[0] == 0x02:  # Touchscreen Event
             if states[3] == 1:
                 event_type = TouchscreenEventType.SHORT
@@ -398,8 +396,8 @@ class StreamDeckPlusXL(StreamDeck):
                 return None
 
             value = {
-                'x': (states[6] << 8) + states[5],
-                'y': (states[8] << 8) + states[7]
+                "x": (states[6] << 8) + states[5],
+                "y": (states[8] << 8) + states[7],
             }
 
             if event_type == TouchscreenEventType.DRAG:
@@ -417,7 +415,10 @@ class StreamDeckPlusXL(StreamDeck):
             else:
                 return None
 
-            values = [self._DIAL_EVENT_TRANSFORM[event_type](s) for s in states[4:4 + self.DIAL_COUNT]]
+            values = [
+                self._DIAL_EVENT_TRANSFORM[event_type](s)
+                for s in states[4 : 4 + self.DIAL_COUNT]
+            ]
 
             return {
                 ControlType.DIAL: {
@@ -456,18 +457,18 @@ class StreamDeckPlusXL(StreamDeck):
             this_length = min(bytes_remaining, self._KEY_PACKET_PAYLOAD_LEN)
 
             header = [
-                0x02,                                           # 0
-                0x07,                                           # 1
-                key & 0xff,                                     # 2 key_index
-                1 if this_length == bytes_remaining else 0,     # 3 is_last
-                this_length & 0xff,                             # 4 bytecount low byte
-                (this_length >> 8) & 0xff,                      # 5 bytecount high byte
-                page_number & 0xff,                             # 6 pagenumber low byte
-                (page_number >> 8) & 0xff,                      # 7 pagenumber high byte
+                0x02,  # 0
+                0x07,  # 1
+                key & 0xFF,  # 2 key_index
+                1 if this_length == bytes_remaining else 0,  # 3 is_last
+                this_length & 0xFF,  # 4 bytecount low byte
+                (this_length >> 8) & 0xFF,  # 5 bytecount high byte
+                page_number & 0xFF,  # 6 pagenumber low byte
+                (page_number >> 8) & 0xFF,  # 7 pagenumber high byte
             ]
 
             bytes_sent = page_number * (self._KEY_PACKET_PAYLOAD_LEN)
-            payload = bytes(header) + image[bytes_sent:bytes_sent + this_length]
+            payload = bytes(header) + image[bytes_sent : bytes_sent + this_length]
             padding = bytearray(self._IMG_PACKET_LEN - len(payload))
             self.device.write(payload + padding)
             bytes_remaining = bytes_remaining - this_length
@@ -508,24 +509,24 @@ class StreamDeckPlusXL(StreamDeck):
 
             header = [
                 0x02,  # 0
-                0x0c,  # 1
-                int_x & 0xff,  # 2 xpos low byte
-                (int_x >> 8) & 0xff,  # 3 xpos high byte
-                int_y & 0xff,  # 4 ypos low byte
-                (int_y >> 8) & 0xff,  # 5 ypos high byte
-                int_w & 0xff,  # 6 width low byte
-                (int_w >> 8) & 0xff,  # 7 width high byte
-                int_h & 0xff,  # 8 height low byte
-                (int_h >> 8) & 0xff,  # 9 height high byte
+                0x0C,  # 1
+                int_x & 0xFF,  # 2 xpos low byte
+                (int_x >> 8) & 0xFF,  # 3 xpos high byte
+                int_y & 0xFF,  # 4 ypos low byte
+                (int_y >> 8) & 0xFF,  # 5 ypos high byte
+                int_w & 0xFF,  # 6 width low byte
+                (int_w >> 8) & 0xFF,  # 7 width high byte
+                int_h & 0xFF,  # 8 height low byte
+                (int_h >> 8) & 0xFF,  # 9 height high byte
                 1 if this_length == bytes_remaining else 0,  # 10 is the last report?
-                page_number & 0xff,  # 11 pagenumber low byte
-                (page_number >> 8) & 0xff,  # 12 pagenumber high byte
-                this_length & 0xff,  # 13 bytecount low byte
-                (this_length >> 8) & 0xff,  # 14 bytecount high byte
+                page_number & 0xFF,  # 11 pagenumber low byte
+                (page_number >> 8) & 0xFF,  # 12 pagenumber high byte
+                this_length & 0xFF,  # 13 bytecount low byte
+                (this_length >> 8) & 0xFF,  # 14 bytecount high byte
                 0x00,  # 15 padding
             ]
 
-            payload = bytes(header) + image[bytes_sent:bytes_sent + this_length]
+            payload = bytes(header) + image[bytes_sent : bytes_sent + this_length]
             padding = bytearray(self._IMG_PACKET_LEN - len(payload))
             self.device.write(payload + padding)
 
