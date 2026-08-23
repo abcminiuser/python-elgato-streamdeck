@@ -7,7 +7,7 @@
 
 from typing import Callable, ClassVar
 
-from .StreamDeck import StreamDeck, ControlType, DialEventType, TouchscreenEventType
+from .StreamDeck import ControlType, DialEventType, StreamDeck, TouchscreenEventType
 
 
 def _dials_rotation_transform(value):
@@ -52,7 +52,7 @@ class StreamDeckPlusXL(StreamDeck):
     _KEY_PACKET_PAYLOAD_LEN = _IMG_PACKET_LEN - _KEY_PACKET_HEADER
     _LCD_PACKET_PAYLOAD_LEN = _IMG_PACKET_LEN - _LCD_PACKET_HEADER
 
-    _DIAL_EVENT_TRANSFORM = {
+    _DIAL_EVENT_TRANSFORM: ClassVar[dict[DialEventType, Callable[[int], int]]] = {
         DialEventType.TURN: _dials_rotation_transform,
         DialEventType.PUSH: bool,
     }
