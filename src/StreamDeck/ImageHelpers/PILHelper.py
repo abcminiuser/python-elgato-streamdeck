@@ -26,7 +26,9 @@ def _scale_image(image, image_format, margins=(0, 0, 0, 0), background="black"):
     thumbnail_max_height = final_image.height - (margins[0] + margins[2])
 
     thumbnail = image.convert("RGBA")
-    thumbnail.thumbnail((thumbnail_max_width, thumbnail_max_height), Image.LANCZOS)
+    thumbnail.thumbnail(
+        (thumbnail_max_width, thumbnail_max_height), Image.Resampling.LANCZOS
+    )
 
     thumbnail_x = margins[3] + (thumbnail_max_width - thumbnail.width) // 2
     thumbnail_y = margins[0] + (thumbnail_max_height - thumbnail.height) // 2
@@ -44,10 +46,10 @@ def _to_native_format(image, image_format):
         image = image.rotate(image_format["rotation"], expand=True)
 
     if image_format["flip"][0]:
-        image = image.transpose(Image.FLIP_LEFT_RIGHT)
+        image = image.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
 
     if image_format["flip"][1]:
-        image = image.transpose(Image.FLIP_TOP_BOTTOM)
+        image = image.transpose(Image.Transpose.FLIP_TOP_BOTTOM)
 
     # We want a compressed image in a given codec, convert.
     with io.BytesIO() as compressed_image:
