@@ -6,16 +6,14 @@
 #
 
 import io
-
 from typing import Any
 
 from PIL import Image
 
 from ..Devices.StreamDeck import StreamDeck
 
-
 ImageFormat = dict[str, Any]
-Margins = list[int] | tuple[int, int, int, int]
+Margins = list[int] | tuple[int, int, int, int] | None
 PILColor = float | tuple[float, ...] | str | None
 
 
@@ -26,9 +24,12 @@ def _create_image(image_format: ImageFormat, background: PILColor) -> Image.Imag
 def _scale_image(
     image: Image.Image,
     image_format: ImageFormat,
-    margins: Margins = [0, 0, 0, 0],
+    margins: Margins = None,
     background: PILColor = "black",
 ):
+    if margins is None:
+        margins = [0, 0, 0, 0]
+
     if len(margins) != 4:
         raise ValueError("Margins should be given as an array of four integers.")
 
@@ -138,7 +139,7 @@ def create_screen_image(
 def create_scaled_image(
     deck: StreamDeck,
     image: Image.Image,
-    margins: Margins = [0, 0, 0, 0],
+    margins: Margins = None,
     background: PILColor = "black",
 ) -> Image.Image:
     """
@@ -151,7 +152,7 @@ def create_scaled_image(
 def create_scaled_key_image(
     deck: StreamDeck,
     image: Image.Image,
-    margins: Margins = [0, 0, 0, 0],
+    margins: Margins = None,
     background: PILColor = "black",
 ) -> Image.Image:
     """
@@ -180,7 +181,7 @@ def create_scaled_key_image(
 def create_scaled_touchscreen_image(
     deck: StreamDeck,
     image: Image.Image,
-    margins: Margins = [0, 0, 0, 0],
+    margins: Margins = None,
     background: PILColor = "black",
 ) -> Image.Image:
     """
@@ -209,7 +210,7 @@ def create_scaled_touchscreen_image(
 def create_scaled_screen_image(
     deck: StreamDeck,
     image: Image.Image,
-    margins: Margins = [0, 0, 0, 0],
+    margins: Margins = None,
     background: PILColor = "black",
 ) -> Image.Image:
     """
