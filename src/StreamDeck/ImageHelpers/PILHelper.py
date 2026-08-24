@@ -7,16 +7,28 @@
 
 import io
 
+from typing import Any
+
 from PIL import Image
 
 from ..Devices.StreamDeck import StreamDeck
 
 
-def _create_image(image_format, background):
+ImageFormat = dict[str, Any]
+Margins = list[int] | tuple[int, int, int, int]
+PILColor = float | tuple[float, ...] | str | None
+
+
+def _create_image(image_format: ImageFormat, background: PILColor) -> Image.Image:
     return Image.new("RGB", image_format["size"], background)
 
 
-def _scale_image(image, image_format, margins=(0, 0, 0, 0), background="black"):
+def _scale_image(
+    image: Image.Image,
+    image_format: ImageFormat,
+    margins: Margins = [0, 0, 0, 0],
+    background: PILColor = "black",
+):
     if len(margins) != 4:
         raise ValueError("Margins should be given as an array of four integers.")
 
@@ -38,7 +50,7 @@ def _scale_image(image, image_format, margins=(0, 0, 0, 0), background="black"):
     return final_image
 
 
-def _to_native_format(image, image_format):
+def _to_native_format(image: Image.Image, image_format: ImageFormat):
     if image.size != image_format["size"]:
         image.thumbnail(image_format["size"])
 
@@ -57,7 +69,7 @@ def _to_native_format(image, image_format):
         return compressed_image.getvalue()
 
 
-def create_image(deck: StreamDeck, background: str = "black") -> Image.Image:
+def create_image(deck: StreamDeck, background: PILColor = "black") -> Image.Image:
     """
     .. deprecated:: 0.9.5
         Use :func:`~PILHelper.create_key_image` method instead.
@@ -65,7 +77,7 @@ def create_image(deck: StreamDeck, background: str = "black") -> Image.Image:
     return create_key_image(deck, background)
 
 
-def create_key_image(deck: StreamDeck, background: str = "black") -> Image.Image:
+def create_key_image(deck: StreamDeck, background: PILColor = "black") -> Image.Image:
     """
     Creates a new PIL Image with the correct image dimensions for the given
     StreamDeck device's keys.
@@ -84,7 +96,7 @@ def create_key_image(deck: StreamDeck, background: str = "black") -> Image.Image
 
 
 def create_touchscreen_image(
-    deck: StreamDeck, background: str = "black"
+    deck: StreamDeck, background: PILColor = "black"
 ) -> Image.Image:
     """
     Creates a new PIL Image with the correct image dimensions for the given
@@ -103,7 +115,9 @@ def create_touchscreen_image(
     return _create_image(deck.touchscreen_image_format(), background)
 
 
-def create_screen_image(deck: StreamDeck, background: str = "black") -> Image.Image:
+def create_screen_image(
+    deck: StreamDeck, background: PILColor = "black"
+) -> Image.Image:
     """
     Creates a new PIL Image with the correct image dimensions for the given
     StreamDeck device's screen.
@@ -124,8 +138,8 @@ def create_screen_image(deck: StreamDeck, background: str = "black") -> Image.Im
 def create_scaled_image(
     deck: StreamDeck,
     image: Image.Image,
-    margins: list[int] | tuple[int, int, int, int] = (0, 0, 0, 0),
-    background: str = "black",
+    margins: Margins = [0, 0, 0, 0],
+    background: PILColor = "black",
 ) -> Image.Image:
     """
     .. deprecated:: 0.9.5
@@ -137,8 +151,8 @@ def create_scaled_image(
 def create_scaled_key_image(
     deck: StreamDeck,
     image: Image.Image,
-    margins: list[int] | tuple[int, int, int, int] = (0, 0, 0, 0),
-    background: str = "black",
+    margins: Margins = [0, 0, 0, 0],
+    background: PILColor = "black",
 ) -> Image.Image:
     """
     Creates a new key image that contains a scaled version of a given image,
@@ -166,8 +180,8 @@ def create_scaled_key_image(
 def create_scaled_touchscreen_image(
     deck: StreamDeck,
     image: Image.Image,
-    margins: tuple[int, int, int, int] = (0, 0, 0, 0),
-    background: str = "black",
+    margins: Margins = [0, 0, 0, 0],
+    background: PILColor = "black",
 ) -> Image.Image:
     """
     Creates a new touchscreen image that contains a scaled version of a given image,
@@ -195,8 +209,8 @@ def create_scaled_touchscreen_image(
 def create_scaled_screen_image(
     deck: StreamDeck,
     image: Image.Image,
-    margins: tuple[int, int, int, int] = (0, 0, 0, 0),
-    background: str = "black",
+    margins: Margins = [0, 0, 0, 0],
+    background: PILColor = "black",
 ) -> Image.Image:
     """
     Creates a new screen image that contains a scaled version of a given image,
