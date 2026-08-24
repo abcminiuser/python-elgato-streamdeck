@@ -501,7 +501,7 @@ class StreamDeck(ABC):
             result = asyncio.run_coroutine_threadsafe(async_callback(*args), loop)
             result.add_done_callback(done)
 
-        self.set_key_callback(callback)
+        self.set_key_callback(callback if async_callback else None)
 
     def set_dial_callback(self, callback: DialCallback) -> None:
         """
@@ -552,7 +552,7 @@ class StreamDeck(ABC):
             result = asyncio.run_coroutine_threadsafe(async_callback(*args), loop)
             result.add_done_callback(done)
 
-        self.set_dial_callback(callback)
+        self.set_dial_callback(callback if async_callback else None)
 
     def set_touchscreen_callback(self, callback: TouchScreenCallback) -> None:
         """
@@ -603,7 +603,7 @@ class StreamDeck(ABC):
             result = asyncio.run_coroutine_threadsafe(async_callback(*args), loop)
             result.add_done_callback(done)
 
-        self.set_touchscreen_callback(callback)
+        self.set_touchscreen_callback(callback if async_callback else None)
 
     def key_states(self) -> list[bool]:
         """
