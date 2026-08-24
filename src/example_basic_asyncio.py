@@ -119,6 +119,9 @@ async def key_change_callback(deck, key, state):
                 # Close deck handle, terminating internal worker threads.
                 deck.close()
 
+            # Terminate the currently running asyncio loop, so that we can exit.
+            asyncio.get_event_loop().stop()
+
 
 async def main(loop):
     print(f"Found {len(streamdecks)} Stream Deck(s).\n")
