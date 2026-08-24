@@ -508,7 +508,7 @@ class StreamDeck(ABC):
 
         self.set_key_callback(callback if async_callback else None)
 
-    def set_dial_callback(self, callback: DialCallback) -> None:
+    def set_dial_callback(self, callback: DialCallback | None) -> None:
         """
         Sets the callback function called each time there is an interaction
         with a dial on the StreamDeck.
@@ -562,7 +562,7 @@ class StreamDeck(ABC):
 
         self.set_dial_callback(callback if async_callback else None)
 
-    def set_touchscreen_callback(self, callback: TouchScreenCallback) -> None:
+    def set_touchscreen_callback(self, callback: TouchScreenCallback | None) -> None:
         """
         Sets the callback function called each time there is an interaction
         with a touchscreen on the StreamDeck.
@@ -582,7 +582,7 @@ class StreamDeck(ABC):
         self.touchscreen_callback = callback
 
     def set_touchscreen_callback_async(
-        self, async_callback: AsyncTouchScreenCallback, loop=None
+        self, async_callback: AsyncTouchScreenCallback | None, loop=None
     ) -> None:
         """
         Sets the asynchronous callback function called each time there is an
