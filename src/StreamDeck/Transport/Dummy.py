@@ -20,42 +20,42 @@ class Dummy(Transport):
 
     class Device(Transport.Device):
         def __init__(self, vid, pid):
-            self.vid = vid
-            self.pid = pid
-            self.id = f"{vid}:{pid}"
-            self.is_open = False
+            self._vid = vid
+            self._pid = pid
+            self._id = f"{vid}:{pid}"
+            self._open = False
 
         def open(self):
-            if self.is_open:
+            if self._open:
                 return
 
             logger.info("Deck opened")
-            self.is_open = True
+            self._open = True
 
         def close(self):
-            if not self.is_open:
+            if not self._open:
                 return
 
             logger.info("Deck closed")
-            self.is_open = False
+            self._open = False
 
         def is_open(self):
-            return True
+            return self._open
 
         def connected(self):
             return True
 
         def vendor_id(self):
-            return self.vid
+            return self._vid
 
         def product_id(self):
-            return self.pid
+            return self._pid
 
         def path(self):
-            return self.id
+            return self._id
 
         def write_feature(self, payload):
-            if not self.is_open:
+            if not self._open:
                 raise TransportError("Deck feature write while deck not open.")
 
             logger.info(
@@ -66,14 +66,14 @@ class Dummy(Transport):
             return True
 
         def read_feature(self, report_id, length):
-            if not self.is_open:
+            if not self._open:
                 raise TransportError("Deck feature read while deck not open.")
 
             logger.info("Deck feature read (length %s)", length)
-            return bytearray(length)
+            return bytes(length)
 
         def write(self, payload):
-            if not self.is_open:
+            if not self._open:
                 raise TransportError("Deck write while deck not open.")
 
             logger.info(
@@ -84,10 +84,11 @@ class Dummy(Transport):
             return True
 
         def read(self, length):
-            if not self.is_open:
+            if not self._open:
                 raise TransportError("Deck read while deck not open.")
 
             logger.info("Deck report read (length %s)", length)
+            return bytes(length)
 
     @staticmethod
     def probe():

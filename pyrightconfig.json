@@ -4,18 +4,10 @@
   ],
 
   "exclude": [
-    "src/StreamDeck/Transport",
     "**/__pycache__",
   ],
 
-  "ignore": [
-  ],
-
-  "defineConstant": {
-    "DEBUG": true
-  },
-
-  "stubPath": "src/stubs",
+  "typeCheckingMode": "standard",
 
   "reportMissingImports": "error",
   "reportMissingTypeStubs": false,

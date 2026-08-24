@@ -116,65 +116,65 @@ class LibUSBHIDAPI(Transport):
                 ("next", ctypes.POINTER(hid_device_info)),
             ]
 
-            self.HIDAPI_INSTANCE.hid_init.argtypes = []
-            self.HIDAPI_INSTANCE.hid_init.restype = ctypes.c_int
+            self.HIDAPI_INSTANCE.hid_init.argtypes = []  # pyright: ignore
+            self.HIDAPI_INSTANCE.hid_init.restype = ctypes.c_int  # pyright: ignore
 
-            self.HIDAPI_INSTANCE.hid_exit.argtypes = []
-            self.HIDAPI_INSTANCE.hid_exit.restype = ctypes.c_int
+            self.HIDAPI_INSTANCE.hid_exit.argtypes = []  # pyright: ignore
+            self.HIDAPI_INSTANCE.hid_exit.restype = ctypes.c_int  # pyright: ignore
 
-            self.HIDAPI_INSTANCE.hid_enumerate.argtypes = [
+            self.HIDAPI_INSTANCE.hid_enumerate.argtypes = [  # pyright: ignore
                 ctypes.c_ushort,
                 ctypes.c_ushort,
             ]
-            self.HIDAPI_INSTANCE.hid_enumerate.restype = ctypes.POINTER(hid_device_info)
+            self.HIDAPI_INSTANCE.hid_enumerate.restype = ctypes.POINTER(hid_device_info)  # pyright: ignore
 
-            self.HIDAPI_INSTANCE.hid_free_enumeration.argtypes = [
+            self.HIDAPI_INSTANCE.hid_free_enumeration.argtypes = [  # pyright: ignore
                 ctypes.POINTER(hid_device_info)
             ]
-            self.HIDAPI_INSTANCE.hid_free_enumeration.restype = None
+            self.HIDAPI_INSTANCE.hid_free_enumeration.restype = None  # pyright: ignore
 
-            self.HIDAPI_INSTANCE.hid_open_path.argtypes = [ctypes.c_char_p]
-            self.HIDAPI_INSTANCE.hid_open_path.restype = ctypes.c_void_p
+            self.HIDAPI_INSTANCE.hid_open_path.argtypes = [ctypes.c_char_p]  # pyright: ignore
+            self.HIDAPI_INSTANCE.hid_open_path.restype = ctypes.c_void_p  # pyright: ignore
 
-            self.HIDAPI_INSTANCE.hid_close.argtypes = [ctypes.c_void_p]
-            self.HIDAPI_INSTANCE.hid_close.restype = None
+            self.HIDAPI_INSTANCE.hid_close.argtypes = [ctypes.c_void_p]  # pyright: ignore
+            self.HIDAPI_INSTANCE.hid_close.restype = None  # pyright: ignore
 
-            self.HIDAPI_INSTANCE.hid_set_nonblocking.argtypes = [
+            self.HIDAPI_INSTANCE.hid_set_nonblocking.argtypes = [  # pyright: ignore
                 ctypes.c_void_p,
                 ctypes.c_int,
             ]
-            self.HIDAPI_INSTANCE.hid_set_nonblocking.restype = ctypes.c_int
+            self.HIDAPI_INSTANCE.hid_set_nonblocking.restype = ctypes.c_int  # pyright: ignore
 
-            self.HIDAPI_INSTANCE.hid_send_feature_report.argtypes = [
+            self.HIDAPI_INSTANCE.hid_send_feature_report.argtypes = [  # pyright: ignore
                 ctypes.c_void_p,
                 ctypes.POINTER(ctypes.c_char),
                 ctypes.c_size_t,
             ]
-            self.HIDAPI_INSTANCE.hid_send_feature_report.restype = ctypes.c_int
+            self.HIDAPI_INSTANCE.hid_send_feature_report.restype = ctypes.c_int  # pyright: ignore
 
-            self.HIDAPI_INSTANCE.hid_get_feature_report.argtypes = [
+            self.HIDAPI_INSTANCE.hid_get_feature_report.argtypes = [  # pyright: ignore
                 ctypes.c_void_p,
                 ctypes.POINTER(ctypes.c_char),
                 ctypes.c_size_t,
             ]
-            self.HIDAPI_INSTANCE.hid_get_feature_report.restype = ctypes.c_int
+            self.HIDAPI_INSTANCE.hid_get_feature_report.restype = ctypes.c_int  # pyright: ignore
 
-            self.HIDAPI_INSTANCE.hid_write.argtypes = [
+            self.HIDAPI_INSTANCE.hid_write.argtypes = [  # pyright: ignore
                 ctypes.c_void_p,
                 ctypes.POINTER(ctypes.c_char),
                 ctypes.c_size_t,
             ]
-            self.HIDAPI_INSTANCE.hid_write.restype = ctypes.c_int
+            self.HIDAPI_INSTANCE.hid_write.restype = ctypes.c_int  # pyright: ignore
 
-            self.HIDAPI_INSTANCE.hid_read.argtypes = [
+            self.HIDAPI_INSTANCE.hid_read.argtypes = [  # pyright: ignore
                 ctypes.c_void_p,
                 ctypes.POINTER(ctypes.c_char),
                 ctypes.c_size_t,
             ]
-            self.HIDAPI_INSTANCE.hid_read.restype = ctypes.c_int
+            self.HIDAPI_INSTANCE.hid_read.restype = ctypes.c_int  # pyright: ignore
 
-            self.HIDAPI_INSTANCE.hid_init()
-            atexit.register(self.HIDAPI_INSTANCE.hid_exit)
+            self.HIDAPI_INSTANCE.hid_init()  # pyright: ignore
+            atexit.register(self.HIDAPI_INSTANCE.hid_exit)  # pyright: ignore
 
             return self.HIDAPI_INSTANCE
 
@@ -226,7 +226,7 @@ class LibUSBHIDAPI(Transport):
             device_list = []
 
             with self.mutex:
-                device_enumeration = self.hidapi.hid_enumerate(vendor_id, product_id)
+                device_enumeration = self.hidapi.hid_enumerate(vendor_id, product_id)  # pyright: ignore
 
                 if device_enumeration:
                     current_device = device_enumeration
@@ -242,7 +242,7 @@ class LibUSBHIDAPI(Transport):
 
                         current_device = current_device.contents.next
 
-                self.hidapi.hid_free_enumeration(device_enumeration)
+                self.hidapi.hid_free_enumeration(device_enumeration)  # pyright: ignore
 
             return device_list
 
@@ -257,12 +257,12 @@ class LibUSBHIDAPI(Transport):
                 if type(path) is not bytes:
                     path = bytes(path, "utf-8")
 
-                handle = self.hidapi.hid_open_path(path)
+                handle = self.hidapi.hid_open_path(path)  # pyright: ignore
 
                 if not handle:
                     raise TransportError("Could not open HID device.")
 
-                self.hidapi.hid_set_nonblocking(handle, 1)
+                self.hidapi.hid_set_nonblocking(handle, 1)  # pyright: ignore
 
             return handle
 
@@ -274,7 +274,7 @@ class LibUSBHIDAPI(Transport):
             """
             with self.mutex:
                 if handle:
-                    self.hidapi.hid_close(handle)
+                    self.hidapi.hid_close(handle)  # pyright: ignore
 
         def send_feature_report(self, handle, data):
             """
@@ -293,7 +293,7 @@ class LibUSBHIDAPI(Transport):
                 raise TransportError("No HID device.")
 
             with self.mutex:
-                result = self.hidapi.hid_send_feature_report(
+                result = self.hidapi.hid_send_feature_report(  # pyright: ignore
                     handle, bytes(data), len(data)
                 )
 
@@ -327,7 +327,7 @@ class LibUSBHIDAPI(Transport):
             data[0] = report_id
 
             with self.mutex:
-                result = self.hidapi.hid_get_feature_report(handle, data, len(data))
+                result = self.hidapi.hid_get_feature_report(handle, data, len(data))  # pyright: ignore
 
             if result < 0:
                 raise TransportError(f"Failed to read feature report ({result}")
@@ -357,7 +357,7 @@ class LibUSBHIDAPI(Transport):
                 raise TransportError("No HID device.")
 
             with self.mutex:
-                result = self.hidapi.hid_write(handle, bytes(data), len(data))
+                result = self.hidapi.hid_write(handle, bytes(data), len(data))  # pyright: ignore
 
             if result < 0:
                 raise TransportError(f"Failed to write out report ({result})")
@@ -382,7 +382,7 @@ class LibUSBHIDAPI(Transport):
             data = ctypes.create_string_buffer(length)
 
             with self.mutex:
-                result = self.hidapi.hid_read(handle, data, len(data))
+                result = self.hidapi.hid_read(handle, data, len(data))  # pyright: ignore
 
             if result < 0:
                 raise TransportError(f"Failed to read in report ({result})")
