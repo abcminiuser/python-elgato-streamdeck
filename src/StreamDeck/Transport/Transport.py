@@ -6,6 +6,7 @@
 #
 
 from abc import ABC, abstractmethod
+from collections.abc import Sequence
 
 
 class TransportError(Exception):
@@ -97,7 +98,7 @@ class Transport(ABC):
             """
 
         @abstractmethod
-        def write_feature(self, payload: bytes) -> int:
+        def write_feature(self, payload: bytes | bytearray) -> int:
             """
             Sends a HID Feature report to the open HID device.
 
@@ -125,7 +126,7 @@ class Transport(ABC):
             """
 
         @abstractmethod
-        def write(self, payload: bytes) -> int:
+        def write(self, payload: bytes | bytearray) -> int:
             """
             Sends a HID Out report to the open HID device.
 
@@ -161,7 +162,7 @@ class Transport(ABC):
         """
 
     @abstractmethod
-    def enumerate(self, vid: int, pid: int) -> list[Device]:
+    def enumerate(self, vid: int, pid: int) -> Sequence[Device]:
         """
         Enumerates all available devices on the system using the current
         transport back-end.

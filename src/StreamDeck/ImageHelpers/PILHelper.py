@@ -124,7 +124,7 @@ def create_screen_image(deck: StreamDeck, background: str = "black") -> Image.Im
 def create_scaled_image(
     deck: StreamDeck,
     image: Image.Image,
-    margins: tuple[int, int, int, int] = (0, 0, 0, 0),
+    margins: list[int] | tuple[int, int, int, int] = (0, 0, 0, 0),
     background: str = "black",
 ) -> Image.Image:
     """
@@ -137,7 +137,7 @@ def create_scaled_image(
 def create_scaled_key_image(
     deck: StreamDeck,
     image: Image.Image,
-    margins: tuple[int, int, int, int] = (0, 0, 0, 0),
+    margins: list[int] | tuple[int, int, int, int] = (0, 0, 0, 0),
     background: str = "black",
 ) -> Image.Image:
     """

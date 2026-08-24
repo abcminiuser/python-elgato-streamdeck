@@ -1,0 +1,31 @@
+{
+  "include": [
+    "src"
+  ],
+
+  "exclude": [
+    "src/StreamDeck/Transport",
+    "**/__pycache__",
+  ],
+
+  "ignore": [
+  ],
+
+  "defineConstant": {
+    "DEBUG": true
+  },
+
+  "stubPath": "src/stubs",
+
+  "reportMissingImports": "error",
+  "reportMissingTypeStubs": false,
+
+  "pythonVersion": "3.10",
+  "pythonPlatform": "Linux",
+
+  "executionEnvironments": [
+    {
+      "root": "src"
+    }
+  ]
+}

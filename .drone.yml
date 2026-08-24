@@ -21,6 +21,14 @@ steps:
   - pip install ruff
   - ruff format --exit-non-zero-on-format
 
+- name: Pyright
+  image: abcminiuser/docker-ci-python:latest
+  pull: always
+  commands:
+  - pip install pyright
+  - pip install -r requirements.txt
+  - pyright
+
 - name: Tests
   image: abcminiuser/docker-ci-python:latest
   pull: always
@@ -44,5 +52,6 @@ steps:
   depends_on:
   - "Ruff Check"
   - "Ruff Format"
+  - Pyright
   - Tests
   - Documentation

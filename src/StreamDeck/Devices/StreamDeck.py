@@ -8,7 +8,7 @@
 import threading
 import time
 from abc import ABC, abstractmethod
-from collections.abc import Awaitable, Callable, Iterable
+from collections.abc import Callable, Coroutine, Iterable
 from enum import Enum
 from typing import Any, TypeVar
 
@@ -84,14 +84,14 @@ class StreamDeck(ABC):
 
     _Self = TypeVar("_Self", bound="StreamDeck")
     KeyCallback = Callable[[_Self, int, bool], None] | None
-    AsyncKeyCallback = Callable[[_Self, int, bool], Awaitable[None]] | None
+    AsyncKeyCallback = Callable[[_Self, int, bool], Coroutine[Any, Any, None]] | None
     DialCallback = Callable[[_Self, int, DialEventType, bool], None] | None
     AsyncDialCallback = (
-        Callable[[_Self, int, DialEventType, bool], Awaitable[None]] | None
+        Callable[[_Self, int, DialEventType, bool], Coroutine[Any, Any, None]] | None
     )
     TouchScreenCallback = Callable[[_Self, TouchscreenEventType, Any], None] | None
     AsyncTouchScreenCallback = (
-        Callable[[_Self, TouchscreenEventType, Any], Awaitable[None]] | None
+        Callable[[_Self, TouchscreenEventType, Any], Coroutine[Any, Any, None]] | None
     )
 
     def __init__(self, device: Transport.Device):
@@ -142,7 +142,7 @@ class StreamDeck(ABC):
         self.update_lock.release()
 
     @abstractmethod
-    def _read_control_states(self) -> None:
+    def _read_control_states(self) -> dict[ControlType, Any] | None:
         """
         Reads the raw key states from an attached StreamDeck.
 
@@ -228,7 +228,7 @@ class StreamDeck(ABC):
                 self.run_read_thread = False
                 self.close()
 
-    def _setup_reader(self, callback: Callable) -> None:
+    def _setup_reader(self, callback: Callable | None) -> None:
         """
         Sets up the internal transport reader thread with the given callback,
         for asynchronous processing of HID events from the device. If the thread
@@ -454,7 +454,7 @@ class StreamDeck(ABC):
         """
         self.read_poll_hz = min(max(hz, 1), 1000)
 
-    def set_key_callback(self, callback: KeyCallback) -> None:
+    def set_key_callback(self, callback: KeyCallback | None) -> None:
         """
         Sets the callback function called each time a button on the StreamDeck
         changes state (either pressed, or released).
@@ -473,7 +473,9 @@ class StreamDeck(ABC):
         """
         self.key_callback = callback
 
-    def set_key_callback_async(self, async_callback: AsyncKeyCallback, loop=None):
+    def set_key_callback_async(
+        self, async_callback: AsyncKeyCallback | None, loop=None
+    ) -> None:
         """
         Sets the asynchronous callback function called each time a button on the
         StreamDeck changes state (either pressed, or released). The given
@@ -494,6 +496,9 @@ class StreamDeck(ABC):
         loop = loop or asyncio.get_event_loop()
 
         def callback(*args):
+            if not async_callback:
+                return
+
             def done(fut):
                 # Get the async result, this will re-raise any exceptions.
                 fut.result()
@@ -523,7 +528,7 @@ class StreamDeck(ABC):
         self.dial_callback = callback
 
     def set_dial_callback_async(
-        self, async_callback: AsyncDialCallback, loop=None
+        self, async_callback: AsyncDialCallback | None, loop=None
     ) -> None:
         """
         Sets the asynchronous callback function called each time there is an
@@ -545,6 +550,9 @@ class StreamDeck(ABC):
         loop = loop or asyncio.get_event_loop()
 
         def callback(*args):
+            if not async_callback:
+                return
+
             def done(fut):
                 # Get the async result, this will re-raise any exceptions.
                 fut.result()
@@ -596,6 +604,9 @@ class StreamDeck(ABC):
         loop = loop or asyncio.get_event_loop()
 
         def callback(*args):
+            if not async_callback:
+                return
+
             def done(fut):
                 # Get the async result, this will re-raise any exceptions.
                 fut.result()
