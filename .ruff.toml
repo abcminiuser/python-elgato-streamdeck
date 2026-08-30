@@ -20,7 +20,6 @@ ignore = [
 	'C408', # I like my explicit empty dict()/list().
 	'SIM102', # Sometimes nested 'if' reads better than a giant multi-conditional.
 	'BLE001', # We do bare exception catching in several places, deliberately.
-	'EXE001', # Python files aren't marked as executable currently.
 ]
 
 [lint.isort]
