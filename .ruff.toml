@@ -1,9 +1,14 @@
 target-version = "py310"
 
-line-length = 88
+line-length = 100
 indent-width = 4
 
 exclude = ['doc/']
+
+[format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = true
 
 [lint]
 ignore = [
@@ -13,6 +18,9 @@ ignore = [
 	'BLE001', # We do bare exception catching in several places, deliberately.
 	'EXE001', # Python files aren't marked as executable currently.
 ]
+
+[lint.isort]
+split-on-trailing-comma = false
 
 [lint.per-file-ignores]
 "test/*.py" = [
