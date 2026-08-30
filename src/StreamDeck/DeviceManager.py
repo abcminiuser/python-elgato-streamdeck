@@ -60,7 +60,9 @@ class DeviceManager:
                 transport_class.probe()
                 return transport_class()
             except Exception as transport_error:
-                raise ProbeError(f'Probe failed on HID backend "{transport}".', transport_error)
+                raise ProbeError(
+                    f'Probe failed on HID backend "{transport}".', transport_error
+                ) from transport_error
         else:
             probe_errors = {}
 
