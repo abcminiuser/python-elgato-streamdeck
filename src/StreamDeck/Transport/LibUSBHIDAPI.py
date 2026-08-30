@@ -35,10 +35,7 @@ class LibUSBHIDAPI(Transport):
                     import subprocess
 
                     homebrew_path = subprocess.run(
-                        ["brew", "--prefix"],
-                        stdout=subprocess.PIPE,
-                        text=True,
-                        check=True,
+                        ["brew", "--prefix"], stdout=subprocess.PIPE, text=True, check=True
                     ).stdout.strip()
                 except:
                     pass
@@ -68,9 +65,7 @@ class LibUSBHIDAPI(Transport):
                 # We'll try to use ctypes' utility function to find the library first, using
                 # its default search paths. It requires the name of the library only (minus all
                 # path prefix and extension suffix).
-                library_name_no_extension = os.path.basename(
-                    os.path.splitext(lib_name)[0]
-                )
+                library_name_no_extension = os.path.basename(os.path.splitext(lib_name)[0])
                 try:
                     found_lib = ctypes.util.find_library(library_name_no_extension)
                 except:
@@ -79,9 +74,7 @@ class LibUSBHIDAPI(Transport):
                 # If we've running with a Homebrew installation, and find_library() didn't find the library in
                 # any of the default search paths, we'll look in Homebrew instead as a fallback.
                 if not found_lib and self.HOMEBREW_PREFIX:
-                    library_path_homebrew = os.path.join(
-                        self.HOMEBREW_PREFIX, "lib", lib_name
-                    )
+                    library_path_homebrew = os.path.join(self.HOMEBREW_PREFIX, "lib", lib_name)
 
                     if os.path.exists(library_path_homebrew):
                         found_lib = library_path_homebrew
@@ -423,10 +416,7 @@ class LibUSBHIDAPI(Transport):
 
         def connected(self):
             with self.mutex:
-                return any(
-                    d["path"] == self.device_info["path"]
-                    for d in self.hidapi.enumerate()
-                )
+                return any(d["path"] == self.device_info["path"] for d in self.hidapi.enumerate())
 
         def vendor_id(self):
             return self.device_info["vendor_id"]
@@ -443,9 +433,7 @@ class LibUSBHIDAPI(Transport):
 
         def read_feature(self, report_id, length):
             with self.mutex:
-                return self.hidapi.get_feature_report(
-                    self.device_handle, report_id, length
-                )
+                return self.hidapi.get_feature_report(self.device_handle, report_id, length)
 
         def write(self, payload):
             with self.mutex:
@@ -463,6 +451,5 @@ class LibUSBHIDAPI(Transport):
         hidapi = LibUSBHIDAPI.Library()
 
         return [
-            LibUSBHIDAPI.Device(hidapi, d)
-            for d in hidapi.enumerate(vendor_id=vid, product_id=pid)
+            LibUSBHIDAPI.Device(hidapi, d) for d in hidapi.enumerate(vendor_id=vid, product_id=pid)
         ]

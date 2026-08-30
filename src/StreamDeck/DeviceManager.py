@@ -48,10 +48,7 @@ class DeviceManager:
         :return: Instance of a HID Transport class
         """
 
-        transports = {
-            "dummy": Dummy,
-            "libusb": LibUSBHIDAPI,
-        }
+        transports = {"dummy": Dummy, "libusb": LibUSBHIDAPI}
 
         if transport:
             transport_class = transports.get(transport)
@@ -63,9 +60,7 @@ class DeviceManager:
                 transport_class.probe()
                 return transport_class()
             except Exception as transport_error:
-                raise ProbeError(
-                    f'Probe failed on HID backend "{transport}".', transport_error
-                )
+                raise ProbeError(f'Probe failed on HID backend "{transport}".', transport_error)
         else:
             probe_errors = {}
 
@@ -79,9 +74,7 @@ class DeviceManager:
                 except Exception as transport_error:
                     probe_errors[transport_name] = transport_error
 
-            raise ProbeError(
-                "Probe failed to find any functional HID backend.", probe_errors
-            )
+            raise ProbeError("Probe failed to find any functional HID backend.", probe_errors)
 
     def __init__(self, transport: str | None = None):
         """
@@ -120,26 +113,14 @@ class DeviceManager:
                 USBProductIDs.USB_PID_STREAMDECK_MK2_MODULE,
                 StreamDeckOriginalV2,
             ),
-            (
-                USBVendorIDs.USB_VID_ELGATO,
-                USBProductIDs.USB_PID_STREAMDECK_MINI,
-                StreamDeckMini,
-            ),
+            (USBVendorIDs.USB_VID_ELGATO, USBProductIDs.USB_PID_STREAMDECK_MINI, StreamDeckMini),
             (
                 USBVendorIDs.USB_VID_ELGATO,
                 USBProductIDs.USB_PID_STREAMDECK_MINI_DISCORD,
                 StreamDeckMini,
             ),
-            (
-                USBVendorIDs.USB_VID_ELGATO,
-                USBProductIDs.USB_PID_STREAMDECK_NEO,
-                StreamDeckNeo,
-            ),
-            (
-                USBVendorIDs.USB_VID_ELGATO,
-                USBProductIDs.USB_PID_STREAMDECK_XL,
-                StreamDeckXL,
-            ),
+            (USBVendorIDs.USB_VID_ELGATO, USBProductIDs.USB_PID_STREAMDECK_NEO, StreamDeckNeo),
+            (USBVendorIDs.USB_VID_ELGATO, USBProductIDs.USB_PID_STREAMDECK_XL, StreamDeckXL),
             (
                 USBVendorIDs.USB_VID_ELGATO,
                 USBProductIDs.USB_PID_STREAMDECK_MK2,
@@ -150,11 +131,7 @@ class DeviceManager:
                 USBProductIDs.USB_PID_STREAMDECK_MK2_V2,
                 StreamDeckOriginalV2,
             ),
-            (
-                USBVendorIDs.USB_VID_ELGATO,
-                USBProductIDs.USB_PID_STREAMDECK_PEDAL,
-                StreamDeckPedal,
-            ),
+            (USBVendorIDs.USB_VID_ELGATO, USBProductIDs.USB_PID_STREAMDECK_PEDAL, StreamDeckPedal),
             (
                 USBVendorIDs.USB_VID_ELGATO,
                 USBProductIDs.USB_PID_STREAMDECK_MINI_MK2,
@@ -165,11 +142,7 @@ class DeviceManager:
                 USBProductIDs.USB_PID_STREAMDECK_MINI_MK2_MODULE,
                 StreamDeckMini,
             ),
-            (
-                USBVendorIDs.USB_VID_ELGATO,
-                USBProductIDs.USB_PID_STREAMDECK_XL_V2,
-                StreamDeckXL,
-            ),
+            (USBVendorIDs.USB_VID_ELGATO, USBProductIDs.USB_PID_STREAMDECK_XL_V2, StreamDeckXL),
             (
                 USBVendorIDs.USB_VID_ELGATO,
                 USBProductIDs.USB_PID_STREAMDECK_XL_V2_MODULE,
@@ -180,11 +153,7 @@ class DeviceManager:
                 USBProductIDs.USB_PID_STREAMDECK_STUDIO,
                 StreamDeckStudio,
             ),
-            (
-                USBVendorIDs.USB_VID_ELGATO,
-                USBProductIDs.USB_PID_STREAMDECK_PLUS,
-                StreamDeckPlus,
-            ),
+            (USBVendorIDs.USB_VID_ELGATO, USBProductIDs.USB_PID_STREAMDECK_PLUS, StreamDeckPlus),
             (
                 USBVendorIDs.USB_VID_ELGATO,
                 USBProductIDs.USB_PID_STREAMDECK_PLUS_XL,

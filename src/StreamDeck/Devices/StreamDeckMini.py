@@ -50,9 +50,7 @@ class StreamDeckMini(StreamDeck):
             return None
 
         states = states[1:]
-        return {
-            ControlType.KEY: [bool(s) for s in states],
-        }
+        return {ControlType.KEY: [bool(s) for s in states]}
 
     def _reset_key_stream(self):
         payload = bytearray(self.IMAGE_REPORT_LENGTH)
@@ -76,9 +74,7 @@ class StreamDeckMini(StreamDeck):
 
     def get_serial_number(self):
         report_read_length = (
-            17
-            if self.device.product_id() == USBProductIDs.USB_PID_STREAMDECK_MINI
-            else 32
+            17 if self.device.product_id() == USBProductIDs.USB_PID_STREAMDECK_MINI else 32
         )
         serial = self.device.read_feature(0x03, report_read_length)
         return self._extract_string(serial[5:])

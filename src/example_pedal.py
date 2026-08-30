@@ -18,10 +18,7 @@ from StreamDeck.Transport.Transport import TransportError
 
 
 def key_change_callback(deck, key, state):
-    print(
-        "Deck {} Key {} = {}".format(deck.id(), key, "down" if state else "up"),
-        flush=True,
-    )
+    print("Deck {} Key {} = {}".format(deck.id(), key, "down" if state else "up"), flush=True)
 
 
 if __name__ == "__main__":

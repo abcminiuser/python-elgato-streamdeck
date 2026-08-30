@@ -54,8 +54,7 @@ class StreamDeckOriginal(StreamDeck):
         states = states[1:]
         return {
             ControlType.KEY: [
-                bool(states[s])
-                for s in map(self._convert_key_id_origin, range(self.KEY_COUNT))
+                bool(states[s]) for s in map(self._convert_key_id_origin, range(self.KEY_COUNT))
             ]
         }
 

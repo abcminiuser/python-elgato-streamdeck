@@ -164,8 +164,7 @@ class StreamDeckStudio(StreamDeck):
             return None
 
         values = [
-            self._DIAL_EVENT_TRANSFORM[event_type](s)
-            for s in states[4 : 4 + self.DIAL_COUNT]
+            self._DIAL_EVENT_TRANSFORM[event_type](s) for s in states[4 : 4 + self.DIAL_COUNT]
         ]
 
         return {ControlType.DIAL: {event_type: values}}
@@ -231,22 +230,15 @@ class StreamDeckStudio(StreamDeck):
         pass
 
     def set_encoder_knob_color(self, encoder, rgb):
-        data = [
-            self._HID_OUTPUT_REPORT_ID,
-            self._DIAL_KNOB_CMD,
-            encoder,
-            rgb[0],
-            rgb[1],
-            rgb[2],
-        ]
+        data = [self._HID_OUTPUT_REPORT_ID, self._DIAL_KNOB_CMD, encoder, rgb[0], rgb[1], rgb[2]]
         self.device.write(bytes(data))
 
     def set_encoder_ring_color(self, encoder, rgb):
-        data = [
-            self._HID_OUTPUT_REPORT_ID,
-            self._DIAL_RING_CMD,
-            encoder,
-        ] + [rgb[0], rgb[1], rgb[2]] * self._DIAL_RING_SEGMENTS
+        data = [self._HID_OUTPUT_REPORT_ID, self._DIAL_RING_CMD, encoder] + [
+            rgb[0],
+            rgb[1],
+            rgb[2],
+        ] * self._DIAL_RING_SEGMENTS
         self.device.write(bytes(data))
 
     def set_encoder_ring_percentage(self, encoder, rgb, value, segment_count=21):
@@ -267,9 +259,7 @@ class StreamDeckStudio(StreamDeck):
             )
 
         segments = round(value * segment_count / 100.0)
-        led_data = list(rgb) * segments + [0, 0, 0] * (
-            self._DIAL_RING_SEGMENTS - segments
-        )
+        led_data = list(rgb) * segments + [0, 0, 0] * (self._DIAL_RING_SEGMENTS - segments)
 
         if encoder == 0:
             offset = self._DIAL_RING_SEGMENTS * 3 // 2

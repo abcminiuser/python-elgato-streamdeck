@@ -39,11 +39,7 @@ def render_key_image(deck, icon_filename, font_filename, label_text):
     draw = ImageDraw.Draw(image)
     font = ImageFont.truetype(font_filename, 14)
     draw.text(
-        (image.width / 2, image.height - 5),
-        text=label_text,
-        font=font,
-        anchor="ms",
-        fill="white",
+        (image.width / 2, image.height - 5), text=label_text, font=font, anchor="ms", fill="white"
     )
 
     return PILHelper.to_native_key_format(deck, image)
@@ -80,9 +76,7 @@ def update_key_image(deck, key, state):
     key_style = get_key_style(deck, key, state)
 
     # Generate the custom key with the requested image and label.
-    image = render_key_image(
-        deck, key_style["icon"], key_style["font"], key_style["label"]
-    )
+    image = render_key_image(deck, key_style["icon"], key_style["font"], key_style["label"])
 
     # Use a scoped-with on the deck to ensure we're the only thread using it
     # right now.

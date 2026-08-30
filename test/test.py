@@ -26,12 +26,8 @@ def test_pil_helpers(deck):
         return
 
     test_key_image_pil = PILHelper.create_key_image(deck)
-    test_scaled_key_image_pil = PILHelper.create_scaled_key_image(
-        deck, test_key_image_pil
-    )
-    test_key_image_native = PILHelper.to_native_key_format(
-        deck, test_scaled_key_image_pil
-    )
+    test_scaled_key_image_pil = PILHelper.create_scaled_key_image(deck, test_key_image_pil)
+    test_key_image_native = PILHelper.to_native_key_format(deck, test_scaled_key_image_pil)
 
     if deck.is_touch():
         test_touchscreen_image_pil = PILHelper.create_touchscreen_image(deck)
@@ -57,9 +53,7 @@ def test_basic_apis(deck):
         key_image_format = deck.key_image_format() if deck.is_visual() else None
         key_states = deck.key_states()
         dial_states = deck.dial_states()
-        touchscreen_image_format = (
-            deck.touchscreen_image_format() if deck.is_touch() else None
-        )
+        touchscreen_image_format = deck.touchscreen_image_format() if deck.is_touch() else None
 
         deck.set_key_callback(None)
         deck.reset()
@@ -68,9 +62,7 @@ def test_basic_apis(deck):
             deck.set_brightness(30)
 
             test_key_image_pil = PILHelper.create_key_image(deck)
-            test_key_image_native = PILHelper.to_native_key_format(
-                deck, test_key_image_pil
-            )
+            test_key_image_native = PILHelper.to_native_key_format(deck, test_key_image_pil)
             deck.set_key_image(0, None)
             deck.set_key_image(0, test_key_image_native)
 
@@ -99,9 +91,7 @@ def test_key_pattern(deck):
 
     draw = ImageDraw.Draw(test_key_image)
     draw.rectangle(
-        (0, 0) + test_key_image.size,
-        fill=(0x11, 0x22, 0x33),
-        outline=(0x44, 0x55, 0x66),
+        (0, 0) + test_key_image.size, fill=(0x11, 0x22, 0x33), outline=(0x44, 0x55, 0x66)
     )
 
     test_key_image = PILHelper.to_native_key_format(deck, test_key_image)
@@ -125,9 +115,7 @@ if __name__ == "__main__":
 
     test_streamdecks = streamdecks
     if args.model:
-        test_streamdecks = [
-            deck for deck in test_streamdecks if deck.deck_type() == args.model
-        ]
+        test_streamdecks = [deck for deck in test_streamdecks if deck.deck_type() == args.model]
 
     if len(test_streamdecks) == 0:
         logger.error(
@@ -143,9 +131,7 @@ if __name__ == "__main__":
 
     test_runners = tests
     if args.test:
-        test_runners = {
-            name: test for (name, test) in test_runners.items() if name == args.test
-        }
+        test_runners = {name: test for (name, test) in test_runners.items() if name == args.test}
 
     if len(test_runners) == 0:
         logger.error(

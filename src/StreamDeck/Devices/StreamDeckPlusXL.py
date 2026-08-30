@@ -395,18 +395,13 @@ class StreamDeckPlusXL(StreamDeck):
             else:
                 return None
 
-            value = {
-                "x": (states[6] << 8) + states[5],
-                "y": (states[8] << 8) + states[7],
-            }
+            value = {"x": (states[6] << 8) + states[5], "y": (states[8] << 8) + states[7]}
 
             if event_type == TouchscreenEventType.DRAG:
                 value["x_out"] = (states[10] << 8) + states[9]
                 value["y_out"] = (states[12] << 8) + states[11]
 
-            return {
-                ControlType.TOUCHSCREEN: (event_type, value),
-            }
+            return {ControlType.TOUCHSCREEN: (event_type, value)}
         elif states[0] == 0x03:  # Dial Event
             if states[3] == 0x01:
                 event_type = DialEventType.TURN
@@ -416,15 +411,10 @@ class StreamDeckPlusXL(StreamDeck):
                 return None
 
             values = [
-                self._DIAL_EVENT_TRANSFORM[event_type](s)
-                for s in states[4 : 4 + self.DIAL_COUNT]
+                self._DIAL_EVENT_TRANSFORM[event_type](s) for s in states[4 : 4 + self.DIAL_COUNT]
             ]
 
-            return {
-                ControlType.DIAL: {
-                    event_type: values,
-                }
-            }
+            return {ControlType.DIAL: {event_type: values}}
 
     def set_brightness(self, percent):
         if isinstance(percent, float):

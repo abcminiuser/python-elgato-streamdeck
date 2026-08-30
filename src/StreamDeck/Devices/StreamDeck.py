@@ -96,9 +96,7 @@ class StreamDeck(ABC):
 
     def __init__(self, device: Transport.Device):
         self.device: Transport.Device = device
-        self.last_key_states: list[bool] = [False] * (
-            self.KEY_COUNT + self.TOUCH_KEY_COUNT
-        )
+        self.last_key_states: list[bool] = [False] * (self.KEY_COUNT + self.TOUCH_KEY_COUNT)
         self.last_dial_states: list[bool] = [False] * self.DIAL_COUNT
         self.read_thread: threading.Thread | None = None
         self.run_read_thread: bool = False
@@ -220,9 +218,7 @@ class StreamDeck(ABC):
 
                 elif ControlType.TOUCHSCREEN in control_states:
                     if self.touchscreen_callback is not None:
-                        self.touchscreen_callback(
-                            self, *control_states[ControlType.TOUCHSCREEN]
-                        )
+                        self.touchscreen_callback(self, *control_states[ControlType.TOUCHSCREEN])
 
             except TransportError:
                 self.run_read_thread = False
@@ -473,9 +469,7 @@ class StreamDeck(ABC):
         """
         self.key_callback = callback
 
-    def set_key_callback_async(
-        self, async_callback: AsyncKeyCallback | None, loop=None
-    ) -> None:
+    def set_key_callback_async(self, async_callback: AsyncKeyCallback | None, loop=None) -> None:
         """
         Sets the asynchronous callback function called each time a button on the
         StreamDeck changes state (either pressed, or released). The given
@@ -527,9 +521,7 @@ class StreamDeck(ABC):
         """
         self.dial_callback = callback
 
-    def set_dial_callback_async(
-        self, async_callback: AsyncDialCallback | None, loop=None
-    ) -> None:
+    def set_dial_callback_async(self, async_callback: AsyncDialCallback | None, loop=None) -> None:
         """
         Sets the asynchronous callback function called each time there is an
         interaction with a dial on the StreamDeck. The given callback should
@@ -692,12 +684,7 @@ class StreamDeck(ABC):
 
     @abstractmethod
     def set_touchscreen_image(
-        self,
-        image: bytes,
-        x_pos: int = 0,
-        y_pos: int = 0,
-        width: int = 0,
-        height: int = 0,
+        self, image: bytes, x_pos: int = 0, y_pos: int = 0, width: int = 0, height: int = 0
     ):
         """
         Draws an image on the touchscreen in a certain position. The image

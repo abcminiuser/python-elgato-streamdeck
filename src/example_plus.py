@@ -116,9 +116,7 @@ if __name__ == "__main__":
         deck.set_dial_callback(dial_change_callback)
         deck.set_touchscreen_callback(touchscreen_event_callback)
 
-        print(
-            f"Opened '{deck.deck_type()}' device (serial number: '{deck.get_serial_number()}')"
-        )
+        print(f"Opened '{deck.deck_type()}' device (serial number: '{deck.get_serial_number()}')")
 
         # Set initial screen brightness to 30%.
         deck.set_brightness(100)

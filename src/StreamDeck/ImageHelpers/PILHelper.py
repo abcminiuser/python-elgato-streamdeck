@@ -39,9 +39,7 @@ def _scale_image(
     thumbnail_max_height = final_image.height - (margins[0] + margins[2])
 
     thumbnail = image.convert("RGBA")
-    thumbnail.thumbnail(
-        (thumbnail_max_width, thumbnail_max_height), Image.Resampling.LANCZOS
-    )
+    thumbnail.thumbnail((thumbnail_max_width, thumbnail_max_height), Image.Resampling.LANCZOS)
 
     thumbnail_x = margins[3] + (thumbnail_max_width - thumbnail.width) // 2
     thumbnail_y = margins[0] + (thumbnail_max_height - thumbnail.height) // 2
@@ -96,9 +94,7 @@ def create_key_image(deck: StreamDeck, background: PILColor = "black") -> Image.
     return _create_image(deck.key_image_format(), background)
 
 
-def create_touchscreen_image(
-    deck: StreamDeck, background: PILColor = "black"
-) -> Image.Image:
+def create_touchscreen_image(deck: StreamDeck, background: PILColor = "black") -> Image.Image:
     """
     Creates a new PIL Image with the correct image dimensions for the given
     StreamDeck device's touchscreen.
@@ -116,9 +112,7 @@ def create_touchscreen_image(
     return _create_image(deck.touchscreen_image_format(), background)
 
 
-def create_screen_image(
-    deck: StreamDeck, background: PILColor = "black"
-) -> Image.Image:
+def create_screen_image(deck: StreamDeck, background: PILColor = "black") -> Image.Image:
     """
     Creates a new PIL Image with the correct image dimensions for the given
     StreamDeck device's screen.
@@ -137,10 +131,7 @@ def create_screen_image(
 
 
 def create_scaled_image(
-    deck: StreamDeck,
-    image: Image.Image,
-    margins: Margins = None,
-    background: PILColor = "black",
+    deck: StreamDeck, image: Image.Image, margins: Margins = None, background: PILColor = "black"
 ) -> Image.Image:
     """
     .. deprecated:: 0.9.5
@@ -150,10 +141,7 @@ def create_scaled_image(
 
 
 def create_scaled_key_image(
-    deck: StreamDeck,
-    image: Image.Image,
-    margins: Margins = None,
-    background: PILColor = "black",
+    deck: StreamDeck, image: Image.Image, margins: Margins = None, background: PILColor = "black"
 ) -> Image.Image:
     """
     Creates a new key image that contains a scaled version of a given image,
@@ -179,10 +167,7 @@ def create_scaled_key_image(
 
 
 def create_scaled_touchscreen_image(
-    deck: StreamDeck,
-    image: Image.Image,
-    margins: Margins = None,
-    background: PILColor = "black",
+    deck: StreamDeck, image: Image.Image, margins: Margins = None, background: PILColor = "black"
 ) -> Image.Image:
     """
     Creates a new touchscreen image that contains a scaled version of a given image,
@@ -208,10 +193,7 @@ def create_scaled_touchscreen_image(
 
 
 def create_scaled_screen_image(
-    deck: StreamDeck,
-    image: Image.Image,
-    margins: Margins = None,
-    background: PILColor = "black",
+    deck: StreamDeck, image: Image.Image, margins: Margins = None, background: PILColor = "black"
 ) -> Image.Image:
     """
     Creates a new screen image that contains a scaled version of a given image,

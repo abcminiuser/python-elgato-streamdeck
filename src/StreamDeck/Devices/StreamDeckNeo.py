@@ -194,9 +194,7 @@ class StreamDeckNeo(StreamDeck):
                 0x02,  # 0
                 0x0B,  # 1
                 0x00,  # 2
-                0x01
-                if this_length == bytes_remaining
-                else 0x00,  # 3 is the last report?
+                0x01 if this_length == bytes_remaining else 0x00,  # 3 is the last report?
                 this_length & 0xFF,  # 5 bytecount high byte
                 (this_length >> 8) & 0xFF,  # 4 bytecount high byte
                 page_number & 0xFF,  # 7 pagenumber low byte
