@@ -180,7 +180,7 @@ class StreamDeck(ABC):
 
                 if ControlType.KEY in control_states:
                     for k, (old, new) in enumerate(
-                        zip(self.last_key_states, control_states[ControlType.KEY])
+                        zip(self.last_key_states, control_states[ControlType.KEY], strict=True)
                     ):
                         if old == new:
                             continue
@@ -196,6 +196,7 @@ class StreamDeck(ABC):
                             zip(
                                 self.last_dial_states,
                                 control_states[ControlType.DIAL][DialEventType.PUSH],
+                                strict=True,
                             )
                         ):
                             if old == new:
