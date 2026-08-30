@@ -11,6 +11,10 @@ indent-style = "space"
 skip-magic-trailing-comma = true
 
 [lint]
+extend-select = ["B"]
+
+unfixable = ["B"]
+
 ignore = [
 	'N999', # Too late to adhere to the standard class naming conventions now.
 	'C408', # I like my explicit empty dict()/list().
@@ -24,10 +28,12 @@ split-on-trailing-comma = false
 
 [lint.per-file-ignores]
 "test/*.py" = [
-	'F841'
+	'F841', # Tests don't use the values of many local variables after a call.
+	'B007', # Tests sometimes don't use an unpacked variable for clarity.
 ]
 "src/example_*.py" = [
 	'RUF059', # Examples sometimes don't use an unpacked variable for clarity.
+	'B007', # Examples sometimes don't use an unpacked variable for clarity.
 ]
 "src/StreamDeck/Transport/*.py" = [
 	'S110', # We swallow exceptions in the transport layer.
