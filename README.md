@@ -41,6 +41,12 @@ Install the library via pip:
 pip install streamdeck
 ```
 
+For Network Dock support, install the optional network dependencies:
+
+```
+pip install streamdeck[network]
+```
+
 Alternatively, manually clone the project repository:
 
 ```
