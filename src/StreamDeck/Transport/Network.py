@@ -126,7 +126,6 @@ class Network(Transport):
             self._vendor_id = vendor_id
             self._product_id = product_id
             self.is_present = is_present
-            print(is_present)
 
             self.mutex = threading.Lock()
             self.connection = None
@@ -189,7 +188,6 @@ class Network(Transport):
                 return False
 
             # The dock stops advertising a device when it is undocked.
-            print(f"{self.is_present()=}")
             return self.is_present()
 
         def vendor_id(self):
@@ -412,7 +410,6 @@ class Network(Transport):
         return services
 
     def _get_services(self):
-        # TODO: this fails after a couple of iterations
         with self.discovery_lock:
             now = time.monotonic()
             if self.services_time is None or now - self.services_time > self.DISCOVERY_CACHE_TIME:
