@@ -2,7 +2,7 @@
 
 ![Example Deck](ExampleDeck.jpg)
 
-This is an open source Python 3 library to control an
+This is an open source third-party Python 3 library to control an
 [Elgato Stream Deck](https://www.elgato.com/en/gaming/stream-deck) directly,
 without the official software. This can allow you to create your own custom
 front-ends, such as a custom control front-end for home automation software.
@@ -101,6 +101,11 @@ development and maintenance of this library:
 
 If you've contributed in some manner, but I've accidentally missed you in the
 list above, please let me know.
+
+
+## AI Policy:
+
+AI contributions are not currently accepted.
 
 
 ## License:
