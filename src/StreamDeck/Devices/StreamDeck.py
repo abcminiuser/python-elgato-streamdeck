@@ -10,7 +10,7 @@ import time
 from abc import ABC, abstractmethod
 from collections.abc import Callable, Coroutine, Iterable
 from enum import Enum
-from typing import Any, TypeVar
+from typing import Any, Literal, TypeAlias, TypeVar
 
 from ..Transport.Transport import Transport, TransportError
 
@@ -52,6 +52,8 @@ class StreamDeck(ABC):
     Represents a physically attached StreamDeck device.
     """
 
+    LiteralBool: TypeAlias = Literal[False, True]
+
     KEY_COUNT = 0
     KEY_COLS = 0
     KEY_ROWS = 0
@@ -61,19 +63,19 @@ class StreamDeck(ABC):
     KEY_PIXEL_WIDTH = 0
     KEY_PIXEL_HEIGHT = 0
     KEY_IMAGE_FORMAT = ""
-    KEY_FLIP = (False, False)
+    KEY_FLIP: tuple[LiteralBool, LiteralBool] = (False, False)
     KEY_ROTATION = 0
 
     TOUCHSCREEN_PIXEL_WIDTH = 0
     TOUCHSCREEN_PIXEL_HEIGHT = 0
     TOUCHSCREEN_IMAGE_FORMAT = ""
-    TOUCHSCREEN_FLIP = (False, False)
+    TOUCHSCREEN_FLIP: tuple[LiteralBool, LiteralBool] = (False, False)
     TOUCHSCREEN_ROTATION = 0
 
     SCREEN_PIXEL_WIDTH = 0
     SCREEN_PIXEL_HEIGHT = 0
     SCREEN_IMAGE_FORMAT = ""
-    SCREEN_FLIP = (False, False)
+    SCREEN_FLIP: tuple[LiteralBool, LiteralBool] = (False, False)
     SCREEN_ROTATION = 0
 
     DIAL_COUNT = 0

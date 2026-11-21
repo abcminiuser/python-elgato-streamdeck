@@ -21,13 +21,13 @@ steps:
   - pip install ruff
   - ruff format --exit-non-zero-on-format
 
-- name: Pyright
+- name: "Pyrefly Check"
   image: abcminiuser/docker-ci-python:latest
   pull: always
   commands:
-  - pip install pyright
+  - pip install pyrefly
   - pip install -r requirements.txt
-  - pyright
+  - pyrefly check
 
 - name: Tests
   image: abcminiuser/docker-ci-python:latest
@@ -52,6 +52,6 @@ steps:
   depends_on:
   - "Ruff Check"
   - "Ruff Format"
-  - Pyright
+  - "Pyrefly Check"
   - Tests
   - Documentation

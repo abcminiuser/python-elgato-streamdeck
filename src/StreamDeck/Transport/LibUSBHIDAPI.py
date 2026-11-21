@@ -109,65 +109,65 @@ class LibUSBHIDAPI(Transport):
                 ("next", ctypes.POINTER(hid_device_info)),
             ]
 
-            self.HIDAPI_INSTANCE.hid_init.argtypes = []  # pyright: ignore
-            self.HIDAPI_INSTANCE.hid_init.restype = ctypes.c_int  # pyright: ignore
+            self.HIDAPI_INSTANCE.hid_init.argtypes = []  # pyrefly: ignore
+            self.HIDAPI_INSTANCE.hid_init.restype = ctypes.c_int  # pyrefly: ignore
 
-            self.HIDAPI_INSTANCE.hid_exit.argtypes = []  # pyright: ignore
-            self.HIDAPI_INSTANCE.hid_exit.restype = ctypes.c_int  # pyright: ignore
+            self.HIDAPI_INSTANCE.hid_exit.argtypes = []  # pyrefly: ignore
+            self.HIDAPI_INSTANCE.hid_exit.restype = ctypes.c_int  # pyrefly: ignore
 
-            self.HIDAPI_INSTANCE.hid_enumerate.argtypes = [  # pyright: ignore
+            self.HIDAPI_INSTANCE.hid_enumerate.argtypes = [  # pyrefly: ignore
                 ctypes.c_ushort,
                 ctypes.c_ushort,
             ]
-            self.HIDAPI_INSTANCE.hid_enumerate.restype = ctypes.POINTER(hid_device_info)  # pyright: ignore
+            self.HIDAPI_INSTANCE.hid_enumerate.restype = ctypes.POINTER(hid_device_info)  # pyrefly: ignore
 
-            self.HIDAPI_INSTANCE.hid_free_enumeration.argtypes = [  # pyright: ignore
+            self.HIDAPI_INSTANCE.hid_free_enumeration.argtypes = [  # pyrefly: ignore
                 ctypes.POINTER(hid_device_info)
             ]
-            self.HIDAPI_INSTANCE.hid_free_enumeration.restype = None  # pyright: ignore
+            self.HIDAPI_INSTANCE.hid_free_enumeration.restype = None  # pyrefly: ignore
 
-            self.HIDAPI_INSTANCE.hid_open_path.argtypes = [ctypes.c_char_p]  # pyright: ignore
-            self.HIDAPI_INSTANCE.hid_open_path.restype = ctypes.c_void_p  # pyright: ignore
+            self.HIDAPI_INSTANCE.hid_open_path.argtypes = [ctypes.c_char_p]  # pyrefly: ignore
+            self.HIDAPI_INSTANCE.hid_open_path.restype = ctypes.c_void_p  # pyrefly: ignore
 
-            self.HIDAPI_INSTANCE.hid_close.argtypes = [ctypes.c_void_p]  # pyright: ignore
-            self.HIDAPI_INSTANCE.hid_close.restype = None  # pyright: ignore
+            self.HIDAPI_INSTANCE.hid_close.argtypes = [ctypes.c_void_p]  # pyrefly: ignore
+            self.HIDAPI_INSTANCE.hid_close.restype = None  # pyrefly: ignore
 
-            self.HIDAPI_INSTANCE.hid_set_nonblocking.argtypes = [  # pyright: ignore
+            self.HIDAPI_INSTANCE.hid_set_nonblocking.argtypes = [  # pyrefly: ignore
                 ctypes.c_void_p,
                 ctypes.c_int,
             ]
-            self.HIDAPI_INSTANCE.hid_set_nonblocking.restype = ctypes.c_int  # pyright: ignore
+            self.HIDAPI_INSTANCE.hid_set_nonblocking.restype = ctypes.c_int  # pyrefly: ignore
 
-            self.HIDAPI_INSTANCE.hid_send_feature_report.argtypes = [  # pyright: ignore
+            self.HIDAPI_INSTANCE.hid_send_feature_report.argtypes = [  # pyrefly: ignore
                 ctypes.c_void_p,
                 ctypes.POINTER(ctypes.c_char),
                 ctypes.c_size_t,
             ]
-            self.HIDAPI_INSTANCE.hid_send_feature_report.restype = ctypes.c_int  # pyright: ignore
+            self.HIDAPI_INSTANCE.hid_send_feature_report.restype = ctypes.c_int  # pyrefly: ignore
 
-            self.HIDAPI_INSTANCE.hid_get_feature_report.argtypes = [  # pyright: ignore
+            self.HIDAPI_INSTANCE.hid_get_feature_report.argtypes = [  # pyrefly: ignore
                 ctypes.c_void_p,
                 ctypes.POINTER(ctypes.c_char),
                 ctypes.c_size_t,
             ]
-            self.HIDAPI_INSTANCE.hid_get_feature_report.restype = ctypes.c_int  # pyright: ignore
+            self.HIDAPI_INSTANCE.hid_get_feature_report.restype = ctypes.c_int  # pyrefly: ignore
 
-            self.HIDAPI_INSTANCE.hid_write.argtypes = [  # pyright: ignore
+            self.HIDAPI_INSTANCE.hid_write.argtypes = [  # pyrefly: ignore
                 ctypes.c_void_p,
                 ctypes.POINTER(ctypes.c_char),
                 ctypes.c_size_t,
             ]
-            self.HIDAPI_INSTANCE.hid_write.restype = ctypes.c_int  # pyright: ignore
+            self.HIDAPI_INSTANCE.hid_write.restype = ctypes.c_int  # pyrefly: ignore
 
-            self.HIDAPI_INSTANCE.hid_read.argtypes = [  # pyright: ignore
+            self.HIDAPI_INSTANCE.hid_read.argtypes = [  # pyrefly: ignore
                 ctypes.c_void_p,
                 ctypes.POINTER(ctypes.c_char),
                 ctypes.c_size_t,
             ]
-            self.HIDAPI_INSTANCE.hid_read.restype = ctypes.c_int  # pyright: ignore
+            self.HIDAPI_INSTANCE.hid_read.restype = ctypes.c_int  # pyrefly: ignore
 
-            self.HIDAPI_INSTANCE.hid_init()  # pyright: ignore
-            atexit.register(self.HIDAPI_INSTANCE.hid_exit)  # pyright: ignore
+            self.HIDAPI_INSTANCE.hid_init()  # pyrefly: ignore
+            atexit.register(self.HIDAPI_INSTANCE.hid_exit)  # pyrefly: ignore
 
             return self.HIDAPI_INSTANCE
 
@@ -219,7 +219,7 @@ class LibUSBHIDAPI(Transport):
             device_list = []
 
             with self.mutex:
-                device_enumeration = self.hidapi.hid_enumerate(vendor_id, product_id)  # pyright: ignore
+                device_enumeration = self.hidapi.hid_enumerate(vendor_id, product_id)  # pyrefly: ignore
 
                 if device_enumeration:
                     current_device = device_enumeration
@@ -235,7 +235,7 @@ class LibUSBHIDAPI(Transport):
 
                         current_device = current_device.contents.next
 
-                self.hidapi.hid_free_enumeration(device_enumeration)  # pyright: ignore
+                self.hidapi.hid_free_enumeration(device_enumeration)  # pyrefly: ignore
 
             return device_list
 
@@ -250,12 +250,12 @@ class LibUSBHIDAPI(Transport):
                 if type(path) is not bytes:
                     path = bytes(path, "utf-8")
 
-                handle = self.hidapi.hid_open_path(path)  # pyright: ignore
+                handle = self.hidapi.hid_open_path(path)  # pyrefly: ignore
 
                 if not handle:
                     raise TransportError("Could not open HID device.")
 
-                self.hidapi.hid_set_nonblocking(handle, 1)  # pyright: ignore
+                self.hidapi.hid_set_nonblocking(handle, 1)  # pyrefly: ignore
 
             return handle
 
@@ -267,7 +267,7 @@ class LibUSBHIDAPI(Transport):
             """
             with self.mutex:
                 if handle:
-                    self.hidapi.hid_close(handle)  # pyright: ignore
+                    self.hidapi.hid_close(handle)  # pyrefly: ignore
 
         def send_feature_report(self, handle, data):
             """
@@ -286,7 +286,7 @@ class LibUSBHIDAPI(Transport):
                 raise TransportError("No HID device.")
 
             with self.mutex:
-                result = self.hidapi.hid_send_feature_report(  # pyright: ignore
+                result = self.hidapi.hid_send_feature_report(  # pyrefly: ignore
                     handle, bytes(data), len(data)
                 )
 
@@ -320,7 +320,7 @@ class LibUSBHIDAPI(Transport):
             data[0] = report_id
 
             with self.mutex:
-                result = self.hidapi.hid_get_feature_report(handle, data, len(data))  # pyright: ignore
+                result = self.hidapi.hid_get_feature_report(handle, data, len(data))  # pyrefly: ignore
 
             if result < 0:
                 raise TransportError(f"Failed to read feature report ({result}")
@@ -350,7 +350,7 @@ class LibUSBHIDAPI(Transport):
                 raise TransportError("No HID device.")
 
             with self.mutex:
-                result = self.hidapi.hid_write(handle, bytes(data), len(data))  # pyright: ignore
+                result = self.hidapi.hid_write(handle, bytes(data), len(data))  # pyrefly: ignore
 
             if result < 0:
                 raise TransportError(f"Failed to write out report ({result})")
@@ -375,7 +375,7 @@ class LibUSBHIDAPI(Transport):
             data = ctypes.create_string_buffer(length)
 
             with self.mutex:
-                result = self.hidapi.hid_read(handle, data, len(data))  # pyright: ignore
+                result = self.hidapi.hid_read(handle, data, len(data))  # pyrefly: ignore
 
             if result < 0:
                 raise TransportError(f"Failed to read in report ({result})")

@@ -1,0 +1,8 @@
+project-includes = ["src"]
+project-excludes = ["**/__pycache__"]
+python-version = "3.10.0"
+infer-with-first-use = false
+
+[errors]
+untyped-import = "ignore"
+missing-import = "error"
