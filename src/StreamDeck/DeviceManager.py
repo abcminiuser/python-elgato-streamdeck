@@ -7,6 +7,7 @@
 
 from .Devices.StreamDeck import StreamDeck
 from .Devices.StreamDeckMini import StreamDeckMini
+from .Devices.StreamDeckMiniDiscord import StreamDeckMiniDiscord
 from .Devices.StreamDeckNeo import StreamDeckNeo
 from .Devices.StreamDeckOriginal import StreamDeckOriginal
 from .Devices.StreamDeckOriginalV2 import StreamDeckOriginalV2
@@ -161,6 +162,7 @@ class DeviceManager:
                 USBProductIDs.USB_PID_STREAMDECK_PLUS_XL,
                 StreamDeckPlusXL,
             ),
+            (USBVendorIDs.USB_VID_ELGATO, USBProductIDs.USB_PID_STREAMDECK_MINI_DISCORD, StreamDeckMiniDiscord),
         ]
 
         streamdecks = list()
