@@ -54,35 +54,35 @@ class StreamDeck(ABC):
 
     LiteralBool: TypeAlias = Literal[False, True]
 
-    KEY_COUNT = 0
-    KEY_COLS = 0
-    KEY_ROWS = 0
+    KEY_COUNT: int = 0
+    KEY_COLS: int = 0
+    KEY_ROWS: int = 0
 
-    TOUCH_KEY_COUNT = 0
+    TOUCH_KEY_COUNT: int = 0
 
-    KEY_PIXEL_WIDTH = 0
-    KEY_PIXEL_HEIGHT = 0
-    KEY_IMAGE_FORMAT = ""
+    KEY_PIXEL_WIDTH: int = 0
+    KEY_PIXEL_HEIGHT: int = 0
+    KEY_IMAGE_FORMAT: str = ""
     KEY_FLIP: tuple[LiteralBool, LiteralBool] = (False, False)
-    KEY_ROTATION = 0
+    KEY_ROTATION: int = 0
 
-    TOUCHSCREEN_PIXEL_WIDTH = 0
-    TOUCHSCREEN_PIXEL_HEIGHT = 0
-    TOUCHSCREEN_IMAGE_FORMAT = ""
+    TOUCHSCREEN_PIXEL_WIDTH: int = 0
+    TOUCHSCREEN_PIXEL_HEIGHT: int = 0
+    TOUCHSCREEN_IMAGE_FORMAT: str = ""
     TOUCHSCREEN_FLIP: tuple[LiteralBool, LiteralBool] = (False, False)
-    TOUCHSCREEN_ROTATION = 0
+    TOUCHSCREEN_ROTATION: int = 0
 
-    SCREEN_PIXEL_WIDTH = 0
-    SCREEN_PIXEL_HEIGHT = 0
-    SCREEN_IMAGE_FORMAT = ""
+    SCREEN_PIXEL_WIDTH: int = 0
+    SCREEN_PIXEL_HEIGHT: int = 0
+    SCREEN_IMAGE_FORMAT: str = ""
     SCREEN_FLIP: tuple[LiteralBool, LiteralBool] = (False, False)
-    SCREEN_ROTATION = 0
+    SCREEN_ROTATION: int = 0
 
-    DIAL_COUNT = 0
+    DIAL_COUNT: int = 0
 
-    DECK_TYPE = ""
-    DECK_VISUAL = False
-    DECK_TOUCH = False
+    DECK_TYPE: str = ""
+    DECK_VISUAL: LiteralBool = False
+    DECK_TOUCH: LiteralBool = False
 
     _Self = TypeVar("_Self", bound="StreamDeck")
     KeyCallback = Callable[[_Self, int, bool], None] | None
