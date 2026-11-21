@@ -11,6 +11,7 @@
 # tiles generated at runtime, and responding to button state change events.
 
 import os
+import sys
 import threading
 
 from PIL import Image, ImageDraw, ImageFont
@@ -113,7 +114,8 @@ def key_change_callback(deck, key, state):
 
 
 if __name__ == "__main__":
-    streamdecks = DeviceManager().enumerate()
+    transport = "network" if "--network" in sys.argv else None
+    streamdecks = DeviceManager(transport=transport).enumerate()
 
     print(f"Found {len(streamdecks)} Stream Deck(s).\n")
 

@@ -19,6 +19,7 @@ from .ProductIDs import USBProductIDs, USBVendorIDs
 from .Transport import Transport
 from .Transport.Dummy import Dummy
 from .Transport.LibUSBHIDAPI import LibUSBHIDAPI
+from .Transport.Network import Network
 
 
 class ProbeError(Exception):
@@ -48,7 +49,7 @@ class DeviceManager:
         :return: Instance of a HID Transport class
         """
 
-        transports = {"dummy": Dummy, "libusb": LibUSBHIDAPI}
+        transports = {"dummy": Dummy, "libusb": LibUSBHIDAPI, "network": Network}
 
         if transport:
             transport_class = transports.get(transport)
@@ -67,7 +68,7 @@ class DeviceManager:
             probe_errors = {}
 
             for transport_name, transport_class in transports.items():
-                if transport_name == "dummy":
+                if transport_name in ("dummy", "network"):
                     continue
 
                 try:
